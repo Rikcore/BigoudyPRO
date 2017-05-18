@@ -5,4 +5,19 @@
     <color name="colorAccent">#FF4081</color>
     <color name="white">#FFFFFF</color>
     <color name="grey">#c6c1c1</color>
+
+
+
+    <!--   BIGOUDY COLORS -->
+
+    <color name="bigoudystronggold">#CEB46F</color>
+    <color name="bigoudymediumgold">#EEDA9C</color>
+    <color name="bigoudylightgold">#FFF4D2</color>
+    <color name="bigoudydarkgrey">#373838</color>
+    <color name="bigoudymediumgrey">#CBC8C4</color>
+    <color name="bigoudylightgrey">#E4DFD3</color>
+    <color name="bigoudyred">#D0011B</color>
+    <color name="bigoudyblue">#6F86CE</color>
+    <color name="bigoudygreen">#489729</color>
+
 </resources>

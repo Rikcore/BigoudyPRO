@@ -9,16 +9,13 @@ import android.widget.Button;
 
 public class MainActivity extends AppCompatActivity {
 
-    public static Typeface butlerExtraBold ;
-    public static Typeface montserratRegular;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        butlerExtraBold = Typeface.createFromAsset(getAssets(), "fonts/butler_extrabold.otf");
-        montserratRegular = Typeface.createFromAsset(getAssets(), "fonts/montserrat_regular.ttf");
 
         Button button = (Button) findViewById(R.id.button);
 
