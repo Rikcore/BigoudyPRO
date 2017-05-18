@@ -1,5 +1,6 @@
 package bigoudy.bigoudypro;
 
+import android.graphics.Typeface;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Window;
@@ -17,9 +18,11 @@ public class LoginActivity extends AppCompatActivity {
         TextView textViewBigoudy = (TextView)findViewById(R.id.textViewBigoudy);
         Button buttonConnection = (Button)findViewById(R.id.buttonConnection);
 
-        textViewBienvenue.setTypeface(MainActivity.montserratRegular);
-        textViewBigoudy.setTypeface(MainActivity.butlerExtraBold);
-        buttonConnection.setTypeface(MainActivity.montserratRegular);
+
+        Fonts.setFontMontSerrat(this, textViewBienvenue);
+        Fonts.setFontMontSerrat(this, buttonConnection);
+        Fonts.setFontButler(this, textViewBigoudy);
+
 
     }
 }
