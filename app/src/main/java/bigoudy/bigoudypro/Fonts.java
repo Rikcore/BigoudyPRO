@@ -5,6 +5,7 @@ import android.graphics.Typeface;
 import android.icu.text.DisplayContext;
 import android.support.constraint.ConstraintLayout;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import static java.security.AccessController.getContext;
@@ -24,6 +25,9 @@ public class Fonts {
     }
     public static void setFontMontSerrat(Context context, TextView textView){
         textView.setTypeface(Typeface.createFromAsset(context.getAssets(), "fonts/montserrat_regular.ttf"));
+    }
+    public static void setFontMontSerrat(Context context, EditText editText){
+        editText.setTypeface(Typeface.createFromAsset(context.getAssets(), "fonts/montserrat_regular.ttf"));
     }
     public static void setFontMontSerrat(Context context, Button button){
         button.setTypeface(Typeface.createFromAsset(context.getAssets(), "fonts/montserrat_regular.ttf"));
