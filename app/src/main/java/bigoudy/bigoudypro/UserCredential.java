@@ -6,6 +6,9 @@ import com.google.gson.annotations.SerializedName;
  * Created by apprenti on 24/05/17.
  */
 
+// NON UTILISE
+
+    
 public class UserCredential {
     @SerializedName("action")
     String action;

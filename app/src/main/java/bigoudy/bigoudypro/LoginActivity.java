@@ -84,7 +84,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 String mailUser = editTextEmail.getText().toString();
                 String passwordUser = editTextPassword.getText().toString();
                 String action = "connectUser";
-                UserCredential userCredential = new UserCredential(action, mailUser, passwordUser);
+
+                //UserCredential userCredential = new UserCredential(action, mailUser, passwordUser);
 
                 Response<UserModel> userModelResponse = null;
                 Call<UserModel> userModelCall = serviceApi.getUserModel(action, mailUser, passwordUser);

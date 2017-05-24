@@ -1,5 +1,5 @@
 
-package bigoudy.bigoudypro; ;
+package bigoudy.bigoudypro;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
