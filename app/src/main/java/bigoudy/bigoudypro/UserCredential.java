@@ -8,7 +8,7 @@ import com.google.gson.annotations.SerializedName;
 
 // NON UTILISE
 
-    
+
 public class UserCredential {
     @SerializedName("action")
     String action;

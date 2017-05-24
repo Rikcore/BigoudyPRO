@@ -1,8 +1,11 @@
 package bigoudy.bigoudypro;
 
+import android.content.Intent;
 import android.graphics.Typeface;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
@@ -12,17 +15,28 @@ import android.widget.TextView;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.IOException;
+
 import okhttp3.OkHttpClient;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+import retrofit2.converter.scalars.ScalarsConverterFactory;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
 
     private EditText editTextEmail;
     private EditText editTextPassword;
+    private String mailUser;
+    private String passwordUser;
 
     Retrofit retrofit;
 
@@ -49,19 +63,13 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         Fonts.setFontMontSerrat(this, buttonConnection);
 
 
-        Gson gson = new GsonBuilder()
-                .setLenient()
-                .create();
-
         OkHttpClient client = new OkHttpClient();
 
         retrofit = new Retrofit.Builder()
                 .baseUrl("https://www.bigoudychat.ovh/app/resources/")
                 .client(client)
-                .addConverterFactory(GsonConverterFactory.create(gson))
+                .addConverterFactory(GsonConverterFactory.create())
                 .build();
-
-
 
         serviceApi = retrofit.create(ServiceApi.class);
 
@@ -74,31 +82,31 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
 
 
-
-
-
     @Override
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.buttonConnection:
-                String mailUser = editTextEmail.getText().toString();
-                String passwordUser = editTextPassword.getText().toString();
+                mailUser = editTextEmail.getText().toString();
+                passwordUser = editTextPassword.getText().toString();
                 String action = "connectUser";
 
-                //UserCredential userCredential = new UserCredential(action, mailUser, passwordUser);
+
 
                 Response<UserModel> userModelResponse = null;
                 Call<UserModel> userModelCall = serviceApi.getUserModel(action, mailUser, passwordUser);
 
                 userModelCall.enqueue(new Callback<UserModel>() {
                     @Override
-                    public void onResponse(Call<UserModel> call, Response<UserModel> response) {
-                        String prout = response.toString();
+                    public void onResponse(Call<UserModel> call, Response<UserModel> userModelResponse) {
+                        if (userModelResponse.body().getIdConnectedUser() != "-1" & userModelResponse != null) {
+                            PreferenceManager.getDefaultSharedPreferences(LoginActivity.this).edit().putString("bigoudyMailUser", mailUser).commit();
+                            PreferenceManager.getDefaultSharedPreferences(LoginActivity.this).edit().putString("bigoudyPasswordUser", passwordUser).commit();
+                            startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                        }
                     }
 
                     @Override
                     public void onFailure(Call<UserModel> call, Throwable t) {
-                        String caca = call.toString();
                     }
                 });
 

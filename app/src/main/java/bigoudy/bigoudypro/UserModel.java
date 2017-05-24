@@ -4,7 +4,9 @@ package bigoudy.bigoudypro;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class UserModel {
+import java.io.Serializable;
+
+public class UserModel implements Serializable {
 
     @SerializedName("success")
     @Expose
