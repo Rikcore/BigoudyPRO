@@ -11,14 +11,8 @@ import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
-import android.widget.TextView;
 import android.support.v4.app.FragmentManager;
-import android.widget.Toast;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 import okhttp3.OkHttpClient;
 import retrofit2.Call;
@@ -62,16 +56,13 @@ public class MainActivity extends AppCompatActivity implements InboxFragment.OnF
         }
 
 
+
         fragmentManager = getSupportFragmentManager();
 
         inboxFragment = new InboxFragment();
         agendaFragment = new AgendaFragment();
         bookingFragment = new BookingFragment();
 
-        fragmentManager
-                .beginTransaction()
-                .replace(R.id.contentLayout, agendaFragment, agendaFragment.getTag())
-                .commit();
 
 
         BottomNavigationView bottomNavigationView = (BottomNavigationView)findViewById(R.id.navigation);
@@ -119,9 +110,6 @@ public class MainActivity extends AppCompatActivity implements InboxFragment.OnF
     public void getCurrentUser (String mailUser, String passwordUser){
         String action = "connectUser";
 
-        /*Gson gson = new GsonBuilder()
-                .setLenient()
-                .create();*/
 
         OkHttpClient client = new OkHttpClient();
 
@@ -133,8 +121,6 @@ public class MainActivity extends AppCompatActivity implements InboxFragment.OnF
 
         ServiceApi serviceApi = retrofit.create(ServiceApi.class);
 
-        //Response<UserModel> userModelResponse = null;
-
         Call<UserModel> userModelCall = serviceApi.getUserModel(action, mailUser, passwordUser);
 
         userModelCall.enqueue(new Callback<UserModel>() {
@@ -143,8 +129,17 @@ public class MainActivity extends AppCompatActivity implements InboxFragment.OnF
                 currentUser = response.body();
                 progressDialog.dismiss();
                 String totcaca = currentUser.getIdConnectedUser();
-                String cacatoto = currentUser.getUserLight().getFirstnameUser();
-                String bruno = "copier coller";
+                Bundle bundle = new Bundle();
+                bundle.putString("idConnectUser", currentUser.getIdConnectedUser());
+                bookingFragment.setArguments(bundle);
+                inboxFragment.setArguments(bundle);
+                agendaFragment.setArguments(bundle);
+
+                fragmentManager
+                        .beginTransaction()
+                        .replace(R.id.contentLayout, agendaFragment, agendaFragment.getTag())
+                        .commit();
+
             }
 
             @Override

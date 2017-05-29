@@ -90,9 +90,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 passwordUser = editTextPassword.getText().toString();
                 String action = "connectUser";
 
-
-
-                Response<UserModel> userModelResponse = null;
                 Call<UserModel> userModelCall = serviceApi.getUserModel(action, mailUser, passwordUser);
 
                 userModelCall.enqueue(new Callback<UserModel>() {
