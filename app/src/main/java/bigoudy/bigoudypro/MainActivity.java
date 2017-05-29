@@ -133,7 +133,7 @@ public class MainActivity extends AppCompatActivity implements InboxFragment.OnF
 
         ServiceApi serviceApi = retrofit.create(ServiceApi.class);
 
-        Response<UserModel> userModelResponse = null;
+        //Response<UserModel> userModelResponse = null;
 
         Call<UserModel> userModelCall = serviceApi.getUserModel(action, mailUser, passwordUser);
 
