@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
 
 /**
@@ -67,23 +68,18 @@ public class AgendaFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_agenda, container, false);
+        TextView textView = (TextView)view.findViewById(R.id.textViewToto);
+        String idConnectUser = getArguments().getString("idConnectUser");
+        textView.setText(idConnectUser);
         // Inflate the layout for this fragment
 
-        View view = inflater.inflate(R.layout.fragment_agenda, container, false);
 
-        Button button = (Button)view.findViewById(R.id.buttonTest);
+        //String idConnectUser = getArguments().getString("idConnectUser");
 
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(getActivity(), LoginActivity.class));
-            }
-        });
+
 
         return view;
-
-
-
 
 
     }

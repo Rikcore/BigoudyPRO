@@ -63,8 +63,10 @@ public class BookingFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_booking, container, false);
+        String idConnectUser = getArguments().getString("idConnectUser");
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_booking, container, false);
+        return view;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
