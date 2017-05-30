@@ -2,8 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/BigoudyPro.iml" filepath="$PROJECT_DIR$/BigoudyPro.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/toulouse-0217-bigoudy.iml" filepath="$PROJECT_DIR$/toulouse-0217-bigoudy.iml" />
     </modules>
   </component>
 </project>
