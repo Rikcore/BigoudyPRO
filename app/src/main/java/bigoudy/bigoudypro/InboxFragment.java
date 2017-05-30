@@ -68,7 +68,7 @@ public class InboxFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_inbox, container, false);
-        mWebView = (WebView) view.findViewById(R.id.webview); mWebView.loadUrl("https://www.bigoudychat.ovh/notifications");
+        mWebView = (WebView) view.findViewById(R.id.webview); mWebView.loadUrl("https://www.bigoudychat.ovh/chat.php");
 
         WebSettings webSettings = mWebView.getSettings();
         webSettings.setJavaScriptEnabled(true);
