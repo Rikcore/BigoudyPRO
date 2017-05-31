@@ -35,8 +35,10 @@ dependencies {
     compile 'com.google.code.gson:gson:2.6.1'
     compile 'com.squareup.retrofit2:converter-gson:2.3.0'
     compile 'com.squareup.retrofit2:converter-scalars:2.3.0'
+    compile 'com.github.alamkanak:android-week-view:1.2.6'
     // https://mvnrepository.com/artifact/commons-codec/commons-codec
     compile group: 'commons-codec', name: 'commons-codec', version: '1.10'
+
 
     testCompile 'junit:junit:4.12'
 }

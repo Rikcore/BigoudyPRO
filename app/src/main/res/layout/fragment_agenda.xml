@@ -7,20 +7,36 @@
 
     <!-- TODO: Update blank fragment layout -->
 
-    <ImageView
-        android:id="@+id/imageView2"
-        android:layout_width="337dp"
-        android:layout_height="452dp"
-        app:srcCompat="@drawable/brouillonagenda"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentStart="true" />
+    <com.alamkanak.weekview.WeekView
+        android:id="@+id/weekView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:eventTextColor="@android:color/white"
+        app:textSize="12sp"
+        app:hourHeight="60dp"
+        app:headerColumnPadding="8dp"
+        app:headerColumnTextColor="@color/bigoudydarkgrey"
+        app:headerRowPadding="12dp"
+        app:columnGap="8dp"
+        app:noOfVisibleDays="3"
+        app:headerRowBackgroundColor="@color/white"
+        app:dayBackgroundColor="#05000000"
+        app:todayBackgroundColor="#1848adff"
+        app:headerColumnBackground="#ffffffff"
+        app:todayHeaderTextColor="@color/bigoudyblue" />
 
-    <TextView
-        android:id="@+id/textViewToto"
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/addRdvButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/imageView2"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="19dp"
-        android:text="TextView" />
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginBottom="27dp"
+        android:layout_marginEnd="33dp"
+        android:clickable="true"
+        app:backgroundTint="@color/bigoudystronggold"
+        app:fabSize="normal"
+        app:srcCompat="@drawable/ic_add_black_24dp" />
+
+
 </RelativeLayout>

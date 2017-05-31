@@ -3,7 +3,7 @@
     package="bigoudy.bigoudypro">
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
         android:allowBackup="true"
@@ -21,9 +21,8 @@
         </activity>
         <activity
             android:name=".LoginActivity"
-            android:theme ="@style/notitlebar">
-        </activity>
-
+            android:theme="@style/notitlebar"></activity>
+        <activity android:name=".CreatRdvActivity"></activity>
     </application>
 
 </manifest>
