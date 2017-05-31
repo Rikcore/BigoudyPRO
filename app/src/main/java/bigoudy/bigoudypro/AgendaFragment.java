@@ -1,9 +1,11 @@
 package bigoudy.bigoudypro;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.RectF;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -12,6 +14,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.alamkanak.weekview.DateTimeInterpreter;
@@ -44,6 +47,7 @@ public class AgendaFragment extends Fragment implements WeekView.EventClickListe
     private static final int TYPE_WEEK_VIEW = 3;
     private int mWeekViewType = TYPE_THREE_DAY_VIEW;
     private WeekView mWeekView;
+    private FloatingActionButton mRdvButton;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -76,6 +80,7 @@ public class AgendaFragment extends Fragment implements WeekView.EventClickListe
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
@@ -85,7 +90,19 @@ public class AgendaFragment extends Fragment implements WeekView.EventClickListe
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
         View view = inflater.inflate(R.layout.fragment_agenda, container, false);
+        setHasOptionsMenu(true);
+
+        FloatingActionButton mRdvButton = (FloatingActionButton) view.findViewById(R.id.addRdvButton);
+
+        mRdvButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent toCreateRdvIntentButton = (new Intent(getActivity(), CreatRdvActivity.class));
+                startActivity(toCreateRdvIntentButton);
+            }
+        });
 
         String idConnectUser = getArguments().getString("idConnectUser");
 
@@ -158,24 +175,20 @@ public class AgendaFragment extends Fragment implements WeekView.EventClickListe
         void onFragmentInteraction(Uri uri);
     }
 
-    /*@Override
+    @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.main, menu);
-    }*/
-
-    /*@Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getActivity().getMenuInflater().inflate(R.menu.main, menu);
-        return true;
-    }*/
-
+    }
 
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         setupDateTimeInterpreter(id == R.id.action_week_view);
+
+
+
         switch (id){
             case R.id.action_today:
                 mWeekView.goToToday();
@@ -254,17 +267,18 @@ public class AgendaFragment extends Fragment implements WeekView.EventClickListe
 
     @Override
     public void onEventClick(WeekViewEvent event, RectF eventRect) {
-        //Toast.makeText(this, "Clicked " + event.getName(), Toast.LENGTH_SHORT).show();
+        Toast.makeText(getActivity(), "Clicked " + event.getName(), Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onEventLongPress(WeekViewEvent event, RectF eventRect) {
-        //Toast.makeText(this, "Long pressed event: " + event.getName(), Toast.LENGTH_SHORT).show();
+
     }
 
     @Override
     public void onEmptyViewLongPress(Calendar time) {
-        //Toast.makeText(this, "Empty view long pressed: " + getEventTitle(time), Toast.LENGTH_SHORT).show();
+        Intent toCreateRdvIntent = (new Intent(getActivity(), CreatRdvActivity.class));
+        startActivity(toCreateRdvIntent);
 
     }
 
