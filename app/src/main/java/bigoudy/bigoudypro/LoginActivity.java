@@ -15,6 +15,9 @@ import android.widget.TextView;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import org.apache.commons.codec.binary.Hex;
+import org.apache.commons.codec.digest.DigestUtils;
+
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -89,15 +92,16 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 mailUser = editTextEmail.getText().toString();
                 passwordUser = editTextPassword.getText().toString();
                 String action = "connectUser";
+                final String passwordUserSha1 = new String(Hex.encodeHex(DigestUtils.sha1(passwordUser)));
 
-                Call<UserModel> userModelCall = serviceApi.getUserModel(action, mailUser, passwordUser);
+                Call<UserModel> userModelCall = serviceApi.getUserModel(action, mailUser, passwordUserSha1);
 
                 userModelCall.enqueue(new Callback<UserModel>() {
                     @Override
                     public void onResponse(Call<UserModel> call, Response<UserModel> userModelResponse) {
                         if (userModelResponse.body().getIdConnectedUser() != "-1" & userModelResponse != null) {
                             PreferenceManager.getDefaultSharedPreferences(LoginActivity.this).edit().putString("bigoudyMailUser", mailUser).commit();
-                            PreferenceManager.getDefaultSharedPreferences(LoginActivity.this).edit().putString("bigoudyPasswordUser", passwordUser).commit();
+                            PreferenceManager.getDefaultSharedPreferences(LoginActivity.this).edit().putString("bigoudyPasswordUser", passwordUserSha1).commit();
                             startActivity(new Intent(LoginActivity.this, MainActivity.class));
                         }
                     }

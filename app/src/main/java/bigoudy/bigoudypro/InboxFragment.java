@@ -7,6 +7,9 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
+
 
 
 /**
@@ -20,6 +23,7 @@ import android.view.ViewGroup;
 public class InboxFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
+    private WebView mWebView;
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
@@ -61,9 +65,13 @@ public class InboxFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
+
         View view = inflater.inflate(R.layout.fragment_inbox, container, false);
+        mWebView = (WebView) view.findViewById(R.id.webview); mWebView.loadUrl("https://www.bigoudychat.ovh/chat.php");
+
+        WebSettings webSettings = mWebView.getSettings();
+        webSettings.setJavaScriptEnabled(true);
         //String idConnectUser = getArguments().getString("idConnectUser");
         // Inflate the layout for this fragment
         return view;
@@ -93,6 +101,7 @@ public class InboxFragment extends Fragment {
         mListener = null;
     }
 
+
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
@@ -106,5 +115,9 @@ public class InboxFragment extends Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
+
     }
+
 }
+
+
