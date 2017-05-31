@@ -267,7 +267,8 @@ public class AgendaFragment extends Fragment implements WeekView.EventClickListe
 
     @Override
     public void onEventClick(WeekViewEvent event, RectF eventRect) {
-        Toast.makeText(getActivity(), "Clicked " + event.getName(), Toast.LENGTH_SHORT).show();
+        Intent toCreateRdvIntent = (new Intent(getActivity(), CreatRdvActivity.class));
+        startActivity(toCreateRdvIntent);
     }
 
     @Override
@@ -277,8 +278,7 @@ public class AgendaFragment extends Fragment implements WeekView.EventClickListe
 
     @Override
     public void onEmptyViewLongPress(Calendar time) {
-        Intent toCreateRdvIntent = (new Intent(getActivity(), CreatRdvActivity.class));
-        startActivity(toCreateRdvIntent);
+
 
     }
 
