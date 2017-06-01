@@ -7,6 +7,9 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
+
+import java.util.ArrayList;
 
 
 /**
@@ -65,6 +68,20 @@ public class BookingFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_booking, container, false);
         String idConnectUser = getArguments().getString("idConnectUser");
+
+        final ArrayList<FakeBooking> bookingArrayList = new ArrayList<>();
+
+        bookingArrayList.add(new FakeBooking("http://www.humoristique.info/images-droles/animaux/percing+sur+un+singe+punk.jpg", "29/05/17 12h00", "Toto Caca", "Coupe","230€"));
+        bookingArrayList.add(new FakeBooking("https://s-media-cache-ak0.pinimg.com/736x/1c/d0/b0/1cd0b044ed429acbe18f2ba4eae5b89d.jpg", "29/05/17 14h00", "Rikcore C.", "Coupe","20€"));
+        bookingArrayList.add(new FakeBooking("https://img.20mn.fr/SDJvH_FxTvms1VBuVcBz2A/830x532_plateau-the-tonight-show-starring-jimmy-fallon-legendaire-coiffure-donald-trump-pris-sacre-coup", "29/05/17 16h00", "Donald T.", "Couleur","987€"));
+        bookingArrayList.add(new FakeBooking("http://img1.ndsstatic.com/chien/un-bebe-singe-a-la-coiffure-avant-gardiste_181845_w620.jpg", "29/05/17 18h00", "Sarah T.", "Brushing","24€"));
+        bookingArrayList.add(new FakeBooking("http://zupimages.net/viewer.php?id=17/22/e6th.jpg", "29/05/17 19h00", "Bruno M.", "Shampoing","30€"));
+
+        final BookingAdapter bookingAdapter = new BookingAdapter(getActivity(), bookingArrayList);
+
+        ListView listViewBooking = (ListView)view.findViewById(R.id.listViewBooking);
+
+        listViewBooking.setAdapter(bookingAdapter);
         // Inflate the layout for this fragment
         return view;
     }
