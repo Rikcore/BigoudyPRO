@@ -22,20 +22,20 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class BookingAdapter extends BaseAdapter {
 
     private Context context;
-    private ArrayList<FakeBooking> bookingArrayList;
+    private ArrayList<Meeting> meetingArrayList;
 
-    public BookingAdapter (Context context, ArrayList<FakeBooking> bookingArrayList){
+    public BookingAdapter (Context context, ArrayList<Meeting> meetingArrayList){
         this.context = context;
-        this.bookingArrayList = bookingArrayList;
+        this.meetingArrayList = meetingArrayList;
     }
     @Override
     public int getCount() {
-        return this.bookingArrayList.size();
+        return this.meetingArrayList.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return this.bookingArrayList.get(position);
+        return this.meetingArrayList.get(position);
     }
 
     @Override
@@ -50,7 +50,7 @@ public class BookingAdapter extends BaseAdapter {
                     inflate(R.layout.booking_item, parent, false);
         }
 
-        FakeBooking currentRdv = (FakeBooking)getItem(position);
+        Meeting currentRdv = (Meeting) getItem(position);
 
         CircleImageView imageViewAvatar = (CircleImageView)convertView.findViewById(R.id.imageViewAvatar);
         TextView textViewName = (TextView)convertView.findViewById(R.id.textViewUser);
@@ -60,13 +60,13 @@ public class BookingAdapter extends BaseAdapter {
 
         Picasso
                 .with(this.context)
-                .load(Uri.parse(currentRdv.getUriAvatar()))
+                .load(Uri.parse(currentRdv.getIdMeeting()))
                 .into(imageViewAvatar);
 
-        textViewName.setText(currentRdv.getFirstNameLastName());
-        textViewDate.setText(currentRdv.getDateRdv());
-        textViewCoupe.setText(currentRdv.getCoupe());
-        textViewPrice.setText(currentRdv.getPriceAdresse());
+        textViewName.setText(currentRdv.getFirstnameCustomer());
+        textViewDate.setText(currentRdv.getDateMeeting());
+        textViewCoupe.setText(currentRdv.getPerformances().get(position).getLibPerformance());
+        textViewPrice.setText(currentRdv.getAmmountWithTimeIncreaseHT());
 
 
 

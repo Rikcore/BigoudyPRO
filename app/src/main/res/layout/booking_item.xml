@@ -2,7 +2,9 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@drawable/design_listview"
+    android:paddingBottom="3dp">
 
     <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/imageViewAvatar"
@@ -13,8 +15,7 @@
         android:layout_marginStart="13dp"
         android:layout_marginTop="11dp"
         android:src="@mipmap/logobigoudy"
-        app:civ_border_color="#FF000000"
-        app:civ_border_width="2dp" />
+        />
 
     <TextView
         android:id="@+id/textViewUser"
@@ -24,6 +25,7 @@
         android:layout_marginStart="33dp"
         android:layout_toEndOf="@+id/imageViewAvatar"
         android:text="Toto Caca"
+        android:textSize="17dp"
         android:textStyle="bold"/>
 
     <ImageView
@@ -32,7 +34,7 @@
         android:layout_height="15dp"
         android:layout_alignStart="@+id/textViewUser"
         android:layout_below="@+id/textViewUser"
-        android:layout_marginTop="13dp"
+        android:layout_marginTop="20dp"
         app:srcCompat="@mipmap/clock_copy_3" />
 
     <ImageView
@@ -49,7 +51,7 @@
         android:layout_width="15dp"
         android:layout_height="15dp"
         app:srcCompat="@mipmap/scissors_opened_tool_copy_3"
-        android:layout_alignBottom="@+id/textViewUser"
+        android:layout_alignBottom="@+id/textViewCoupe"
         android:layout_alignStart="@+id/imageViewEuro" />
 
     <TextView
@@ -57,9 +59,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="TextView"
-        android:layout_alignTop="@+id/imageViewCoupe"
-        android:layout_toEndOf="@+id/imageViewCoupe"
-        android:layout_marginStart="13dp" />
+        android:layout_marginStart="13dp"
+        android:layout_alignTop="@+id/textViewUser"
+        android:layout_toEndOf="@+id/imageViewCoupe" />
 
     <TextView
         android:id="@+id/textViewPrice"
