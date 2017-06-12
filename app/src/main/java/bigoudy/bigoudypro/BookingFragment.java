@@ -76,17 +76,47 @@ public class BookingFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_booking, container, false);
+        final View view = inflater.inflate(R.layout.fragment_booking, container, false);
+        final ListView listViewBooking = (ListView)view.findViewById(R.id.listViewBooking);
 
-       // BookingModel bookingModel = new BookingModel();
-        final ArrayList<Meeting> meetingArrayList = (ArrayList<Meeting>)bookingModel.getMeetings();
+        String action = "getIncomingMeetingByBigouderId";
+        String idConnectUserString = getArguments().getString("idConnectUser");
+        Integer id = new Integer(idConnectUserString).intValue();
+        String filter = "demand";
+
+        OkHttpClient client = new OkHttpClient();
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("https://www.bigoudychat.ovh/app/resources/")
+                .client(client)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        ServiceApi serviceApi = retrofit.create(ServiceApi.class);
+
+        final Call<BookingModel> bookingModelCall = serviceApi.getBookingModel(action, id, filter);
+
+        bookingModelCall.enqueue(new Callback<BookingModel>() {
+            @Override
+            public void onResponse(Call<BookingModel> call, Response<BookingModel> response) {
+                bookingModel = response.body();
+                final ArrayList<Meeting> meetingArrayList = (ArrayList<Meeting>)bookingModel.getMeetings();
 
 
-        final BookingAdapter bookingAdapter = new BookingAdapter(getActivity(), meetingArrayList);
+                final BookingAdapter bookingAdapter = new BookingAdapter(getActivity(), meetingArrayList);
 
-        ListView listViewBooking = (ListView)view.findViewById(R.id.listViewBooking);
+                listViewBooking.setAdapter(bookingAdapter);
 
-        listViewBooking.setAdapter(bookingAdapter);
+            }
+
+            @Override
+            public void onFailure(Call<BookingModel> call, Throwable t) {
+                String tata = "tata";
+
+            }
+        });
+
+
+
         // Inflate the layout for this fragment
         return view;
     }
@@ -107,31 +137,7 @@ public class BookingFragment extends Fragment {
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");
         }
-        String idConnectUser = getArguments().getString("idConnectUser");
-        String action = "getIncomingMeetingByBigouderId";
-        OkHttpClient client = new OkHttpClient();
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://www.bigoudychat.ovh/app/ressources/")
-                .client(client)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
 
-        ServiceApi serviceApi = retrofit.create(ServiceApi.class);
-
-        Call<BookingModel> bookingModelCall = serviceApi.getBookingModel(action, idConnectUser, "demand");
-
-        bookingModelCall.enqueue(new Callback<BookingModel>() {
-            @Override
-            public void onResponse(Call<BookingModel> call, Response<BookingModel> response) {
-                bookingModel = response.body();
-
-            }
-
-            @Override
-            public void onFailure(Call<BookingModel> call, Throwable t) {
-
-            }
-        });
     }
 
     @Override

@@ -25,7 +25,7 @@ public interface ServiceApi {
     @POST("meeting.php")
     Call<BookingModel> getBookingModel(
             @Field("action") String action,
-            @Field("idBigouder") String idBigouder,
-            @Field("filterDemande") String filterDemand
+            @Field("idBigouder") Integer idBigouder,
+            @Field("filterDemand") String filterDemand
     );
 }

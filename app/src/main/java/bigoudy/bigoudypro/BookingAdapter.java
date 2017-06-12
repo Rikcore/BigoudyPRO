@@ -58,9 +58,12 @@ public class BookingAdapter extends BaseAdapter {
         TextView textViewCoupe = (TextView)convertView.findViewById(R.id.textViewCoupe);
         TextView textViewPrice = (TextView)convertView.findViewById(R.id.textViewPrice);
 
+        String urlAvatar = currentRdv.getLinkAvatarCustomer();
+        String urlFull = "https://www.bigoudychat.ovh/"+urlAvatar;
+
         Picasso
                 .with(this.context)
-                .load(Uri.parse(currentRdv.getIdMeeting()))
+                .load(Uri.parse(urlFull))
                 .into(imageViewAvatar);
 
         textViewName.setText(currentRdv.getFirstnameCustomer());
