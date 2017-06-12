@@ -20,4 +20,12 @@ public interface ServiceApi {
             @Field("mailUser") String mailUser,
             @Field("passwordUser") String passWordUser
     );
+
+    @FormUrlEncoded
+    @POST("meeting.php")
+    Call<BookingModel> getBookingModel(
+            @Field("action") String action,
+            @Field("idBigouder") Integer idBigouder,
+            @Field("filterDemand") String filterDemand
+    );
 }

@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/design_listview"
+    android:paddingBottom="3dp">
+
+    <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/imageViewAvatar"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="13dp"
+        android:layout_marginTop="11dp"
+        android:src="@mipmap/logobigoudy"
+        />
+
+    <TextView
+        android:id="@+id/textViewUser"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/imageViewAvatar"
+        android:layout_marginStart="33dp"
+        android:layout_toEndOf="@+id/imageViewAvatar"
+        android:text="Toto Caca"
+        android:textSize="17dp"
+        android:textStyle="bold"/>
+
+    <ImageView
+        android:id="@+id/imageViewClock"
+        android:layout_width="15dp"
+        android:layout_height="15dp"
+        android:layout_alignStart="@+id/textViewUser"
+        android:layout_below="@+id/textViewUser"
+        android:layout_marginTop="20dp"
+        app:srcCompat="@mipmap/clock_copy_3" />
+
+    <ImageView
+        android:id="@+id/imageViewEuro"
+        android:layout_width="15dp"
+        android:layout_height="15dp"
+        app:srcCompat="@mipmap/copy_3"
+        android:layout_marginEnd="97dp"
+        android:layout_alignTop="@+id/imageViewClock"
+        android:layout_alignParentEnd="true" />
+
+    <ImageView
+        android:id="@+id/imageViewCoupe"
+        android:layout_width="15dp"
+        android:layout_height="15dp"
+        app:srcCompat="@mipmap/scissors_opened_tool_copy_3"
+        android:layout_alignBottom="@+id/textViewCoupe"
+        android:layout_alignStart="@+id/imageViewEuro" />
+
+    <TextView
+        android:id="@+id/textViewCoupe"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TextView"
+        android:layout_marginStart="13dp"
+        android:layout_alignTop="@+id/textViewUser"
+        android:layout_toEndOf="@+id/imageViewCoupe" />
+
+    <TextView
+        android:id="@+id/textViewPrice"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/imageViewEuro"
+        android:layout_alignStart="@+id/textViewCoupe"
+        android:text="TextView" />
+
+    <TextView
+        android:id="@+id/textViewDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/imageViewClock"
+        android:layout_marginStart="14dp"
+        android:layout_toEndOf="@+id/imageViewClock"
+        android:text="TextView" />
+
+</RelativeLayout>
