@@ -1,12 +1,16 @@
 package bigoudy.bigoudypro;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import java.util.ArrayList;
@@ -42,6 +46,10 @@ public class BookingFragment extends Fragment {
     private BookingModel bookingModel;
     private OnFragmentInteractionListener mListener;
 
+    MeetingDetailFragment meetingDetailFragment;
+    FragmentManager fragmentManager;
+    android.support.v7.app.ActionBar actionBar;
+
     public BookingFragment() {
         // Required empty public constructor
     }
@@ -76,13 +84,20 @@ public class BookingFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+        fragmentManager = getFragmentManager();
+        meetingDetailFragment = new MeetingDetailFragment();
+
         final View view = inflater.inflate(R.layout.fragment_booking, container, false);
         final ListView listViewBooking = (ListView)view.findViewById(R.id.listViewBooking);
+
+        actionBar = ((AppCompatActivity)getActivity()).getSupportActionBar();
+        actionBar.hide();
 
         String action = "getIncomingMeetingByBigouderId";
         String idConnectUserString = getArguments().getString("idConnectUser");
         Integer id = new Integer(idConnectUserString).intValue();
-        String filter = "demand";
+        String filter = "";
 
         OkHttpClient client = new OkHttpClient();
         Retrofit retrofit = new Retrofit.Builder()
@@ -111,6 +126,21 @@ public class BookingFragment extends Fragment {
             @Override
             public void onFailure(Call<BookingModel> call, Throwable t) {
                 String tata = "tata";
+
+            }
+        });
+
+        listViewBooking.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Meeting selectedMeeting = bookingModel.getMeetings().get(position);
+                Bundle bundleDetails = new Bundle();
+                bundleDetails.putSerializable("meetingDetails", selectedMeeting);
+                meetingDetailFragment.setArguments(bundleDetails);
+                fragmentManager
+                        .beginTransaction()
+                        .replace(R.id.contentLayout, meetingDetailFragment, meetingDetailFragment.getTag())
+                        .commit();
 
             }
         });
@@ -144,6 +174,7 @@ public class BookingFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+        actionBar.show();
     }
 
     /**

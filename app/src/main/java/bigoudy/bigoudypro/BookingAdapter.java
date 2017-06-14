@@ -54,9 +54,13 @@ public class BookingAdapter extends BaseAdapter {
 
         CircleImageView imageViewAvatar = (CircleImageView)convertView.findViewById(R.id.imageViewAvatar);
         TextView textViewName = (TextView)convertView.findViewById(R.id.textViewUser);
+        Fonts.setFontButler(context, textViewName);
         TextView textViewDate = (TextView)convertView.findViewById(R.id.textViewDate);
+        Fonts.setFontMontSerrat(context, textViewDate);
         TextView textViewCoupe = (TextView)convertView.findViewById(R.id.textViewCoupe);
+        Fonts.setFontMontSerrat(context, textViewCoupe);
         TextView textViewPrice = (TextView)convertView.findViewById(R.id.textViewPrice);
+        Fonts.setFontMontSerrat(context, textViewPrice);
 
         String urlAvatar = currentRdv.getLinkAvatarCustomer();
         String urlFull = "https://www.bigoudychat.ovh/"+urlAvatar;
@@ -68,7 +72,7 @@ public class BookingAdapter extends BaseAdapter {
 
         textViewName.setText(currentRdv.getFirstnameCustomer());
         textViewDate.setText(currentRdv.getDateMeeting());
-        textViewCoupe.setText(currentRdv.getPerformances().get(position).getLibPerformance());
+        textViewCoupe.setText(currentRdv.getPerformances().get(0).getLibPerformance());
         textViewPrice.setText(currentRdv.getAmmountWithTimeIncreaseHT());
 
 

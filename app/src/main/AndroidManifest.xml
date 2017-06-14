@@ -21,8 +21,8 @@
         </activity>
         <activity
             android:name=".LoginActivity"
-            android:theme="@style/notitlebar"></activity>
-        <activity android:name=".CreatRdvActivity"></activity>
+            android:theme="@style/notitlebar" />
+        <activity android:name=".CreatRdvActivity" />
     </application>
 
 </manifest>
