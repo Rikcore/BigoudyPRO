@@ -1,5 +1,6 @@
 package bigoudy.bigoudypro;
 
+
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Typeface;
@@ -21,7 +22,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class MainActivity extends AppCompatActivity implements InboxFragment.OnFragmentInteractionListener, AgendaFragment.OnFragmentInteractionListener, BookingFragment.OnFragmentInteractionListener {
+public class MainActivity extends AppCompatActivity implements InboxFragment.OnFragmentInteractionListener, AgendaFragment.OnFragmentInteractionListener, BookingFragment.OnFragmentInteractionListener, MeetingDetailFragment.OnFragmentInteractionListener {
 
     InboxFragment inboxFragment;
     AgendaFragment agendaFragment;
