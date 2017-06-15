@@ -6,12 +6,17 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListView;
+import android.widget.TabHost;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 
@@ -23,6 +28,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 import static android.R.attr.id;
+import static bigoudy.bigoudypro.R.id.listViewBooking;
 
 
 /**
@@ -39,11 +45,17 @@ public class BookingFragment extends Fragment {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
+
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    Button btn_tout, btn_resa, btn_accept;
+
+
 
     private BookingModel bookingModel;
+    private BookingAdapter bookingAdapter;
+    private ListView listViewBooking;
     private OnFragmentInteractionListener mListener;
 
     MeetingDetailFragment meetingDetailFragment;
@@ -78,23 +90,75 @@ public class BookingFragment extends Fragment {
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
+
         }
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(final LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+        final View view = inflater.inflate(R.layout.fragment_booking, container, false);
+
+        filterMeeting("");
+
+        btn_tout = (Button)view.findViewById(R.id.btn_tout);
+        btn_tout.setBackground(getResources().getDrawable(R.drawable.btn_selected));
+        btn_tout.setTextColor(getResources().getColor(R.color.white));
+        btn_tout.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                filterMeeting("");
+                btn_tout.setBackground(getResources().getDrawable(R.drawable.btn_selected));
+                btn_resa.setBackground(getResources().getDrawable(R.drawable.btn_gris));
+                btn_accept.setBackground(getResources().getDrawable(R.drawable.btn_gris));
+                btn_tout.setTextColor(getResources().getColor(R.color.white));
+                btn_resa.setTextColor(getResources().getColor(R.color.black));
+                btn_accept.setTextColor(getResources().getColor(R.color.black));
+
+            }
+         });
+
+        btn_resa = (Button)view.findViewById(R.id.btn_resa);
+        btn_resa.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                filterMeeting("demand");
+                btn_tout.setBackground(getResources().getDrawable(R.drawable.btn_gris));
+                btn_resa.setBackground(getResources().getDrawable(R.drawable.btn_selected));
+                btn_accept.setBackground(getResources().getDrawable(R.drawable.btn_gris));
+                btn_tout.setTextColor(getResources().getColor(R.color.black));
+                btn_resa.setTextColor(getResources().getColor(R.color.white));
+                btn_accept.setTextColor(getResources().getColor(R.color.black));
+
+            }
+        });
+
+        btn_accept = (Button)view.findViewById(R.id.btn_accept);
+        btn_accept.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                filterMeeting("incoming");
+                btn_tout.setBackground(getResources().getDrawable(R.drawable.btn_gris));
+                btn_resa.setBackground(getResources().getDrawable(R.drawable.btn_gris));
+                btn_accept.setBackground(getResources().getDrawable(R.drawable.btn_selected));
+                btn_tout.setTextColor(getResources().getColor(R.color.black));
+                btn_resa.setTextColor(getResources().getColor(R.color.black));
+                btn_accept.setTextColor(getResources().getColor(R.color.white));
+            }
+        });
+
 
         fragmentManager = getFragmentManager();
         meetingDetailFragment = new MeetingDetailFragment();
 
-        final View view = inflater.inflate(R.layout.fragment_booking, container, false);
-        final ListView listViewBooking = (ListView)view.findViewById(R.id.listViewBooking);
+        listViewBooking = (ListView)view.findViewById(R.id.listViewBooking);
+
 
         actionBar = ((AppCompatActivity)getActivity()).getSupportActionBar();
         actionBar.hide();
 
-        String action = "getIncomingMeetingByBigouderId";
+       /* String action = "getIncomingMeetingByBigouderId";
         String idConnectUserString = getArguments().getString("idConnectUser");
         Integer id = new Integer(idConnectUserString).intValue();
         String filter = "";
@@ -121,14 +185,17 @@ public class BookingFragment extends Fragment {
 
                 listViewBooking.setAdapter(bookingAdapter);
 
+
             }
+
+
 
             @Override
             public void onFailure(Call<BookingModel> call, Throwable t) {
                 String tata = "tata";
 
             }
-        });
+        });*/
 
         listViewBooking.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -149,7 +216,11 @@ public class BookingFragment extends Fragment {
 
         // Inflate the layout for this fragment
         return view;
+
+
     }
+
+
 
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
@@ -191,4 +262,51 @@ public class BookingFragment extends Fragment {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
+
+    public void filterMeeting(String filter){
+
+        String action = "getIncomingMeetingByBigouderId";
+        String idConnectUserString = getArguments().getString("idConnectUser");
+        Integer id = new Integer(idConnectUserString).intValue();
+
+        OkHttpClient client = new OkHttpClient();
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("https://www.bigoudychat.ovh/app/resources/")
+                .client(client)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        ServiceApi serviceApi = retrofit.create(ServiceApi.class);
+
+        final Call<BookingModel> bookingModelCall = serviceApi.getBookingModel(action, id, filter);
+
+        bookingModelCall.enqueue(new Callback<BookingModel>() {
+            @Override
+            public void onResponse(Call<BookingModel> call, Response<BookingModel> response) {
+                bookingModel = response.body();
+                final ArrayList<Meeting> meetingArrayList = (ArrayList<Meeting>)bookingModel.getMeetings();
+
+
+                bookingAdapter = new BookingAdapter(getActivity(), meetingArrayList);
+
+                listViewBooking.setAdapter(bookingAdapter);
+
+
+            }
+
+
+
+            @Override
+            public void onFailure(Call<BookingModel> call, Throwable t) {
+                String tata = "tata";
+
+            }
+        });
+
+
+    }
+
+
+
+
 }
