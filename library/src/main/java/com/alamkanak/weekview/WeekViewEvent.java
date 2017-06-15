@@ -1,5 +1,7 @@
 package com.alamkanak.weekview;
 
+import android.nfc.Tag;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -57,6 +59,7 @@ public class WeekViewEvent {
 
         this.mName = name;
     }
+
 
     /**
      * Initializes the event for week view.

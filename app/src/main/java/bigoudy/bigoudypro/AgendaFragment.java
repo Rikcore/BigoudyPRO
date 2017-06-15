@@ -28,6 +28,13 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
+import okhttp3.OkHttpClient;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -48,6 +55,10 @@ public class AgendaFragment extends Fragment implements WeekView.EventClickListe
     private int mWeekViewType = TYPE_THREE_DAY_VIEW;
     private WeekView mWeekView;
     private FloatingActionButton mRdvButton;
+
+    List<WeekViewEvent> events;
+
+    BookingModel bookingModel;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -105,11 +116,11 @@ public class AgendaFragment extends Fragment implements WeekView.EventClickListe
         });
 
         String idConnectUser = getArguments().getString("idConnectUser");
+        bookingModel = (BookingModel) getArguments().getSerializable("bookingModel");
+
+        //callModel(idConnectUser);
 
         // Inflate the layout for this fragment
-
-
-        //String idConnectUser = getArguments().getString("idConnectUser");
 
         // Get a reference for the week view in the layout.
         mWeekView = (WeekView) view.findViewById(R.id.weekView);
@@ -285,58 +296,21 @@ public class AgendaFragment extends Fragment implements WeekView.EventClickListe
     @Override
     public List<? extends WeekViewEvent> onMonthChange(int newYear, int newMonth) {
         // Populate the week view with some events.
-        List<WeekViewEvent> events = new ArrayList<WeekViewEvent>();
+        events = new ArrayList<WeekViewEvent>();
 
-        Calendar startTime = Calendar.getInstance();
-        startTime.set(Calendar.HOUR_OF_DAY, 10);
-        startTime.set(Calendar.MINUTE, 0);
-        startTime.set(Calendar.MONTH, newMonth - 1);
-        startTime.set(Calendar.YEAR, newYear);
-        Calendar endTime = (Calendar) startTime.clone();
-        endTime.add(Calendar.HOUR, 1);
-        endTime.set(Calendar.MONTH, newMonth - 1);
-        WeekViewEvent event = new WeekViewEvent(1, getEventTitle(startTime), startTime, endTime);
-        event.setColor(getResources().getColor(R.color.bigoudylightgold));
-        events.add(event);
 
-        startTime = Calendar.getInstance();
-        startTime.set(Calendar.HOUR_OF_DAY, 13);
-        startTime.set(Calendar.MINUTE, 30);
-        startTime.set(Calendar.MONTH, newMonth-1);
-        startTime.set(Calendar.YEAR, newYear);
-        endTime = (Calendar) startTime.clone();
-        endTime.set(Calendar.HOUR_OF_DAY, 14);
-        endTime.set(Calendar.MINUTE, 30);
-        endTime.set(Calendar.MONTH, newMonth-1);
-        event = new WeekViewEvent(10, getEventTitle(startTime), startTime, endTime);
-        event.setColor(getResources().getColor(R.color.bigoudystronggold));
-        events.add(event);
-
-        startTime = Calendar.getInstance();
-        startTime.set(Calendar.DAY_OF_MONTH, 18);
-        startTime.set(Calendar.HOUR_OF_DAY, 14);
-        startTime.set(Calendar.MINUTE, 0);
-        startTime.set(Calendar.MONTH, newMonth-1);
-        startTime.set(Calendar.YEAR, newYear);
-        endTime = (Calendar) startTime.clone();
-        endTime.add(Calendar.HOUR_OF_DAY, 2);
-        event = new WeekViewEvent(4, getEventTitle(startTime), startTime, endTime);
-        event.setColor(getResources().getColor(R.color.bigoudylightgold));
-        events.add(event);
-
-        startTime = Calendar.getInstance();
-        startTime.set(Calendar.HOUR_OF_DAY, 14);
-        startTime.set(Calendar.MINUTE, 50);
-        startTime.set(Calendar.MONTH, newMonth-1);
-        startTime.set(Calendar.YEAR, newYear);
-        endTime = (Calendar) startTime.clone();
-        endTime.set(Calendar.HOUR_OF_DAY, 16);
-        endTime.set(Calendar.MINUTE, 0);
-        event = new WeekViewEvent(10, getEventTitle(startTime), startTime, endTime);
-        event.setColor(getResources().getColor(R.color.bigoudystronggold));
-        events.add(event);
+            for (int i = 0; i < bookingModel.getMeetings().size(); i++) {
+                String date = bookingModel.getMeetings().get(i).getDateMeeting();
+                String heure = bookingModel.getMeetings().get(i).getBeginTimeAvailable();
+                WeekViewEvent event = bookingModel.getMeetings().get(i).getEvent(date, heure, newMonth, newYear, bookingModel, i);
+                if (event != null) {
+                    events.add(event);
+                }
+            }
 
         return events;
-}
+
+    }
+
 }
 
