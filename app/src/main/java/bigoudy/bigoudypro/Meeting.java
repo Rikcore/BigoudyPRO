@@ -4,9 +4,16 @@ package bigoudy.bigoudypro;
  * Created by M.C on 06/06/2017.
  */
 
+import android.content.Context;
+import android.graphics.Color;
+
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
+
+import com.alamkanak.weekview.WeekViewEvent;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -408,5 +415,45 @@ public class Meeting implements Serializable {
     public void setDiagnosticPhotos(List<Object> diagnosticPhotos) {
         this.diagnosticPhotos = diagnosticPhotos;
     }
+
+    public WeekViewEvent getEvent (String dateMeeting, String beginTimeAvailable, int newMonth, int newYear, BookingModel bookingModel, int position){
+
+        WeekViewEvent event;
+
+        String[] hourSplit = beginTimeAvailable.split(":");
+        int hour = Integer.valueOf(hourSplit[0]);
+        int minute = Integer.valueOf(hourSplit[1]);
+
+        String[] dateSplit = dateMeeting.split("-");
+        int year = Integer.valueOf(dateSplit[0]);
+        int month = Integer.valueOf(dateSplit[1]);
+        int day = Integer.valueOf(dateSplit[2]);
+
+        if (month == newMonth && year == newYear) {
+            Calendar starTime = Calendar.getInstance();
+            starTime.set(Calendar.HOUR_OF_DAY, hour);
+            starTime.set(Calendar.MINUTE, minute);
+            starTime.set(Calendar.DAY_OF_MONTH, day);
+            starTime.set(Calendar.MONTH, month - 1);
+            starTime.set(Calendar.YEAR, year);
+            Calendar endtime = (Calendar) starTime.clone();
+            endtime.add(Calendar.HOUR, 1);
+            String customerFirstName = bookingModel.getMeetings().get(position).getFirstnameCustomer();
+            String perf = bookingModel.getMeetings().get(position).getPerformances().get(0).getLibPerformance();
+            String rdv = customerFirstName+"\n"+perf;
+            event = new WeekViewEvent(1, rdv, starTime, endtime);
+            event.setColor(R.color.bigoudystronggold);
+            return event;
+
+
+        } else {
+            return null;
+
+        }
+
+
+
+    }
+
 
 }

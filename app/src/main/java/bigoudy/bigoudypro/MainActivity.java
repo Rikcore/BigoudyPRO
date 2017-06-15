@@ -15,6 +15,8 @@ import android.view.MenuItem;
 import android.support.v4.app.FragmentManager;
 
 
+import java.util.Calendar;
+
 import okhttp3.OkHttpClient;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -32,6 +34,7 @@ public class MainActivity extends AppCompatActivity implements InboxFragment.OnF
     String mailUser;
     String passwordUser;
     UserModel currentUser;
+    BookingModel bookingModel;
 
     ProgressDialog progressDialog;
 
@@ -135,11 +138,14 @@ public class MainActivity extends AppCompatActivity implements InboxFragment.OnF
                 bookingFragment.setArguments(bundle);
                 inboxFragment.setArguments(bundle);
                 agendaFragment.setArguments(bundle);
+                callModel(currentUser.getIdConnectedUser());
 
-                fragmentManager
+
+
+                /*fragmentManager
                         .beginTransaction()
                         .replace(R.id.contentLayout, agendaFragment, agendaFragment.getTag())
-                        .commit();
+                        .commit();*/
 
             }
 
@@ -148,6 +154,52 @@ public class MainActivity extends AppCompatActivity implements InboxFragment.OnF
 
             }
         });
+
+    }
+
+    public void callModel (final String idConnectUser){
+        final BookingModel model;
+        String action = "getIncomingMeetingByBigouderId";
+        Integer id = new Integer(idConnectUser).intValue();
+        final String[] filter = {"incoming"};
+
+        OkHttpClient client = new OkHttpClient();
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("https://www.bigoudychat.ovh/app/resources/")
+                .client(client)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        ServiceApi serviceApi = retrofit.create(ServiceApi.class);
+
+        final Call<BookingModel> bookingModelCall = serviceApi.getBookingModel(action, id, filter[0]);
+
+        bookingModelCall.enqueue(new Callback<BookingModel>() {
+            @Override
+            public void onResponse(Call<BookingModel> call, Response<BookingModel> response) {
+                bookingModel = response.body();
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("bookingModel", bookingModel);
+                bundle.putString("idConnectUser", idConnectUser);
+                agendaFragment.setArguments(bundle);
+                fragmentManager
+                        .beginTransaction()
+                        .replace(R.id.contentLayout, agendaFragment, agendaFragment.getTag())
+                        .commit();
+
+            }
+
+            @Override
+            public void onFailure(Call<BookingModel> call, Throwable t) {
+                String toto;
+
+            }
+        });
+
+        return;
+
+
+
 
     }
 
