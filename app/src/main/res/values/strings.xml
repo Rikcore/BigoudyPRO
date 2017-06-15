@@ -13,5 +13,8 @@
     <string name="title_activity_basic">Mois</string>
     <string name="title_activity_asynchronous">Asynchronous Events</string>
     <string name="async_error">Could not download events from the internet</string>
+    <string name="button_tout">Tout</string>
+    <string name="button_dmd_resa">Demandes de\n réservation</string>
+    <string name="button_resaok">Réservations acceptées</string>
 
 </resources>
