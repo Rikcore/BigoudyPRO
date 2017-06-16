@@ -60,7 +60,6 @@ public class BookingFragment extends Fragment {
 
     MeetingDetailFragment meetingDetailFragment;
     FragmentManager fragmentManager;
-    android.support.v7.app.ActionBar actionBar;
 
     public BookingFragment() {
         // Required empty public constructor
@@ -99,6 +98,7 @@ public class BookingFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         final View view = inflater.inflate(R.layout.fragment_booking, container, false);
+
 
         filterMeeting("");
 
@@ -153,49 +153,7 @@ public class BookingFragment extends Fragment {
         meetingDetailFragment = new MeetingDetailFragment();
 
         listViewBooking = (ListView)view.findViewById(R.id.listViewBooking);
-
-
-        actionBar = ((AppCompatActivity)getActivity()).getSupportActionBar();
-        actionBar.hide();
-
-       /* String action = "getIncomingMeetingByBigouderId";
-        String idConnectUserString = getArguments().getString("idConnectUser");
-        Integer id = new Integer(idConnectUserString).intValue();
-        String filter = "";
-
-        OkHttpClient client = new OkHttpClient();
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://www.bigoudychat.ovh/app/resources/")
-                .client(client)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        ServiceApi serviceApi = retrofit.create(ServiceApi.class);
-
-        final Call<BookingModel> bookingModelCall = serviceApi.getBookingModel(action, id, filter);
-
-        bookingModelCall.enqueue(new Callback<BookingModel>() {
-            @Override
-            public void onResponse(Call<BookingModel> call, Response<BookingModel> response) {
-                bookingModel = response.body();
-                final ArrayList<Meeting> meetingArrayList = (ArrayList<Meeting>)bookingModel.getMeetings();
-
-
-                final BookingAdapter bookingAdapter = new BookingAdapter(getActivity(), meetingArrayList);
-
-                listViewBooking.setAdapter(bookingAdapter);
-
-
-            }
-
-
-
-            @Override
-            public void onFailure(Call<BookingModel> call, Throwable t) {
-                String tata = "tata";
-
-            }
-        });*/
+        
 
         listViewBooking.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -245,7 +203,6 @@ public class BookingFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
-        actionBar.show();
     }
 
     /**

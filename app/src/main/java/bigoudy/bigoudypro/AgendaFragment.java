@@ -28,6 +28,7 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
+
 import okhttp3.OkHttpClient;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -55,6 +56,7 @@ public class AgendaFragment extends Fragment implements WeekView.EventClickListe
     private int mWeekViewType = TYPE_THREE_DAY_VIEW;
     private WeekView mWeekView;
     private FloatingActionButton mRdvButton;
+
 
     List<WeekViewEvent> events;
 
@@ -104,6 +106,7 @@ public class AgendaFragment extends Fragment implements WeekView.EventClickListe
 
         View view = inflater.inflate(R.layout.fragment_agenda, container, false);
         setHasOptionsMenu(true);
+
 
         FloatingActionButton mRdvButton = (FloatingActionButton) view.findViewById(R.id.addRdvButton);
 
