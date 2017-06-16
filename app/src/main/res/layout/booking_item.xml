@@ -40,16 +40,16 @@
         android:layout_width="15dp"
         android:layout_height="15dp"
         app:srcCompat="@mipmap/copy_3"
-        android:layout_marginEnd="97dp"
-        android:layout_alignTop="@+id/imageViewClock"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignTop="@+id/textViewDate"
+        android:layout_toEndOf="@+id/textViewDetails"
+        android:layout_marginStart="80dp" />
 
     <ImageView
         android:id="@+id/imageViewCoupe"
         android:layout_width="15dp"
         android:layout_height="15dp"
         app:srcCompat="@mipmap/scissors_opened_tool_copy_3"
-        android:layout_alignBottom="@+id/textViewCoupe"
+        android:layout_alignTop="@+id/textViewCoupe"
         android:layout_alignStart="@+id/imageViewEuro" />
 
     <TextView
@@ -59,7 +59,8 @@
         android:textSize="15dp"
         android:layout_marginStart="13dp"
         android:layout_alignTop="@+id/textViewUser"
-        android:layout_toEndOf="@+id/imageViewCoupe" />
+        android:layout_toEndOf="@+id/imageViewCoupe"
+        />
 
     <TextView
         android:id="@+id/textViewPrice"
