@@ -31,6 +31,9 @@ public class MainActivity extends AppCompatActivity implements InboxFragment.OnF
     BookingFragment bookingFragment;
     FragmentManager fragmentManager;
 
+    android.support.v7.app.ActionBar actionBar;
+
+
     String mailUser;
     String passwordUser;
     UserModel currentUser;
@@ -45,6 +48,8 @@ public class MainActivity extends AppCompatActivity implements InboxFragment.OnF
         setContentView(R.layout.activity_main);
         progressDialog = new ProgressDialog(this);
         progressDialog.setMessage("Patientez");
+        actionBar = getSupportActionBar();
+        actionBar.setTitle("Agenda");
 
 
         String mailUser = PreferenceManager.getDefaultSharedPreferences(MainActivity.this).getString("bigoudyMailUser", null);
@@ -77,21 +82,27 @@ public class MainActivity extends AppCompatActivity implements InboxFragment.OnF
                 switch (item.getItemId()){
                     case R.id.navigation_inbox:
                         //Do what you need
+                        actionBar.hide();
                         fragmentManager
                                 .beginTransaction()
+                                .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
                                 .replace(R.id.contentLayout, inboxFragment, inboxFragment.getTag())
                                 .commit();
                         return true;
                     case R.id.navigation_agenda:
+                        actionBar.show();
                         fragmentManager
                                 .beginTransaction()
+                                .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
                                 .replace(R.id.contentLayout, agendaFragment, agendaFragment.getTag())
                                 .commit();
                         //Do what you need
                         return true;
                     case R.id.navigation_booking:
+                        actionBar.hide();
                         fragmentManager
                                 .beginTransaction()
+                                .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
                                 .replace(R.id.contentLayout, bookingFragment, bookingFragment.getTag())
                                 .commit();
                         //Do what you need
@@ -141,11 +152,6 @@ public class MainActivity extends AppCompatActivity implements InboxFragment.OnF
                 callModel(currentUser.getIdConnectedUser());
 
 
-
-                /*fragmentManager
-                        .beginTransaction()
-                        .replace(R.id.contentLayout, agendaFragment, agendaFragment.getTag())
-                        .commit();*/
 
             }
 
