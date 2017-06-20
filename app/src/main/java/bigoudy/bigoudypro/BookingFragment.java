@@ -54,7 +54,8 @@ public class BookingFragment extends Fragment {
 
 
     private BookingModel bookingModel;
-    private BookingAdapter bookingAdapter;
+    private SwipeBookingAdapter swipeBookingAdapter;
+    //private BookingAdapter bookingAdapter;
     private ListView listViewBooking;
     private OnFragmentInteractionListener mListener;
 
@@ -244,9 +245,10 @@ public class BookingFragment extends Fragment {
                 final ArrayList<Meeting> meetingArrayList = (ArrayList<Meeting>)bookingModel.getMeetings();
 
 
-                bookingAdapter = new BookingAdapter(getActivity(), meetingArrayList);
+                //bookingAdapter = new BookingAdapter(getActivity(), meetingArrayList);
+                swipeBookingAdapter = new SwipeBookingAdapter(getActivity(), meetingArrayList);
 
-                listViewBooking.setAdapter(bookingAdapter);
+                listViewBooking.setAdapter(swipeBookingAdapter);
 
 
             }

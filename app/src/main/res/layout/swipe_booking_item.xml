@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.daimajia.swipe.SwipeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/swipe"
+    android:layout_width="match_parent"
+    android:layout_height="100dp">
+    <!-- Bottom View Start-->
+    <LinearLayout
+        android:id="@+id/bottom_wrapper"
+        android:layout_width="160dp"
+        android:layout_height="match_parent"
+        android:background="#66ddff00"
+        android:orientation="horizontal"
+        android:weightSum="1">
+        <!--What you want to show-->
+    </LinearLayout>
+    <!-- Bottom View End-->
+
+    <!-- Surface View Start -->
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#ffffff">
+
+        <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/imageViewAvatar"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginStart="23dp"
+            android:layout_marginTop="8dp"
+            android:src="@mipmap/logobigoudy"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:layout_constraintLeft_creator="1"
+            tools:layout_constraintTop_creator="1" />
+
+        <TextView
+            android:id="@+id/textViewUser"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="8dp"
+            android:text="lkjkljlkjlkjjlkj"
+            android:textSize="20dp"
+            android:textStyle="bold"
+            app:layout_constraintLeft_toRightOf="@+id/imageViewAvatar"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:layout_constraintBottom_creator="1"
+            tools:layout_constraintLeft_creator="1"
+            tools:layout_constraintRight_creator="1"
+            tools:layout_constraintTop_creator="1" />
+
+        <ImageView
+            android:id="@+id/imageViewClock"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="16dp"
+            app:layout_constraintLeft_toRightOf="@+id/imageViewAvatar"
+            app:layout_constraintTop_toBottomOf="@+id/textViewUser"
+            app:srcCompat="@mipmap/clock_copy_3"
+            tools:layout_constraintBottom_creator="1"
+            tools:layout_constraintRight_creator="1"
+            tools:layout_constraintTop_creator="1" />
+
+        <ImageView
+            android:id="@+id/imageViewEuro"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:layout_marginLeft="96dp"
+            android:layout_marginTop="17dp"
+            app:layout_constraintLeft_toRightOf="@+id/textViewUser"
+            app:layout_constraintTop_toBottomOf="@+id/imageViewCoupe"
+            app:srcCompat="@mipmap/copy_3"
+            tools:layout_constraintBottom_creator="1"
+            tools:layout_constraintLeft_creator="1"
+            tools:layout_constraintTop_creator="1" />
+
+        <ImageView
+            android:id="@+id/imageViewCoupe"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:layout_marginLeft="64dp"
+            android:layout_marginTop="16dp"
+            app:layout_constraintLeft_toRightOf="@+id/textViewUser"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@mipmap/scissors_opened_tool_copy_3"
+            tools:layout_constraintRight_creator="1"
+            tools:layout_constraintTop_creator="1" />
+
+        <TextView
+            android:id="@+id/textViewCoupe"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="16dp"
+            android:text="jjjjj"
+            android:textSize="15dp"
+            app:layout_constraintLeft_toRightOf="@+id/imageViewCoupe"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:layout_constraintLeft_creator="1"
+            tools:layout_constraintTop_creator="1" />
+
+        <TextView
+            android:id="@+id/textViewPrice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="16dp"
+            android:text="kjjjj"
+            android:textSize="15dp"
+            app:layout_constraintLeft_toRightOf="@+id/imageViewEuro"
+            app:layout_constraintTop_toBottomOf="@+id/textViewCoupe"
+            tools:layout_constraintLeft_creator="1"
+            tools:layout_constraintRight_creator="1"
+            tools:layout_constraintTop_creator="1" />
+
+        <TextView
+            android:id="@+id/textViewDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="16dp"
+            android:text="klmlkml"
+            android:textSize="15dp"
+            app:layout_constraintLeft_toRightOf="@+id/imageViewClock"
+            app:layout_constraintTop_toBottomOf="@+id/textViewUser"
+            tools:layout_constraintLeft_creator="1"
+            tools:layout_constraintRight_creator="1"
+            tools:layout_constraintTop_creator="1" />
+
+        <TextView
+            android:id="@+id/textViewDétails"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="32dp"
+            android:layout_marginTop="16dp"
+            android:text="Détails"
+            app:layout_constraintLeft_toRightOf="@+id/imageViewAvatar"
+            app:layout_constraintTop_toBottomOf="@+id/textViewDate" />
+
+        <!--What you want to show in SurfaceView-->
+    </android.support.constraint.ConstraintLayout>
+    <!-- Surface View End -->
+</com.daimajia.swipe.SwipeLayout>
