@@ -231,7 +231,7 @@ public class BookingFragment extends Fragment {
                 bookingModel = response.body();
                 final ArrayList<Meeting> meetingArrayList = (ArrayList<Meeting>)bookingModel.getMeetings();
 
-                swipeBookingAdapter = new SwipeBookingAdapter(getActivity(), meetingArrayList, idConnectUser);
+                swipeBookingAdapter = new SwipeBookingAdapter(getActivity(), meetingArrayList, idConnectUser, BookingFragment.this);
 
                 listViewBooking.setAdapter(swipeBookingAdapter);
             }
