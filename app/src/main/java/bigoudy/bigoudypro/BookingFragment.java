@@ -1,22 +1,19 @@
 package bigoudy.bigoudypro;
 
 import android.content.Context;
-import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
-import android.widget.TabHost;
-import android.widget.TextView;
+import android.widget.Toast;
+
+import com.daimajia.swipe.SwipeLayout;
 
 import java.util.ArrayList;
 
@@ -27,8 +24,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-import static android.R.attr.id;
-import static bigoudy.bigoudypro.R.id.listViewBooking;
+
 
 
 /**
@@ -49,18 +45,23 @@ public class BookingFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-    Button btn_tout, btn_resa, btn_accept;
+    private SwipeLayout swipeLayout;
+    Button btn_tout, btn_demand, btn_incoming;
 
 
 
     private BookingModel bookingModel;
     private SwipeBookingAdapter swipeBookingAdapter;
-    //private BookingAdapter bookingAdapter;
     private ListView listViewBooking;
     private OnFragmentInteractionListener mListener;
 
     MeetingDetailFragment meetingDetailFragment;
     FragmentManager fragmentManager;
+    String idConnectUser;
+
+    Button buttonAccept;
+    Button buttonDecline;
+    Button buttonMessage;
 
     public BookingFragment() {
         // Required empty public constructor
@@ -96,56 +97,57 @@ public class BookingFragment extends Fragment {
 
     @Override
     public View onCreateView(final LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+                             final Bundle savedInstanceState) {
 
         final View view = inflater.inflate(R.layout.fragment_booking, container, false);
+        idConnectUser = getArguments().getString("idConnectUser");
 
 
-        filterMeeting("");
+        filterMeeting("demand");
 
         btn_tout = (Button)view.findViewById(R.id.btn_tout);
-        btn_tout.setBackground(getResources().getDrawable(R.drawable.btn_selected));
-        btn_tout.setTextColor(getResources().getColor(R.color.white));
         btn_tout.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
                 filterMeeting("");
                 btn_tout.setBackground(getResources().getDrawable(R.drawable.btn_selected));
-                btn_resa.setBackground(getResources().getDrawable(R.drawable.btn_gris));
-                btn_accept.setBackground(getResources().getDrawable(R.drawable.btn_gris));
+                btn_demand.setBackground(getResources().getDrawable(R.drawable.btn_gris));
+                btn_incoming.setBackground(getResources().getDrawable(R.drawable.btn_gris));
                 btn_tout.setTextColor(getResources().getColor(R.color.white));
-                btn_resa.setTextColor(getResources().getColor(R.color.black));
-                btn_accept.setTextColor(getResources().getColor(R.color.black));
+                btn_demand.setTextColor(getResources().getColor(R.color.black));
+                btn_incoming.setTextColor(getResources().getColor(R.color.black));
 
             }
          });
 
-        btn_resa = (Button)view.findViewById(R.id.btn_resa);
-        btn_resa.setOnClickListener(new View.OnClickListener() {
+        btn_demand = (Button)view.findViewById(R.id.btn_resa);
+        btn_demand.setBackground(getResources().getDrawable(R.drawable.btn_selected));
+        btn_demand.setTextColor(getResources().getColor(R.color.white));
+        btn_demand.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 filterMeeting("demand");
                 btn_tout.setBackground(getResources().getDrawable(R.drawable.btn_gris));
-                btn_resa.setBackground(getResources().getDrawable(R.drawable.btn_selected));
-                btn_accept.setBackground(getResources().getDrawable(R.drawable.btn_gris));
+                btn_demand.setBackground(getResources().getDrawable(R.drawable.btn_selected));
+                btn_incoming.setBackground(getResources().getDrawable(R.drawable.btn_gris));
                 btn_tout.setTextColor(getResources().getColor(R.color.black));
-                btn_resa.setTextColor(getResources().getColor(R.color.white));
-                btn_accept.setTextColor(getResources().getColor(R.color.black));
+                btn_demand.setTextColor(getResources().getColor(R.color.white));
+                btn_incoming.setTextColor(getResources().getColor(R.color.black));
 
             }
         });
 
-        btn_accept = (Button)view.findViewById(R.id.btn_accept);
-        btn_accept.setOnClickListener(new View.OnClickListener() {
+        btn_incoming = (Button)view.findViewById(R.id.btn_accept);
+        btn_incoming.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 filterMeeting("incoming");
                 btn_tout.setBackground(getResources().getDrawable(R.drawable.btn_gris));
-                btn_resa.setBackground(getResources().getDrawable(R.drawable.btn_gris));
-                btn_accept.setBackground(getResources().getDrawable(R.drawable.btn_selected));
+                btn_demand.setBackground(getResources().getDrawable(R.drawable.btn_gris));
+                btn_incoming.setBackground(getResources().getDrawable(R.drawable.btn_selected));
                 btn_tout.setTextColor(getResources().getColor(R.color.black));
-                btn_resa.setTextColor(getResources().getColor(R.color.black));
-                btn_accept.setTextColor(getResources().getColor(R.color.white));
+                btn_demand.setTextColor(getResources().getColor(R.color.black));
+                btn_incoming.setTextColor(getResources().getColor(R.color.white));
             }
         });
 
@@ -170,8 +172,6 @@ public class BookingFragment extends Fragment {
 
             }
         });
-
-
 
         // Inflate the layout for this fragment
         return view;
@@ -224,7 +224,7 @@ public class BookingFragment extends Fragment {
     public void filterMeeting(String filter){
 
         String action = "getIncomingMeetingByBigouderId";
-        String idConnectUserString = getArguments().getString("idConnectUser");
+        final String idConnectUserString = getArguments().getString("idConnectUser");
         Integer id = new Integer(idConnectUserString).intValue();
 
         OkHttpClient client = new OkHttpClient();
@@ -244,27 +244,18 @@ public class BookingFragment extends Fragment {
                 bookingModel = response.body();
                 final ArrayList<Meeting> meetingArrayList = (ArrayList<Meeting>)bookingModel.getMeetings();
 
-
-                //bookingAdapter = new BookingAdapter(getActivity(), meetingArrayList);
-                swipeBookingAdapter = new SwipeBookingAdapter(getActivity(), meetingArrayList);
+                swipeBookingAdapter = new SwipeBookingAdapter(getActivity(), meetingArrayList, idConnectUser);
 
                 listViewBooking.setAdapter(swipeBookingAdapter);
-
-
             }
-
-
 
             @Override
             public void onFailure(Call<BookingModel> call, Throwable t) {
-                String tata = "tata";
-
             }
         });
 
 
     }
-
 
 
 

@@ -4,13 +4,19 @@
         <shape android:shape="rectangle">
             <solid android:color="@color/bigoudymediumgold" />
             <corners android:radius="2dp"/>
+            <stroke android:color="@color/bigoudystronggold"
+                android:width="1dp">
+            </stroke>
         </shape>
     </item>
     <item android:right="1dp" android:left="1dp" android:bottom="1dp" android:top="1dp">
         <shape
             android:shape="rectangle">
-            <solid android:color="@android:color/white"/>
+            <solid android:color="@color/bigoudystronggold"/>
             <corners android:radius="2dp"/>
+            <stroke android:color="@color/bigoudystronggold"
+                android:width="1dp">
+            </stroke>
         </shape>
     </item>
 </layer-list>

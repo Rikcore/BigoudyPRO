@@ -8,12 +8,38 @@
     <!-- Bottom View Start-->
     <LinearLayout
         android:id="@+id/bottom_wrapper"
-        android:layout_width="160dp"
+        android:layout_width="250dp"
         android:layout_height="match_parent"
-        android:background="#66ddff00"
+        android:background="#FFFFFF"
         android:orientation="horizontal"
-        android:weightSum="1">
+        android:weightSum="3"
+        android:gravity="center">
         <!--What you want to show-->
+        <Button
+            android:id="@+id/buttonAccept"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="Accepter"
+            android:textColor="@color/white"
+            android:background="@drawable/btn_gold"/>
+
+        <Button
+            android:id="@+id/buttonDecline"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="Refuser"
+            android:textColor="@color/white"
+            android:background="@drawable/btn_rouge"/>
+
+        <Button
+            android:id="@+id/buttonMessage"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="Message"
+            android:background="@drawable/btn_bleu"/>
     </LinearLayout>
     <!-- Bottom View End-->
 

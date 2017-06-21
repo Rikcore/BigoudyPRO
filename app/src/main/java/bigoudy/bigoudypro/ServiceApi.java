@@ -28,4 +28,14 @@ public interface ServiceApi {
             @Field("idBigouder") Integer idBigouder,
             @Field("filterDemand") String filterDemand
     );
+
+    @FormUrlEncoded
+    @POST("meeting.php")
+    Call<DeclineMeeting> declineReservation(
+            @Field("action") String action,
+            @Field("idMeeting") Integer idMeeting,
+            @Field("cancellationReason") String cancellationReason
+    );
+
+
 }
