@@ -21,5 +21,6 @@
     <color name="bigoudyred">#D0011B</color>
     <color name="bigoudyblue">#6F86CE</color>
     <color name="bigoudygreen">#489729</color>
+    <color name="bigoudystronggrey">#555555</color>
 
 </resources>
