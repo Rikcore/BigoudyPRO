@@ -416,7 +416,7 @@ public class Meeting implements Serializable {
         this.diagnosticPhotos = diagnosticPhotos;
     }
 
-    public WeekViewEvent getEvent (String dateMeeting, String beginTimeAvailable, int newMonth, int newYear, BookingModel bookingModel, int position){
+    public WeekViewEvent getEvent (String dateMeeting, String beginTimeAvailable, int newMonth, int newYear, BookingModel bookingModel, int position, int duration){
 
         WeekViewEvent event;
 
@@ -437,10 +437,10 @@ public class Meeting implements Serializable {
             starTime.set(Calendar.MONTH, month - 1);
             starTime.set(Calendar.YEAR, year);
             Calendar endtime = (Calendar) starTime.clone();
-            endtime.add(Calendar.HOUR, 1);
+            endtime.add(Calendar.MINUTE, duration);
             String customerFirstName = bookingModel.getMeetings().get(position).getFirstnameCustomer();
             String perf = bookingModel.getMeetings().get(position).getPerformances().get(0).getLibPerformance();
-            String rdv = customerFirstName+"\n"+perf;
+            String rdv = customerFirstName+" "+perf;
             event = new WeekViewEvent(1, rdv, starTime, endtime);
             event.setColor(R.color.bigoudystronggold);
             return event;

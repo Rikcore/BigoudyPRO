@@ -305,7 +305,8 @@ public class AgendaFragment extends Fragment implements WeekView.EventClickListe
             for (int i = 0; i < bookingModel.getMeetings().size(); i++) {
                 String date = bookingModel.getMeetings().get(i).getDateMeeting();
                 String heure = bookingModel.getMeetings().get(i).getBeginTimeAvailable();
-                WeekViewEvent event = bookingModel.getMeetings().get(i).getEvent(date, heure, newMonth, newYear, bookingModel, i);
+                int duration = Integer.valueOf((String) bookingModel.getMeetings().get(i).getDurationMeeting());
+                WeekViewEvent event = bookingModel.getMeetings().get(i).getEvent(date, heure, newMonth, newYear, bookingModel, i, duration);
                 if (event != null) {
                     events.add(event);
                 }
