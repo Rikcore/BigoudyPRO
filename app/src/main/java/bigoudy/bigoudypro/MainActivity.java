@@ -98,6 +98,8 @@ public class MainActivity extends AppCompatActivity implements InboxFragment.OnF
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Intent myIntent = new Intent(MainActivity.this, MyService.class);
+        startService(myIntent);
         progressDialog = new ProgressDialog(this);
         progressDialog.setMessage("Patientez");
         actionBar = getSupportActionBar();
@@ -203,6 +205,7 @@ public class MainActivity extends AppCompatActivity implements InboxFragment.OnF
             @Override
             public void onResponse(Call<UserModel> call, Response<UserModel> response) {
                 currentUser = response.body();
+                PreferenceManager.getDefaultSharedPreferences(MainActivity.this).edit().putString("idBigouder", currentUser.getIdConnectedUser()).commit();
                 progressDialog.dismiss();
                 String totcaca = currentUser.getIdConnectedUser();
                 Bundle bundle = new Bundle();

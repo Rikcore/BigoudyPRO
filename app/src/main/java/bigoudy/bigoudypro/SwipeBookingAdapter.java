@@ -1,7 +1,9 @@
 package bigoudy.bigoudypro;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
+import android.support.v4.app.FragmentManager;
 import android.telecom.Call;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,13 +32,18 @@ public class SwipeBookingAdapter extends BaseSwipeAdapter {
 
     private Context context;
     private ArrayList<Meeting> meetingArrayList;
+    private BookingFragment bookingFragment;
     private String idBigouder;
+    private String address;
+
+    FragmentManager fragmentManager;
 
 
-    public SwipeBookingAdapter (Context context, ArrayList<Meeting> meetingArrayList, String idBigouder){
+    public SwipeBookingAdapter (Context context, ArrayList<Meeting> meetingArrayList, String idBigouder, BookingFragment bookingFragment){
         this.context = context;
         this.meetingArrayList = meetingArrayList;
         this.idBigouder = idBigouder;
+        this.bookingFragment = bookingFragment;
     }
     @Override
     public int getSwipeLayoutResourceId(int position) {
@@ -51,6 +58,8 @@ public class SwipeBookingAdapter extends BaseSwipeAdapter {
     @Override
     public void fillValues(int position, View convertView) {
         final Meeting currentRdv = (Meeting) getItem(position);
+        address = currentRdv.getAddressMeeting()+" "+currentRdv.getZipcodeMeeting()+" "+currentRdv.getCityMeeting();
+
 
         CircleImageView imageViewAvatar = (CircleImageView)convertView.findViewById(R.id.imageViewAvatar);
         TextView textViewName = (TextView)convertView.findViewById(R.id.textViewUser);
@@ -76,6 +85,18 @@ public class SwipeBookingAdapter extends BaseSwipeAdapter {
         textViewPrice.setText(currentRdv.getAmmountWithTimeIncreaseHT());
 
         Button buttonAccept = (Button)convertView.findViewById(R.id.buttonAccept);
+        Button buttonDecline = (Button)convertView.findViewById(R.id.buttonDecline);
+        Button buttonMessage = (Button)convertView.findViewById(R.id.buttonMessage);
+        Button buttonGps = (Button)convertView.findViewById(R.id.buttonGPS);
+        if(currentRdv.getIsADemandMeeting().equals("0")){
+            buttonAccept.setVisibility(View.GONE);
+            buttonDecline.setVisibility(View.GONE);
+            buttonGps.setVisibility(View.VISIBLE);
+        }else{
+            buttonAccept.setVisibility(View.VISIBLE);
+            buttonDecline.setVisibility(View.VISIBLE);
+            buttonGps.setVisibility(View.GONE);
+        }
         buttonAccept.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -83,7 +104,7 @@ public class SwipeBookingAdapter extends BaseSwipeAdapter {
             }
         });
 
-        Button buttonDecline = (Button)convertView.findViewById(R.id.buttonDecline);
+
         buttonDecline.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -95,6 +116,7 @@ public class SwipeBookingAdapter extends BaseSwipeAdapter {
                     @Override
                     public void onResponse(retrofit2.Call<DeclineMeeting> call, Response<DeclineMeeting> response) {
                         Toast.makeText(context, "Rendez-vous refusé", Toast.LENGTH_SHORT).show();
+                        bookingFragment.btn_demand.callOnClick();
                     }
 
                     @Override
@@ -106,11 +128,21 @@ public class SwipeBookingAdapter extends BaseSwipeAdapter {
             }
         });
 
-        Button buttonMessage = (Button)convertView.findViewById(R.id.buttonMessage);
+
         buttonMessage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Toast.makeText(context, "J'envoie un message", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        buttonGps.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Uri gmmIntentUri = Uri.parse("geo:0,0?q="+address);
+                Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+                mapIntent.setPackage("com.google.android.apps.maps");
+                context.startActivity(mapIntent);
             }
         });
 
