@@ -131,9 +131,6 @@ public class MeetingDetailFragment extends Fragment {
         });
 
 
-
-
-
         // Inflate the layout for this fragment
         return v;
     }

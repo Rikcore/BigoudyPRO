@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -14,17 +15,18 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.Toast;
+
 
 import com.alamkanak.weekview.DateTimeInterpreter;
 import com.alamkanak.weekview.MonthLoader;
 import com.alamkanak.weekview.WeekView;
 import com.alamkanak.weekview.WeekViewEvent;
 
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
@@ -56,6 +58,10 @@ public class AgendaFragment extends Fragment implements WeekView.EventClickListe
     private int mWeekViewType = TYPE_THREE_DAY_VIEW;
     private WeekView mWeekView;
     private FloatingActionButton mRdvButton;
+    private HashMap<Integer, Meeting> hashMapMeeting;
+    MeetingDetailFragment meetingDetailFragment;
+
+    FragmentManager fragmentManager;
 
 
     List<WeekViewEvent> events;
@@ -106,7 +112,6 @@ public class AgendaFragment extends Fragment implements WeekView.EventClickListe
 
         View view = inflater.inflate(R.layout.fragment_agenda, container, false);
         setHasOptionsMenu(true);
-
 
         FloatingActionButton mRdvButton = (FloatingActionButton) view.findViewById(R.id.addRdvButton);
 
@@ -281,8 +286,19 @@ public class AgendaFragment extends Fragment implements WeekView.EventClickListe
 
     @Override
     public void onEventClick(WeekViewEvent event, RectF eventRect) {
-        Intent toCreateRdvIntent = (new Intent(getActivity(), CreatRdvActivity.class));
-        startActivity(toCreateRdvIntent);
+        /*Intent toCreateRdvIntent = (new Intent(getActivity(), CreatRdvActivity.class));
+        startActivity(toCreateRdvIntent);*/
+        meetingDetailFragment = new MeetingDetailFragment();
+        fragmentManager = getFragmentManager();
+        int testId = (int) event.getId();
+        Meeting test = hashMapMeeting.get(testId);
+        Bundle bundleDetails = new Bundle();
+        bundleDetails.putSerializable("meetingDetails", test);
+        meetingDetailFragment.setArguments(bundleDetails);
+        fragmentManager
+                .beginTransaction()
+                .replace(R.id.contentLayout, meetingDetailFragment, meetingDetailFragment.getTag())
+                .commit();
     }
 
     @Override
@@ -300,6 +316,7 @@ public class AgendaFragment extends Fragment implements WeekView.EventClickListe
     public List<? extends WeekViewEvent> onMonthChange(int newYear, int newMonth) {
         // Populate the week view with some events.
         events = new ArrayList<WeekViewEvent>();
+        hashMapMeeting = new HashMap<>();
 
 
             for (int i = 0; i < bookingModel.getMeetings().size(); i++) {
@@ -307,6 +324,7 @@ public class AgendaFragment extends Fragment implements WeekView.EventClickListe
                 String heure = bookingModel.getMeetings().get(i).getBeginTimeAvailable();
                 int duration = Integer.valueOf((String) bookingModel.getMeetings().get(i).getDurationMeeting());
                 WeekViewEvent event = bookingModel.getMeetings().get(i).getEvent(date, heure, newMonth, newYear, bookingModel, i, duration);
+                hashMapMeeting.put(Integer.valueOf(bookingModel.getMeetings().get(i).getIdMeeting()), bookingModel.getMeetings().get(i));
                 if (event != null) {
                     events.add(event);
                 }

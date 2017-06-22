@@ -438,10 +438,11 @@ public class Meeting implements Serializable {
             starTime.set(Calendar.YEAR, year);
             Calendar endtime = (Calendar) starTime.clone();
             endtime.add(Calendar.MINUTE, duration);
+            Integer idMeeting = Integer.valueOf(bookingModel.getMeetings().get(position).getIdMeeting());
             String customerFirstName = bookingModel.getMeetings().get(position).getFirstnameCustomer();
             String perf = bookingModel.getMeetings().get(position).getPerformances().get(0).getLibPerformance();
             String rdv = customerFirstName+" "+perf;
-            event = new WeekViewEvent(1, rdv, starTime, endtime);
+            event = new WeekViewEvent(idMeeting, rdv, starTime, endtime);
             event.setColor(R.color.bigoudystronggold);
             return event;
 
