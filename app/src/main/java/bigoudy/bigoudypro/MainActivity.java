@@ -74,13 +74,24 @@ public class MainActivity extends AppCompatActivity implements InboxFragment.OnF
     android.support.v7.app.ActionBar actionBar;
 
 
-    String mailUser;
-    String passwordUser;
     UserModel currentUser;
     BookingModel bookingModel;
     TextView textViewGg;
-
     ProgressDialog progressDialog;
+
+    GoogleAccountCredential mCredential;
+    private TextView mOutputText;
+    ProgressDialog mProgress;
+
+    static final int REQUEST_ACCOUNT_PICKER = 1000;
+    static final int REQUEST_AUTHORIZATION = 1001;
+    static final int REQUEST_GOOGLE_PLAY_SERVICES = 1002;
+    static final int REQUEST_PERMISSION_GET_ACCOUNTS = 1003;
+
+    private static final String BUTTON_TEXT = "Google Calendar";
+    private static final String PREF_ACCOUNT_NAME = "accountName";
+    private static final String[] SCOPES = { CalendarScopes.CALENDAR_READONLY };
+    private List<String> list;
 
 
     @Override
@@ -92,22 +103,15 @@ public class MainActivity extends AppCompatActivity implements InboxFragment.OnF
         actionBar = getSupportActionBar();
         actionBar.setTitle("Agenda");
 
-        final TextView textViewGg = (TextView) findViewById(R.id.textViewGg);
+        mCredential = GoogleAccountCredential.usingOAuth2(
+                getApplicationContext(), Arrays.asList(SCOPES))
+                .setBackOff(new ExponentialBackOff());
 
-        FloatingActionButton mFloatingGgButton = (FloatingActionButton) findViewById(R.id.floatingActionButtonGg);
+        getResultsFromApi();
 
-        mFloatingGgButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Initialize credentials and service object.
-                mCredential = GoogleAccountCredential.usingOAuth2(
-                        getApplicationContext(), Arrays.asList(SCOPES))
-                        .setBackOff(new ExponentialBackOff());
+        // Initialize credentials and service object.
 
-                getResultsFromApi();
-                Toast.makeText(MainActivity.this, "Ok", Toast.LENGTH_LONG).show();
-            }
-        });
+
 
 
 
@@ -265,27 +269,8 @@ public class MainActivity extends AppCompatActivity implements InboxFragment.OnF
 
 
 
-    GoogleAccountCredential mCredential;
-    private TextView mOutputText;
-    private Button mCallApiButton;
-    ProgressDialog mProgress;
 
-    static final int REQUEST_ACCOUNT_PICKER = 1000;
-    static final int REQUEST_AUTHORIZATION = 1001;
-    static final int REQUEST_GOOGLE_PLAY_SERVICES = 1002;
-    static final int REQUEST_PERMISSION_GET_ACCOUNTS = 1003;
 
-    private static final String BUTTON_TEXT = "Google Calendar";
-    private static final String PREF_ACCOUNT_NAME = "accountName";
-    private static final String[] SCOPES = { CalendarScopes.CALENDAR_READONLY };
-
-    /**
-     * Attempt to call the API, after verifying that all the preconditions are
-     * satisfied. The preconditions are: Google Play Services installed, an
-     * account was selected and the device currently has online access. If any
-     * of the preconditions are not satisfied, the app will prompt the user as
-     * appropriate.
-     */
     private void getResultsFromApi() {
         if (! isGooglePlayServicesAvailable()) {
             acquireGooglePlayServices();
@@ -294,7 +279,7 @@ public class MainActivity extends AppCompatActivity implements InboxFragment.OnF
         } else if (! isDeviceOnline()) {
             mOutputText.setText("No network connection available.");
         } else {
-            new MainActivity.MakeRequestTask(mCredential).execute();
+            new MakeRequestTask(mCredential).execute();
         }
     }
 
@@ -477,7 +462,6 @@ public class MainActivity extends AppCompatActivity implements InboxFragment.OnF
         dialog.show();
     }
 
-
     /**
      * An asynchronous task that handles the Google Calendar API call.
      * Placing the API calls in their own task ensures the UI stays responsive.
@@ -491,7 +475,7 @@ public class MainActivity extends AppCompatActivity implements InboxFragment.OnF
             JsonFactory jsonFactory = JacksonFactory.getDefaultInstance();
             mService = new com.google.api.services.calendar.Calendar.Builder(
                     transport, jsonFactory, credential)
-                    .setApplicationName("Bigoudy Pro")
+                    .setApplicationName("Google Calendar API Android Quickstart")
                     .build();
         }
 
@@ -510,20 +494,12 @@ public class MainActivity extends AppCompatActivity implements InboxFragment.OnF
             }
         }
 
-        public com.google.api.services.calendar.Calendar getmService() {
-            return mService;
-        }
-
-        public Exception getmLastError() {
-            return mLastError;
-        }
-
         /**
          * Fetch a list of the next 10 events from the primary calendar.
          * @return List of Strings describing returned events.
          * @throws IOException
          */
-        public List<String> getDataFromApi() throws IOException {
+        private List<String> getDataFromApi() throws IOException {
             // List the next 10 events from the primary calendar.
             DateTime now = new DateTime(System.currentTimeMillis());
             List<String> eventStrings = new ArrayList<String>();
@@ -545,29 +521,26 @@ public class MainActivity extends AppCompatActivity implements InboxFragment.OnF
                 eventStrings.add(
                         String.format("%s (%s)", event.getSummary(), start));
             }
+            List list = eventStrings;
             return eventStrings;
         }
 
+
         @Override
         protected void onPreExecute() {
-            mOutputText.setText("");
-            mProgress.show();
+
         }
 
         @Override
         protected void onPostExecute(List<String> output) {
-            mProgress.hide();
             if (output == null || output.size() == 0) {
-                mOutputText.setText("No results returned.");
             } else {
                 output.add(0, "Data retrieved using the Google Calendar API:");
-                mOutputText.setText(TextUtils.join("\n", output));
             }
         }
 
         @Override
         protected void onCancelled() {
-            mProgress.hide();
             if (mLastError != null) {
                 if (mLastError instanceof GooglePlayServicesAvailabilityIOException) {
                     showGooglePlayServicesAvailabilityErrorDialog(

@@ -50,5 +50,8 @@ dependencies {
     compile('com.google.apis:google-api-services-calendar:v3-rev249-1.22.0') {
         exclude group: 'org.apache.httpcomponents'
     }
+    compile 'com.android.support:recyclerview-v7:25.0.0'
+    compile "com.daimajia.swipelayout:library:1.2.0@aar"
+
     testCompile 'junit:junit:4.12'
 }
