@@ -1,36 +1,25 @@
 package bigoudy.bigoudypro;
 
-
 import android.Manifest;
 import android.accounts.AccountManager;
+import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Typeface;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.net.Uri;
 import android.os.AsyncTask;
-import android.preference.PreferenceManager;
-import android.support.annotation.NonNull;
-import android.support.design.internal.BottomNavigationMenu;
-import android.support.design.widget.BottomNavigationView;
-import android.support.design.widget.FloatingActionButton;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.text.method.ScrollingMovementMethod;
-import android.view.MenuItem;
-import android.support.v4.app.FragmentManager;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
-
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
@@ -43,44 +32,23 @@ import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.client.util.DateTime;
 import com.google.api.client.util.ExponentialBackOff;
-import com.google.api.services.calendar.CalendarScopes;
-import com.google.api.services.calendar.model.Event;
-import com.google.api.services.calendar.model.Events;
+import com.google.api.services.calendar.*;
+import com.google.api.services.calendar.model.*;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Calendar;
 import java.util.List;
 
-import okhttp3.OkHttpClient;
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
-public class MainActivity extends AppCompatActivity implements InboxFragment.OnFragmentInteractionListener,
-        AgendaFragment.OnFragmentInteractionListener, BookingFragment.OnFragmentInteractionListener,
-        MeetingDetailFragment.OnFragmentInteractionListener, EasyPermissions.PermissionCallbacks {
-
-    InboxFragment inboxFragment;
-    AgendaFragment agendaFragment;
-    BookingFragment bookingFragment;
-    FragmentManager fragmentManager;
-
-    android.support.v7.app.ActionBar actionBar;
-
-
-    UserModel currentUser;
-    BookingModel bookingModel;
-    TextView textViewGg;
-    ProgressDialog progressDialog;
+public class GoogleAgendaRetrieve extends Activity
+        implements EasyPermissions.PermissionCallbacks {
 
     GoogleAccountCredential mCredential;
     private TextView mOutputText;
+    private Button mCallApiButton;
     ProgressDialog mProgress;
 
     static final int REQUEST_ACCOUNT_PICKER = 1000;
@@ -91,189 +59,68 @@ public class MainActivity extends AppCompatActivity implements InboxFragment.OnF
     private static final String BUTTON_TEXT = "Google Calendar";
     private static final String PREF_ACCOUNT_NAME = "accountName";
     private static final String[] SCOPES = { CalendarScopes.CALENDAR_READONLY };
-    private List<String> list;
 
-
+    /**
+     * Create the main activity.
+     * @param savedInstanceState previously saved instance data.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        Intent myIntent = new Intent(MainActivity.this, MyService.class);
-        startService(myIntent);
-        progressDialog = new ProgressDialog(this);
-        progressDialog.setMessage("Patientez");
-        actionBar = getSupportActionBar();
-        actionBar.setTitle("Agenda");
+        LinearLayout activityLayout = new LinearLayout(this);
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.MATCH_PARENT);
+        activityLayout.setLayoutParams(lp);
+        activityLayout.setOrientation(LinearLayout.VERTICAL);
+        activityLayout.setPadding(16, 16, 16, 16);
 
+        ViewGroup.LayoutParams tlp = new ViewGroup.LayoutParams(
+                ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT);
+
+        mCallApiButton = new Button(this);
+        mCallApiButton.setText(BUTTON_TEXT);
+        mCallApiButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mCallApiButton.setEnabled(false);
+                mOutputText.setText("");
+                getResultsFromApi();
+                mCallApiButton.setEnabled(true);
+            }
+        });
+        activityLayout.addView(mCallApiButton);
+
+        mOutputText = new TextView(this);
+        mOutputText.setLayoutParams(tlp);
+        mOutputText.setPadding(16, 16, 16, 16);
+        mOutputText.setVerticalScrollBarEnabled(true);
+        mOutputText.setMovementMethod(new ScrollingMovementMethod());
+        mOutputText.setText(
+                "" + BUTTON_TEXT +"\' test");
+        activityLayout.addView(mOutputText);
+
+        mProgress = new ProgressDialog(this);
+        mProgress.setMessage("Accès Google Calendar ...");
+
+        setContentView(activityLayout);
+
+        // Initialize credentials and service object.
         mCredential = GoogleAccountCredential.usingOAuth2(
                 getApplicationContext(), Arrays.asList(SCOPES))
                 .setBackOff(new ExponentialBackOff());
-
-        getResultsFromApi();
-
-        // Initialize credentials and service object.
-
-
-
-
-
-        String mailUser = PreferenceManager.getDefaultSharedPreferences(MainActivity.this).getString("bigoudyMailUser", null);
-        String passwordUser = PreferenceManager.getDefaultSharedPreferences(MainActivity.this).getString("bigoudyPasswordUser", null);
-
-        if (mailUser != null && passwordUser != null){
-            progressDialog.show();
-            getCurrentUser(mailUser, passwordUser);
-
-        }
-        else{
-            startActivity(new Intent(MainActivity.this, LoginActivity.class));
-        }
-
-        fragmentManager = getSupportFragmentManager();
-
-        inboxFragment = new InboxFragment();
-        agendaFragment = new AgendaFragment();
-        bookingFragment = new BookingFragment();
-
-
-
-        BottomNavigationView bottomNavigationView = (BottomNavigationView)findViewById(R.id.navigation);
-        bottomNavigationView.setSelectedItemId(R.id.navigation_agenda);
-        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                switch (item.getItemId()){
-                    case R.id.navigation_inbox:
-                        //Do what you need
-                        actionBar.hide();
-                        fragmentManager
-                                .beginTransaction()
-                                .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
-                                .replace(R.id.contentLayout, inboxFragment, inboxFragment.getTag())
-                                .commit();
-                        return true;
-                    case R.id.navigation_agenda:
-                        actionBar.show();
-                        fragmentManager
-                                .beginTransaction()
-                                .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
-                                .replace(R.id.contentLayout, agendaFragment, agendaFragment.getTag())
-                                .commit();
-                        //Do what you need
-                        return true;
-                    case R.id.navigation_booking:
-                        actionBar.hide();
-                        fragmentManager
-                                .beginTransaction()
-                                .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
-                                .replace(R.id.contentLayout, bookingFragment, bookingFragment.getTag())
-                                .commit();
-                        //Do what you need
-                        return true;
-                    default:
-                        return false;
-                }
-            }
-        });
-
-
-    }
-
-
-    @Override
-    public void onFragmentInteraction(Uri uri) {
-
-    }
-
-    public void getCurrentUser (String mailUser, String passwordUser){
-        String action = "connectUser";
-
-
-        OkHttpClient client = new OkHttpClient();
-
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://www.bigoudychat.ovh/app/resources/")
-                .client(client)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        ServiceApi serviceApi = retrofit.create(ServiceApi.class);
-
-        Call<UserModel> userModelCall = serviceApi.getUserModel(action, mailUser, passwordUser);
-
-        userModelCall.enqueue(new Callback<UserModel>() {
-            @Override
-            public void onResponse(Call<UserModel> call, Response<UserModel> response) {
-                currentUser = response.body();
-                PreferenceManager.getDefaultSharedPreferences(MainActivity.this).edit().putString("idBigouder", currentUser.getIdConnectedUser()).commit();
-                progressDialog.dismiss();
-                String totcaca = currentUser.getIdConnectedUser();
-                Bundle bundle = new Bundle();
-                bundle.putString("idConnectUser", currentUser.getIdConnectedUser());
-                bookingFragment.setArguments(bundle);
-                inboxFragment.setArguments(bundle);
-                agendaFragment.setArguments(bundle);
-                callModel(currentUser.getIdConnectedUser());
-
-
-
-            }
-
-            @Override
-            public void onFailure(Call<UserModel> call, Throwable t) {
-
-            }
-        });
-
-    }
-
-    public void callModel (final String idConnectUser){
-        final BookingModel model;
-        String action = "getIncomingMeetingByBigouderId";
-        Integer id = new Integer(idConnectUser).intValue();
-        final String[] filter = {"incoming"};
-
-        OkHttpClient client = new OkHttpClient();
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://www.bigoudychat.ovh/app/resources/")
-                .client(client)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        ServiceApi serviceApi = retrofit.create(ServiceApi.class);
-
-        final Call<BookingModel> bookingModelCall = serviceApi.getBookingModel(action, id, filter[0]);
-
-        bookingModelCall.enqueue(new Callback<BookingModel>() {
-            @Override
-            public void onResponse(Call<BookingModel> call, Response<BookingModel> response) {
-                bookingModel = response.body();
-                Bundle bundle = new Bundle();
-                bundle.putSerializable("bookingModel", bookingModel);
-                bundle.putString("idConnectUser", idConnectUser);
-                agendaFragment.setArguments(bundle);
-                fragmentManager
-                        .beginTransaction()
-                        .replace(R.id.contentLayout, agendaFragment, agendaFragment.getTag())
-                        .commit();
-
-            }
-
-            @Override
-            public void onFailure(Call<BookingModel> call, Throwable t) {
-                String toto;
-
-            }
-        });
-
-        return;
     }
 
 
 
-
-
-
+    /**
+     * Attempt to call the API, after verifying that all the preconditions are
+     * satisfied. The preconditions are: Google Play Services installed, an
+     * account was selected and the device currently has online access. If any
+     * of the preconditions are not satisfied, the app will prompt the user as
+     * appropriate.
+     */
     private void getResultsFromApi() {
         if (! isGooglePlayServicesAvailable()) {
             acquireGooglePlayServices();
@@ -459,11 +306,12 @@ public class MainActivity extends AppCompatActivity implements InboxFragment.OnF
             final int connectionStatusCode) {
         GoogleApiAvailability apiAvailability = GoogleApiAvailability.getInstance();
         Dialog dialog = apiAvailability.getErrorDialog(
-                MainActivity.this,
+                GoogleAgendaRetrieve.this,
                 connectionStatusCode,
                 REQUEST_GOOGLE_PLAY_SERVICES);
         dialog.show();
     }
+
 
     /**
      * An asynchronous task that handles the Google Calendar API call.
@@ -478,7 +326,7 @@ public class MainActivity extends AppCompatActivity implements InboxFragment.OnF
             JsonFactory jsonFactory = JacksonFactory.getDefaultInstance();
             mService = new com.google.api.services.calendar.Calendar.Builder(
                     transport, jsonFactory, credential)
-                    .setApplicationName("Google Calendar API Android Quickstart")
+                    .setApplicationName("Bigoudy Pro")
                     .build();
         }
 
@@ -497,12 +345,20 @@ public class MainActivity extends AppCompatActivity implements InboxFragment.OnF
             }
         }
 
+        public com.google.api.services.calendar.Calendar getmService() {
+            return mService;
+        }
+
+        public Exception getmLastError() {
+            return mLastError;
+        }
+
         /**
          * Fetch a list of the next 10 events from the primary calendar.
          * @return List of Strings describing returned events.
          * @throws IOException
          */
-        private List<String> getDataFromApi() throws IOException {
+        public List<String> getDataFromApi() throws IOException {
             // List the next 10 events from the primary calendar.
             DateTime now = new DateTime(System.currentTimeMillis());
             List<String> eventStrings = new ArrayList<String>();
@@ -524,26 +380,31 @@ public class MainActivity extends AppCompatActivity implements InboxFragment.OnF
                 eventStrings.add(
                         String.format("%s (%s)", event.getSummary(), start));
             }
-            List list = eventStrings;
             return eventStrings;
         }
 
 
+
         @Override
         protected void onPreExecute() {
-
+            mOutputText.setText("");
+            mProgress.show();
         }
 
         @Override
         protected void onPostExecute(List<String> output) {
+            mProgress.hide();
             if (output == null || output.size() == 0) {
+                mOutputText.setText("No results returned.");
             } else {
                 output.add(0, "Data retrieved using the Google Calendar API:");
+                mOutputText.setText(TextUtils.join("\n", output));
             }
         }
 
         @Override
         protected void onCancelled() {
+            mProgress.hide();
             if (mLastError != null) {
                 if (mLastError instanceof GooglePlayServicesAvailabilityIOException) {
                     showGooglePlayServicesAvailabilityErrorDialog(
@@ -562,5 +423,4 @@ public class MainActivity extends AppCompatActivity implements InboxFragment.OnF
             }
         }
     }
-
 }
