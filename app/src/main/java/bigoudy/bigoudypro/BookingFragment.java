@@ -46,7 +46,7 @@ public class BookingFragment extends Fragment {
     private String mParam2;
     private SwipeLayout swipeLayout;
     Button btn_tout, btn_demand, btn_incoming;
-
+    private Context context;
 
 
     private BookingModel bookingModel;

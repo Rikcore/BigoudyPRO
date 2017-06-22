@@ -22,6 +22,7 @@
             android:layout_width="0dp"
             android:layout_height="60dp"
             android:layout_weight="1"
+            android:textAllCaps="false"
             android:background="@drawable/btn_unselected"
             android:textColor="@color/bigoudystronggrey"
             android:text="@string/button_tout" />
@@ -31,6 +32,7 @@
             android:layout_width="0dp"
             android:layout_height="60dp"
             android:layout_weight="1"
+            android:textAllCaps="false"
             android:background="@drawable/btn_selected"
             android:text="@string/button_dmd_resa" />
 
@@ -39,6 +41,7 @@
             android:layout_width="0dp"
             android:layout_height="60dp"
             android:layout_weight="1"
+            android:textAllCaps="false"
             android:background="@drawable/btn_unselected"
             android:textColor="@color/bigoudystronggrey"
             android:text="@string/button_resaok" />
