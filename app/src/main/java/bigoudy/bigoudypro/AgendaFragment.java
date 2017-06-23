@@ -20,6 +20,8 @@ import com.alamkanak.weekview.DateTimeInterpreter;
 import com.alamkanak.weekview.MonthLoader;
 import com.alamkanak.weekview.WeekView;
 import com.alamkanak.weekview.WeekViewEvent;
+import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
+import com.google.api.services.calendar.CalendarScopes;
 
 import java.io.Serializable;
 
@@ -65,7 +67,6 @@ public class AgendaFragment extends Fragment implements WeekView.EventClickListe
 
     FragmentManager fragmentManager;
 
-
     List<WeekViewEvent> events;
 
     BookingModel bookingModel;
@@ -75,6 +76,14 @@ public class AgendaFragment extends Fragment implements WeekView.EventClickListe
     private String mParam2;
 
     private OnFragmentInteractionListener mListener;
+
+    GoogleAccountCredential mCredential;
+    static final int REQUEST_ACCOUNT_PICKER = 1000;
+    static final int REQUEST_AUTHORIZATION = 1001;
+    static final int REQUEST_GOOGLE_PLAY_SERVICES = 1002;
+    static final int REQUEST_PERMISSION_GET_ACCOUNTS = 1003;
+    private static final String[] SCOPES = { CalendarScopes.CALENDAR_READONLY };
+    private List<String> list;
 
     public AgendaFragment() {
         // Required empty public constructor
@@ -335,6 +344,7 @@ public class AgendaFragment extends Fragment implements WeekView.EventClickListe
         return events;
 
     }
+
 
 }
 
