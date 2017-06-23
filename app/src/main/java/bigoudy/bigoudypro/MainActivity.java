@@ -13,6 +13,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.internal.BottomNavigationMenu;
@@ -22,6 +23,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.text.method.ScrollingMovementMethod;
+import android.util.Log;
 import android.view.MenuItem;
 import android.support.v4.app.FragmentManager;
 import android.view.View;
@@ -76,21 +78,15 @@ public class MainActivity extends AppCompatActivity implements InboxFragment.OnF
 
     UserModel currentUser;
     BookingModel bookingModel;
-    TextView textViewGg;
     ProgressDialog progressDialog;
 
     GoogleAccountCredential mCredential;
-    private TextView mOutputText;
-    ProgressDialog mProgress;
-
     static final int REQUEST_ACCOUNT_PICKER = 1000;
     static final int REQUEST_AUTHORIZATION = 1001;
     static final int REQUEST_GOOGLE_PLAY_SERVICES = 1002;
     static final int REQUEST_PERMISSION_GET_ACCOUNTS = 1003;
-
-    private static final String BUTTON_TEXT = "Google Calendar";
+    private static final String[] SCOPES = {CalendarScopes.CALENDAR_READONLY};
     private static final String PREF_ACCOUNT_NAME = "accountName";
-    private static final String[] SCOPES = { CalendarScopes.CALENDAR_READONLY };
     private List<String> list;
 
 
@@ -109,23 +105,17 @@ public class MainActivity extends AppCompatActivity implements InboxFragment.OnF
                 getApplicationContext(), Arrays.asList(SCOPES))
                 .setBackOff(new ExponentialBackOff());
 
-        getResultsFromApi();
-
-        // Initialize credentials and service object.
-
-
 
 
 
         String mailUser = PreferenceManager.getDefaultSharedPreferences(MainActivity.this).getString("bigoudyMailUser", null);
         String passwordUser = PreferenceManager.getDefaultSharedPreferences(MainActivity.this).getString("bigoudyPasswordUser", null);
 
-        if (mailUser != null && passwordUser != null){
+        if (mailUser != null && passwordUser != null) {
             progressDialog.show();
             getCurrentUser(mailUser, passwordUser);
 
-        }
-        else{
+        } else {
             startActivity(new Intent(MainActivity.this, LoginActivity.class));
         }
 
@@ -136,13 +126,12 @@ public class MainActivity extends AppCompatActivity implements InboxFragment.OnF
         bookingFragment = new BookingFragment();
 
 
-
-        BottomNavigationView bottomNavigationView = (BottomNavigationView)findViewById(R.id.navigation);
+        BottomNavigationView bottomNavigationView = (BottomNavigationView) findViewById(R.id.navigation);
         bottomNavigationView.setSelectedItemId(R.id.navigation_agenda);
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                switch (item.getItemId()){
+                switch (item.getItemId()) {
                     case R.id.navigation_inbox:
                         //Do what you need
                         actionBar.hide();
@@ -176,6 +165,13 @@ public class MainActivity extends AppCompatActivity implements InboxFragment.OnF
             }
         });
 
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                getResultsFromApi();
+
+            }
+        },1000);
 
     }
 
@@ -185,7 +181,7 @@ public class MainActivity extends AppCompatActivity implements InboxFragment.OnF
 
     }
 
-    public void getCurrentUser (String mailUser, String passwordUser){
+    public void getCurrentUser(String mailUser, String passwordUser) {
         String action = "connectUser";
 
 
@@ -216,7 +212,6 @@ public class MainActivity extends AppCompatActivity implements InboxFragment.OnF
                 callModel(currentUser.getIdConnectedUser());
 
 
-
             }
 
             @Override
@@ -227,7 +222,7 @@ public class MainActivity extends AppCompatActivity implements InboxFragment.OnF
 
     }
 
-    public void callModel (final String idConnectUser){
+    public void callModel(final String idConnectUser) {
         final BookingModel model;
         String action = "getIncomingMeetingByBigouderId";
         Integer id = new Integer(idConnectUser).intValue();
@@ -271,16 +266,21 @@ public class MainActivity extends AppCompatActivity implements InboxFragment.OnF
 
 
 
+    //DEBUT DES PROBLEMES
 
-
-
+    /**
+     * Attempt to call the API, after verifying that all the preconditions are
+     * satisfied. The preconditions are: Google Play Services installed, an
+     * account was selected and the device currently has online access. If any
+     * of the preconditions are not satisfied, the app will prompt the user as
+     * appropriate.
+     */
     private void getResultsFromApi() {
         if (! isGooglePlayServicesAvailable()) {
             acquireGooglePlayServices();
         } else if (mCredential.getSelectedAccountName() == null) {
             chooseAccount();
         } else if (! isDeviceOnline()) {
-            mOutputText.setText("No network connection available.");
         } else {
             new MakeRequestTask(mCredential).execute();
         }
@@ -338,9 +338,7 @@ public class MainActivity extends AppCompatActivity implements InboxFragment.OnF
         switch(requestCode) {
             case REQUEST_GOOGLE_PLAY_SERVICES:
                 if (resultCode != RESULT_OK) {
-                    mOutputText.setText(
-                            "This app requires Google Play Services. Please install " +
-                                    "Google Play Services on your device and relaunch this app.");
+
                 } else {
                     getResultsFromApi();
                 }
@@ -470,7 +468,8 @@ public class MainActivity extends AppCompatActivity implements InboxFragment.OnF
      * Placing the API calls in their own task ensures the UI stays responsive.
      */
     private class MakeRequestTask extends AsyncTask<Void, Void, List<String>> {
-        private com.google.api.services.calendar.Calendar mService = null;
+        private com.google.api.services.calendar.Calendar
+        mService = null;
         private Exception mLastError = null;
 
         MakeRequestTask(GoogleAccountCredential credential) {
@@ -478,7 +477,7 @@ public class MainActivity extends AppCompatActivity implements InboxFragment.OnF
             JsonFactory jsonFactory = JacksonFactory.getDefaultInstance();
             mService = new com.google.api.services.calendar.Calendar.Builder(
                     transport, jsonFactory, credential)
-                    .setApplicationName("Google Calendar API Android Quickstart")
+                    .setApplicationName("Bigoudy Pro")
                     .build();
         }
 
@@ -491,6 +490,7 @@ public class MainActivity extends AppCompatActivity implements InboxFragment.OnF
             try {
                 return getDataFromApi();
             } catch (Exception e) {
+
                 mLastError = e;
                 cancel(true);
                 return null;
@@ -539,6 +539,7 @@ public class MainActivity extends AppCompatActivity implements InboxFragment.OnF
             if (output == null || output.size() == 0) {
             } else {
                 output.add(0, "Data retrieved using the Google Calendar API:");
+                Log.d("prout",output.get(1));
             }
         }
 
@@ -552,15 +553,15 @@ public class MainActivity extends AppCompatActivity implements InboxFragment.OnF
                 } else if (mLastError instanceof UserRecoverableAuthIOException) {
                     startActivityForResult(
                             ((UserRecoverableAuthIOException) mLastError).getIntent(),
-                            GoogleAgendaRetrieve.REQUEST_AUTHORIZATION);
+                            MainActivity.REQUEST_AUTHORIZATION);
                 } else {
-                    mOutputText.setText("The following error occurred:\n"
-                            + mLastError.getMessage());
+                    String tata = "tata";
                 }
             } else {
-                mOutputText.setText("Request cancelled.");
+                String toto = "toto";
             }
         }
     }
+
 
 }
