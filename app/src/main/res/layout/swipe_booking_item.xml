@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/swipe"
     android:layout_width="match_parent"
-    android:layout_height="100dp">
+    android:layout_height="100dp"
+    android:background="@drawable/design_listview">
     <!-- Bottom View Start-->
     <LinearLayout
         android:id="@+id/bottom_wrapper"
@@ -22,7 +23,7 @@
             android:layout_weight="2"
             android:text="GPS"
             android:textColor="@color/white"
-            android:background="@drawable/btn_gold"/>
+            android:background="@drawable/selector_btn_accept"/>
 
         <Button
             android:id="@+id/buttonAccept"
@@ -58,16 +59,16 @@
     <!-- Surface View Start -->
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="110dp"
         android:background="#ffffff">
 
         <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
             android:id="@+id/imageViewAvatar"
             android:layout_width="60dp"
             android:layout_height="60dp"
-            android:layout_marginLeft="8dp"
+            android:layout_marginLeft="31dp"
             android:layout_marginStart="23dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="20dp"
             android:src="@mipmap/logobigoudy"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -107,7 +108,7 @@
             android:id="@+id/imageViewEuro"
             android:layout_width="15dp"
             android:layout_height="15dp"
-            android:layout_marginLeft="96dp"
+            android:layout_marginLeft="79dp"
             android:layout_marginTop="17dp"
             app:layout_constraintLeft_toRightOf="@+id/textViewUser"
             app:layout_constraintTop_toBottomOf="@+id/imageViewCoupe"
@@ -120,7 +121,7 @@
             android:id="@+id/imageViewCoupe"
             android:layout_width="15dp"
             android:layout_height="15dp"
-            android:layout_marginLeft="64dp"
+            android:layout_marginLeft="79dp"
             android:layout_marginTop="16dp"
             app:layout_constraintLeft_toRightOf="@+id/textViewUser"
             app:layout_constraintTop_toTopOf="parent"
@@ -175,7 +176,9 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="32dp"
             android:layout_marginTop="16dp"
-            android:text="Détails"
+            android:text="en voir plus"
+            android:textColor="#d6b471"
+            android:background="@drawable/text_underlined"
             app:layout_constraintLeft_toRightOf="@+id/imageViewAvatar"
             app:layout_constraintTop_toBottomOf="@+id/textViewDate" />
 
