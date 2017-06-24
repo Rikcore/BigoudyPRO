@@ -506,7 +506,7 @@ public class MainActivity extends AppCompatActivity implements InboxFragment.OnF
             DateTime now = new DateTime(System.currentTimeMillis());
             ArrayList<String> eventStrings = new ArrayList<String>();
             Events events = mService.events().list("primary")
-                    .setMaxResults(10)
+                    .setMaxResults(50)
                     .setTimeMin(now)
                     .setOrderBy("startTime")
                     .setSingleEvents(true)
@@ -520,7 +520,9 @@ public class MainActivity extends AppCompatActivity implements InboxFragment.OnF
                     // All-day events don't have start times, so just use
                     // the start date.
                     start = event.getStart().getDate();
+                    end = event.getEnd().getDate();
                 }
+
 
                 eventStrings.add(String.format(event.getSummary()+"¤"+start+"¤"+end));
 
