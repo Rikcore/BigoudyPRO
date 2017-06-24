@@ -522,7 +522,7 @@ public class MainActivity extends AppCompatActivity implements InboxFragment.OnF
                     start = event.getStart().getDate();
                 }
 
-                eventStrings.add(String.format(event.getSummary()+" "+start+" "+end));
+                eventStrings.add(String.format(event.getSummary()+"¤"+start+"¤"+end));
 
             }
             bundleGlobal.putStringArrayList("googleList", eventStrings);

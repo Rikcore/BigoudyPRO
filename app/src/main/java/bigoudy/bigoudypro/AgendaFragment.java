@@ -29,6 +29,7 @@ import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -343,7 +344,11 @@ public class AgendaFragment extends Fragment implements WeekView.EventClickListe
         events = new ArrayList<WeekViewEvent>();
 
         for (int j = 0; j < googleWeekViewEventList.size(); j++){
-            events.add(googleWeekViewEventList.get(j));
+            WeekViewEvent eventGoogle = googleWeekViewEventList.get(j);
+            if(eventGoogle.getStartTime().get(Calendar.MONTH) == newMonth) {
+                events.add(eventGoogle);
+            }
+
         }
 
         hashMapMeeting = new HashMap<>();
@@ -370,7 +375,7 @@ public class AgendaFragment extends Fragment implements WeekView.EventClickListe
     public WeekViewEvent getGoogleCalendarEvent(String date){
 
         WeekViewEvent googleWeekViewEvent;
-        String[] totalSplit = date.split(" ");
+        String[] totalSplit = date.split("¤");
         String summary = totalSplit[0];
         String startString = totalSplit[1];
         String endString = totalSplit[2];
