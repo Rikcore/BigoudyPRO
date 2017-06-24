@@ -34,6 +34,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
+import com.alamkanak.weekview.WeekViewEvent;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.api.client.extensions.android.http.AndroidHttp;
@@ -50,9 +51,11 @@ import com.google.api.services.calendar.model.Event;
 import com.google.api.services.calendar.model.Events;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import okhttp3.OkHttpClient;
@@ -64,6 +67,8 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+import static android.app.Activity.RESULT_OK;
+
 public class MainActivity extends AppCompatActivity implements InboxFragment.OnFragmentInteractionListener,
         AgendaFragment.OnFragmentInteractionListener, BookingFragment.OnFragmentInteractionListener,
         MeetingDetailFragment.OnFragmentInteractionListener, EasyPermissions.PermissionCallbacks {
@@ -72,6 +77,8 @@ public class MainActivity extends AppCompatActivity implements InboxFragment.OnF
     AgendaFragment agendaFragment;
     BookingFragment bookingFragment;
     FragmentManager fragmentManager;
+
+    Bundle bundleGlobal;
 
     android.support.v7.app.ActionBar actionBar;
 
@@ -142,12 +149,13 @@ public class MainActivity extends AppCompatActivity implements InboxFragment.OnF
                                 .commit();
                         return true;
                     case R.id.navigation_agenda:
+                        getResultsFromApi();
                         actionBar.show();
-                        fragmentManager
+                        /*fragmentManager
                                 .beginTransaction()
                                 .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
                                 .replace(R.id.contentLayout, agendaFragment, agendaFragment.getTag())
-                                .commit();
+                                .commit();*/
                         //Do what you need
                         return true;
                     case R.id.navigation_booking:
@@ -165,13 +173,7 @@ public class MainActivity extends AppCompatActivity implements InboxFragment.OnF
             }
         });
 
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                getResultsFromApi();
 
-            }
-        },1000);
 
     }
 
@@ -243,14 +245,11 @@ public class MainActivity extends AppCompatActivity implements InboxFragment.OnF
             @Override
             public void onResponse(Call<BookingModel> call, Response<BookingModel> response) {
                 bookingModel = response.body();
-                Bundle bundle = new Bundle();
-                bundle.putSerializable("bookingModel", bookingModel);
-                bundle.putString("idConnectUser", idConnectUser);
-                agendaFragment.setArguments(bundle);
-                fragmentManager
-                        .beginTransaction()
-                        .replace(R.id.contentLayout, agendaFragment, agendaFragment.getTag())
-                        .commit();
+                bundleGlobal = new Bundle();
+                bundleGlobal.putSerializable("bookingModel", bookingModel);
+                bundleGlobal.putString("idConnectUser", idConnectUser);
+
+                getResultsFromApi();
 
             }
 
@@ -505,7 +504,7 @@ public class MainActivity extends AppCompatActivity implements InboxFragment.OnF
         private List<String> getDataFromApi() throws IOException {
             // List the next 10 events from the primary calendar.
             DateTime now = new DateTime(System.currentTimeMillis());
-            List<String> eventStrings = new ArrayList<String>();
+            ArrayList<String> eventStrings = new ArrayList<String>();
             Events events = mService.events().list("primary")
                     .setMaxResults(10)
                     .setTimeMin(now)
@@ -516,15 +515,23 @@ public class MainActivity extends AppCompatActivity implements InboxFragment.OnF
 
             for (Event event : items) {
                 DateTime start = event.getStart().getDateTime();
+                DateTime end = event.getEnd().getDateTime();
                 if (start == null) {
                     // All-day events don't have start times, so just use
                     // the start date.
                     start = event.getStart().getDate();
                 }
-                eventStrings.add(
-                        String.format("%s (%s)", event.getSummary(), start));
+
+                eventStrings.add(String.format(event.getSummary()+" "+start+" "+end));
+
             }
-            List list = eventStrings;
+            bundleGlobal.putStringArrayList("googleList", eventStrings);
+            agendaFragment.setArguments(bundleGlobal);
+            fragmentManager
+                    .beginTransaction()
+                    .replace(R.id.contentLayout, agendaFragment, agendaFragment.getTag())
+                    .commit();
+
             return eventStrings;
         }
 

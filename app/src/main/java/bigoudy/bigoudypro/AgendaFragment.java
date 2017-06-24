@@ -68,6 +68,8 @@ public class AgendaFragment extends Fragment implements WeekView.EventClickListe
     FragmentManager fragmentManager;
 
     List<WeekViewEvent> events;
+    ArrayList<String> googleList;
+    ArrayList<WeekViewEvent> googleWeekViewEventList;
 
     BookingModel bookingModel;
 
@@ -124,6 +126,16 @@ public class AgendaFragment extends Fragment implements WeekView.EventClickListe
         View view = inflater.inflate(R.layout.fragment_agenda, container, false);
         setHasOptionsMenu(true);
 
+        googleList = new ArrayList<String>();
+        googleWeekViewEventList = new ArrayList<WeekViewEvent>();
+
+
+        googleList = getArguments().getStringArrayList("googleList");
+        for (int i = 0; i < googleList.size(); i++){
+            WeekViewEvent googleWeekViewEvent = getGoogleCalendarEvent(googleList.get(i));
+            googleWeekViewEventList.add(googleWeekViewEvent);
+        }
+
         FloatingActionButton mRdvButton = (FloatingActionButton) view.findViewById(R.id.addRdvButton);
 
         mRdvButton.setOnClickListener(new View.OnClickListener() {
@@ -135,6 +147,8 @@ public class AgendaFragment extends Fragment implements WeekView.EventClickListe
         });
 
         String idConnectUser = getArguments().getString("idConnectUser");
+
+
         bookingModel = (BookingModel) getArguments().getSerializable("bookingModel");
 
         //callModel(idConnectUser);
@@ -327,21 +341,83 @@ public class AgendaFragment extends Fragment implements WeekView.EventClickListe
     public List<? extends WeekViewEvent> onMonthChange(int newYear, int newMonth) {
         // Populate the week view with some events.
         events = new ArrayList<WeekViewEvent>();
+
+        for (int j = 0; j < googleWeekViewEventList.size(); j++){
+            events.add(googleWeekViewEventList.get(j));
+        }
+
         hashMapMeeting = new HashMap<>();
 
 
-            for (int i = 0; i < bookingModel.getMeetings().size(); i++) {
-                String date = bookingModel.getMeetings().get(i).getDateMeeting();
-                String heure = bookingModel.getMeetings().get(i).getBeginTimeAvailable();
-                int duration = Integer.valueOf((String) bookingModel.getMeetings().get(i).getDurationMeeting());
-                WeekViewEvent event = bookingModel.getMeetings().get(i).getEvent(date, heure, newMonth, newYear, bookingModel, i, duration);
-                hashMapMeeting.put(Integer.valueOf(bookingModel.getMeetings().get(i).getIdMeeting()), bookingModel.getMeetings().get(i));
-                if (event != null) {
-                    events.add(event);
-                }
+        for (int i = 0; i < bookingModel.getMeetings().size(); i++) {
+            String date = bookingModel.getMeetings().get(i).getDateMeeting();
+            String heure = bookingModel.getMeetings().get(i).getBeginTimeAvailable();
+            int duration = Integer.valueOf((String) bookingModel.getMeetings().get(i).getDurationMeeting());
+            WeekViewEvent event = bookingModel.getMeetings().get(i).getEvent(date, heure, newMonth, newYear, bookingModel, i, duration);
+            hashMapMeeting.put(Integer.valueOf(bookingModel.getMeetings().get(i).getIdMeeting()), bookingModel.getMeetings().get(i));
+            if (event != null) {
+                events.add(event);
             }
+        }
+
+
+
 
         return events;
+
+    }
+
+    public WeekViewEvent getGoogleCalendarEvent(String date){
+
+        WeekViewEvent googleWeekViewEvent;
+        String[] totalSplit = date.split(" ");
+        String summary = totalSplit[0];
+        String startString = totalSplit[1];
+        String endString = totalSplit[2];
+
+        String[] startStringSplit = startString.split("T");
+        String startDateGoogle = startStringSplit[0];
+        String startHourGoogle = startStringSplit[1];
+
+        String[] startDateGoogleSplit = startDateGoogle.split("-");
+        int yearGoogleStart = Integer.valueOf(startDateGoogleSplit[0]);
+        int monthGoogleStart = Integer.valueOf(startDateGoogleSplit[1]);
+        int dayGoogleStart = Integer.valueOf(startDateGoogleSplit[2]);
+        String[] startHourGoogleSplit = startHourGoogle.split(":");
+        int hourGoogleStart = Integer.valueOf(startHourGoogleSplit[0]);
+        int minuteGoogleStart = Integer.valueOf(startHourGoogleSplit[1]);
+
+
+        String[] endStringSplit = endString.split("T");
+        String endDateGoogle = endStringSplit[0];
+        String endHourGoogle = endStringSplit[1];
+
+        String[] endDateGoogleSplit = endDateGoogle.split("-");
+        int yearGoogleEnd = Integer.valueOf(endDateGoogleSplit[0]);
+        int monthGoogleEnd = Integer.valueOf(endDateGoogleSplit[1]);
+        int dayGoogleEnd = Integer.valueOf(endDateGoogleSplit[2]);
+        String[] endHourGoogleSplit = endHourGoogle.split(":");
+        int hourGoogleEnd = Integer.valueOf(endHourGoogleSplit[0]);
+        int minuteGoogleEnd = Integer.valueOf(endHourGoogleSplit[1]);
+
+        int fakeDuration = 60;
+
+
+
+            Calendar starTime = Calendar.getInstance();
+            starTime.set(Calendar.HOUR_OF_DAY, hourGoogleStart);
+            starTime.set(Calendar.MINUTE, minuteGoogleStart);
+            starTime.set(Calendar.DAY_OF_MONTH, dayGoogleStart);
+            starTime.set(Calendar.MONTH, monthGoogleStart - 1);
+            starTime.set(Calendar.YEAR, yearGoogleStart);
+            Calendar endtime = (Calendar) starTime.clone();
+            endtime.add(Calendar.MINUTE, fakeDuration);
+            googleWeekViewEvent = new WeekViewEvent(0, "Tutu", starTime, endtime);
+            googleWeekViewEvent.setColor(R.color.bigoudygreen);
+
+
+            return googleWeekViewEvent;
+
 
     }
 
