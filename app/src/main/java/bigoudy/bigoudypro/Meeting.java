@@ -443,7 +443,6 @@ public class Meeting implements Serializable {
             String perf = bookingModel.getMeetings().get(position).getPerformances().get(0).getLibPerformance();
             String rdv = customerFirstName+" "+perf;
             event = new WeekViewEvent(idMeeting, rdv, starTime, endtime);
-            event.setColor(R.color.bigoudystronggold);
             return event;
 
 

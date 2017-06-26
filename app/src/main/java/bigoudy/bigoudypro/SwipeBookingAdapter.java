@@ -2,13 +2,21 @@ package bigoudy.bigoudypro;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
 import android.support.v4.app.FragmentManager;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.LinearLayoutCompat;
 import android.telecom.Call;
+import android.text.InputType;
+import android.text.method.ScrollingMovementMethod;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Scroller;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -56,7 +64,7 @@ public class SwipeBookingAdapter extends BaseSwipeAdapter {
     }
 
     @Override
-    public void fillValues(int position, View convertView) {
+    public void fillValues(int position, final View convertView) {
         final Meeting currentRdv = (Meeting) getItem(position);
         address = currentRdv.getAddressMeeting()+" "+currentRdv.getZipcodeMeeting()+" "+currentRdv.getCityMeeting();
 
@@ -133,6 +141,19 @@ public class SwipeBookingAdapter extends BaseSwipeAdapter {
             @Override
             public void onClick(View v) {
                 Toast.makeText(context, "J'envoie un message", Toast.LENGTH_SHORT).show();
+                final EditText edittext = new EditText(context);
+                edittext.setInputType(InputType.TYPE_TEXT_FLAG_CAP_SENTENCES|InputType.TYPE_TEXT_FLAG_MULTI_LINE);
+                edittext.setMinLines(2);
+                edittext.setMaxLines(4);
+                edittext.setVerticalScrollBarEnabled(true);
+                edittext.setScroller(new Scroller(context));
+                edittext.setMovementMethod(new ScrollingMovementMethod());
+                edittext.setGravity(Gravity.LEFT|Gravity.TOP);
+                AlertDialog.Builder alert = new AlertDialog.Builder(context);
+                alert.setMessage("Enter Your Message");
+                alert.setTitle("Enter Your Title");
+                alert.setView(edittext);
+                alert.show();
             }
         });
 
