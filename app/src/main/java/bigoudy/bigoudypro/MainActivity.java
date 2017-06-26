@@ -75,6 +75,7 @@ public class MainActivity extends AppCompatActivity implements InboxFragment.OnF
         AgendaFragment.OnFragmentInteractionListener, BookingFragment.OnFragmentInteractionListener,
         MeetingDetailFragment.OnFragmentInteractionListener, EasyPermissions.PermissionCallbacks {
 
+
     InboxFragment inboxFragment;
     AgendaFragment agendaFragment;
     BookingFragment bookingFragment;
@@ -85,7 +86,6 @@ public class MainActivity extends AppCompatActivity implements InboxFragment.OnF
     android.support.v7.app.ActionBar actionBar;
 
 
-    UserModel currentUser;
     BookingModel bookingModel;
     ProgressDialog progressDialog;
 
@@ -116,14 +116,13 @@ public class MainActivity extends AppCompatActivity implements InboxFragment.OnF
                 .setBackOff(new ExponentialBackOff());
 
 
+        String bigouderId = PreferenceManager.getDefaultSharedPreferences(MainActivity.this).getString("bigouderId", null);
 
 
-        String mailUser = PreferenceManager.getDefaultSharedPreferences(MainActivity.this).getString("bigoudyMailUser", null);
-        String passwordUser = PreferenceManager.getDefaultSharedPreferences(MainActivity.this).getString("bigoudyPasswordUser", null);
 
-        if (mailUser != null && passwordUser != null) {
+        if (bigouderId != null) {
             progressDialog.show();
-            getCurrentUser(mailUser, passwordUser);
+            callModel(bigouderId);
 
         } else {
             startActivity(new Intent(MainActivity.this, LoginActivity.class));
@@ -134,6 +133,12 @@ public class MainActivity extends AppCompatActivity implements InboxFragment.OnF
         inboxFragment = new InboxFragment();
         agendaFragment = new AgendaFragment();
         bookingFragment = new BookingFragment();
+
+        Bundle bundle = new Bundle();
+        bundle.putString("idConnectUser", bigouderId);
+        bookingFragment.setArguments(bundle);
+        inboxFragment.setArguments(bundle);
+        agendaFragment.setArguments(bundle);
 
 
         BottomNavigationView bottomNavigationView = (BottomNavigationView) findViewById(R.id.navigation);
@@ -186,71 +191,31 @@ public class MainActivity extends AppCompatActivity implements InboxFragment.OnF
 
     }
 
-    public void getCurrentUser(String mailUser, String passwordUser) {
-        String action = "connectUser";
-
-
-        OkHttpClient client = new OkHttpClient();
-
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://www.bigoudychat.ovh/app/resources/")
-                .client(client)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        ServiceApi serviceApi = retrofit.create(ServiceApi.class);
-
-        Call<UserModel> userModelCall = serviceApi.getUserModel(action, mailUser, passwordUser);
-
-        userModelCall.enqueue(new Callback<UserModel>() {
-            @Override
-            public void onResponse(Call<UserModel> call, Response<UserModel> response) {
-                currentUser = response.body();
-                PreferenceManager.getDefaultSharedPreferences(MainActivity.this).edit().putString("idBigouder", currentUser.getIdConnectedUser()).commit();
-                progressDialog.dismiss();
-                String totcaca = currentUser.getIdConnectedUser();
-                Bundle bundle = new Bundle();
-                bundle.putString("idConnectUser", currentUser.getIdConnectedUser());
-                bookingFragment.setArguments(bundle);
-                inboxFragment.setArguments(bundle);
-                agendaFragment.setArguments(bundle);
-                callModel(currentUser.getIdConnectedUser());
-
-
-            }
-
-            @Override
-            public void onFailure(Call<UserModel> call, Throwable t) {
-
-            }
-        });
-
-    }
 
     public void callModel(final String idConnectUser) {
         final BookingModel model;
         String action = "getIncomingMeetingByBigouderId";
         Integer id = new Integer(idConnectUser).intValue();
-        final String[] filter = {"incoming"};
+        final String filter = "incoming";
 
         OkHttpClient client = new OkHttpClient();
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://www.bigoudychat.ovh/app/resources/")
+                .baseUrl(Resources.RESOURCES)
                 .client(client)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
         ServiceApi serviceApi = retrofit.create(ServiceApi.class);
 
-        final Call<BookingModel> bookingModelCall = serviceApi.getBookingModel(action, id, filter[0]);
+        final Call<BookingModel> bookingModelCall = serviceApi.getBookingModel(action, id, filter);
 
         bookingModelCall.enqueue(new Callback<BookingModel>() {
             @Override
             public void onResponse(Call<BookingModel> call, Response<BookingModel> response) {
+                progressDialog.dismiss();
                 bookingModel = response.body();
                 bundleGlobal = new Bundle();
                 bundleGlobal.putSerializable("bookingModel", bookingModel);
-                bundleGlobal.putString("idConnectUser", idConnectUser);
 
                 getResultsFromApi();
 
@@ -258,8 +223,6 @@ public class MainActivity extends AppCompatActivity implements InboxFragment.OnF
 
             @Override
             public void onFailure(Call<BookingModel> call, Throwable t) {
-                String toto;
-
             }
         });
 

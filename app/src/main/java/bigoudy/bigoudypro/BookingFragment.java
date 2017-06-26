@@ -216,7 +216,7 @@ public class BookingFragment extends Fragment {
 
         OkHttpClient client = new OkHttpClient();
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://www.bigoudychat.ovh/app/resources/")
+                .baseUrl(Resources.RESOURCES)
                 .client(client)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();

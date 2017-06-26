@@ -69,7 +69,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         OkHttpClient client = new OkHttpClient();
 
         retrofit = new Retrofit.Builder()
-                .baseUrl("https://www.bigoudychat.ovh/app/resources/")
+                .baseUrl(Resources.RESOURCES)
                 .client(client)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
@@ -100,8 +100,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     @Override
                     public void onResponse(Call<UserModel> call, Response<UserModel> userModelResponse) {
                         if (userModelResponse.body().getIdConnectedUser() != "-1" & userModelResponse != null) {
-                            PreferenceManager.getDefaultSharedPreferences(LoginActivity.this).edit().putString("bigoudyMailUser", mailUser).commit();
-                            PreferenceManager.getDefaultSharedPreferences(LoginActivity.this).edit().putString("bigoudyPasswordUser", passwordUserSha1).commit();
+                            String bigouderId = userModelResponse.body().getIdConnectedUser();
+                            PreferenceManager.getDefaultSharedPreferences(LoginActivity.this).edit().putString("bigouderId", bigouderId).commit();
                             startActivity(new Intent(LoginActivity.this, MainActivity.class));
                         }
                     }

@@ -405,7 +405,7 @@ public class AgendaFragment extends Fragment implements WeekView.EventClickListe
         int monthGoogleEnd = 0;
         int yearGoogleEnd = 0;
 
-        int fakeDuration = 0;
+        int duration = 0;
 
         String[] totalSplit = date.split("¤");
         String summary = totalSplit[0];
@@ -483,7 +483,7 @@ public class AgendaFragment extends Fragment implements WeekView.EventClickListe
             long difference = Math.abs(date1.getTime() - date2.getTime());
             long differenceDates = difference / (60 * 1000);
 
-            fakeDuration = (int) differenceDates;
+            duration = (int) differenceDates;
 
         } catch (Exception exception) {
             Log.e("DIDN'T WORK", "exception " + exception);
@@ -499,9 +499,8 @@ public class AgendaFragment extends Fragment implements WeekView.EventClickListe
             starTime.set(Calendar.MONTH, monthGoogleStart - 1);
             starTime.set(Calendar.YEAR, yearGoogleStart);
             Calendar endtime = (Calendar) starTime.clone();
-            endtime.add(Calendar.MINUTE, fakeDuration);
+            endtime.add(Calendar.MINUTE, duration);
             googleWeekViewEvent = new WeekViewEvent(0, summary, starTime, endtime);
-
 
 
             return googleWeekViewEvent;

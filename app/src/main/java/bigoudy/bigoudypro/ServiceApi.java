@@ -37,6 +37,20 @@ public interface ServiceApi {
             @Field("cancellationReason") String cancellationReason
     );
 
+    @FormUrlEncoded
+    @POST("meeting.php")
+    Call<AcceptReservation> acceptReservation(
+            @Field("action") String action,
+            @Field("idMeeting") Integer idMeeting,
+            @Field("durationMeeting") Integer durationMeeting,
+            @Field("dateMeeting") String dateMeeting,
+            @Field("timesAvailable") String timesAvailable,
+            @Field("moreInfoBigouder") String moreInfoBigouder,
+            @Field("idBigouder") Integer idBigouder,
+            @Field("dateDiagnosticMeeting") String dateDiagnosticMeeting,
+            @Field("timeDiagnosticAvailable") String timeDiagnosticAvailable
+    );
+
 
 
 
