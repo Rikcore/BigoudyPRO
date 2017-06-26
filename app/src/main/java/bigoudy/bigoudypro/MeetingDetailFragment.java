@@ -16,6 +16,10 @@ import android.view.ViewGroup;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
+
+import de.hdodenhof.circleimageview.CircleImageView;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -105,6 +109,14 @@ public class MeetingDetailFragment extends Fragment {
         Fonts.setFontMontSerrat(getActivity(), textViewComments);
         TextView textViewPrice = (TextView)v.findViewById(R.id.textViewPrice);
         Fonts.setFontMontSerrat(getActivity(), textViewPrice);
+        CircleImageView imageViewAvatar = (CircleImageView)v.findViewById(R.id.imageViewAvatar);
+
+        String urlFull = "https://www.bigoudychat.ovh/"+meetingDetails.getLinkAvatarCustomer();
+
+        Picasso
+                .with(getActivity().getApplicationContext())
+                .load(Uri.parse(urlFull))
+                .into(imageViewAvatar);
 
 
         textViewName.setText(meetingDetails.getFirstnameCustomer()+" "+meetingDetails.getLastnameCustomer());
