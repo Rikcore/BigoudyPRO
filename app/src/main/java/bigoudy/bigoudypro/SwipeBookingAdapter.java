@@ -165,53 +165,8 @@ public class SwipeBookingAdapter extends BaseSwipeAdapter {
                 buttonFinalizeRdv.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-
-                        StringBuilder sb = new StringBuilder();
-                        String action = "acceptReservation";
-                        int idMeeting = Integer.valueOf(currentRdv.getIdMeeting());
-                        int durationMeeting = value;
-                        int caseToLock = value/30;
-                        LocalTime[] tab = new LocalTime[caseToLock];
-                        tab[0] = LocalTime.parse(currentRdv.getBeginTimeAvailable());
-                        for(int i = 1; i < tab.length; i++){
-                            tab[i] = tab[i-1].plusMinutes(30);
-                        }
-                        String[] tabString = new String[caseToLock];
-                        for (int j = 0; j < tabString.length; j++){
-                            tabString[j] = "'"+tab[j].toString().substring(0, 8)+"'";
-                        }
-                        for (int k = 0; k < tabString.length; k++){
-                            if(k < tabString.length - 1){
-                                sb.append(tabString[k]);
-                                sb.append(",");
-                            }else{
-                                sb.append(tabString[k]);
-                            }
-                        }
-
-                        String dateMeeting = currentRdv.getDateMeeting();
-                        String timesAvailable = sb.toString();
-                        String moreInfoBigouder = "";
-                        Integer id = Integer.valueOf(idBigouder);
-                        String dateDiagnosticMeeting = "null";
-                        String timeDiagnosticAvailable = "null";
-
-                        final retrofit2.Call<AcceptReservation> acceptReservation = callRetrofit().acceptReservation(action, idMeeting, durationMeeting, dateMeeting, timesAvailable, moreInfoBigouder, id, dateDiagnosticMeeting, timeDiagnosticAvailable);
-                        acceptReservation.enqueue(new Callback<AcceptReservation>() {
-                            @Override
-                            public void onResponse(retrofit2.Call<AcceptReservation> call, Response<AcceptReservation> response) {
-                                Toast.makeText(context, String.valueOf("J'accepte le rdv"+currentRdv.getIdCustomer()+currentRdv.getIdMeeting()), Toast.LENGTH_SHORT).show();
-                                bookingFragment.btn_demand.callOnClick();
-                                ad.dismiss();
-
-
-                            }
-
-                            @Override
-                            public void onFailure(retrofit2.Call<AcceptReservation> call, Throwable t) {
-
-                            }
-                        });
+                        acceptMeeting(currentRdv);
+                        ad.dismiss();
 
                     }
                 });
@@ -360,6 +315,54 @@ public class SwipeBookingAdapter extends BaseSwipeAdapter {
 
             @Override
             public void onFailure(retrofit2.Call<DeclineMeeting> call, Throwable t) {
+
+            }
+        });
+
+    }
+
+    public void acceptMeeting(final Meeting meeting){
+        StringBuilder sb = new StringBuilder();
+        String action = "acceptReservation";
+        int idMeeting = Integer.valueOf(meeting.getIdMeeting());
+        int durationMeeting = value;
+        int caseToLock = value/30;
+        LocalTime[] tab = new LocalTime[caseToLock];
+        tab[0] = LocalTime.parse(meeting.getBeginTimeAvailable());
+        for(int i = 1; i < tab.length; i++){
+            tab[i] = tab[i-1].plusMinutes(30);
+        }
+        String[] tabString = new String[caseToLock];
+        for (int j = 0; j < tabString.length; j++){
+            tabString[j] = "'"+tab[j].toString().substring(0, 8)+"'";
+        }
+        for (int k = 0; k < tabString.length; k++){
+            if(k < tabString.length - 1){
+                sb.append(tabString[k]);
+                sb.append(",");
+            }else{
+                sb.append(tabString[k]);
+            }
+        }
+
+        String dateMeeting = meeting.getDateMeeting();
+        String timesAvailable = sb.toString();
+        String moreInfoBigouder = "";
+        Integer id = Integer.valueOf(idBigouder);
+        String dateDiagnosticMeeting = "null";
+        String timeDiagnosticAvailable = "null";
+
+        final retrofit2.Call<AcceptReservation> acceptReservation = callRetrofit().acceptReservation(action, idMeeting, durationMeeting, dateMeeting, timesAvailable, moreInfoBigouder, id, dateDiagnosticMeeting, timeDiagnosticAvailable);
+        acceptReservation.enqueue(new Callback<AcceptReservation>() {
+            @Override
+            public void onResponse(retrofit2.Call<AcceptReservation> call, Response<AcceptReservation> response) {
+                Toast.makeText(context, String.valueOf("J'accepte le rdv"+meeting.getIdCustomer()+meeting.getIdMeeting()), Toast.LENGTH_SHORT).show();
+                bookingFragment.btn_demand.callOnClick();
+
+            }
+
+            @Override
+            public void onFailure(retrofit2.Call<AcceptReservation> call, Throwable t) {
 
             }
         });
