@@ -29,7 +29,11 @@ import org.joda.time.LocalTime;
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.DateTimeFormatterBuilder;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Locale;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -99,11 +103,11 @@ public class SwipeBookingAdapter extends BaseSwipeAdapter {
                 .into(imageViewAvatar);
 
         textViewName.setText(currentRdv.getFirstnameCustomer());
-        textViewDate.setText(currentRdv.getDateMeeting());
+        textViewDate.setText(getGoodDateFormat(currentRdv.getDateMeeting()));
         textViewCoupe.setText(currentRdv.getPerformances().get(0).getLibPerformance());
         textViewPrice.setText(currentRdv.getAmmountWithTimeIncreaseHT());
 
-        Button buttonAccept = (Button)convertView.findViewById(R.id.buttonAccept);
+        final Button buttonAccept = (Button)convertView.findViewById(R.id.buttonAccept);
         final Button buttonDecline = (Button)convertView.findViewById(R.id.buttonDecline);
         Button buttonMessage = (Button)convertView.findViewById(R.id.buttonMessage);
         Button buttonGps = (Button)convertView.findViewById(R.id.buttonGPS);
@@ -121,7 +125,7 @@ public class SwipeBookingAdapter extends BaseSwipeAdapter {
             public void onClick(View v) {
 
                 final int step = 30;
-                final int max = 240;
+                final int max = 210;
                 final int min = 30;
 
                 final AlertDialog.Builder alertAccept = new AlertDialog.Builder(context);
@@ -130,16 +134,26 @@ public class SwipeBookingAdapter extends BaseSwipeAdapter {
                 final LinearLayout linearLayoutAccept = new LinearLayout(context);
                 linearLayoutAccept.setOrientation(LinearLayout.VERTICAL);
                 final TextView durationTextView = new TextView(context);
+                durationTextView.setText("30");
                 final SeekBar seekBar = new SeekBar(context);
-                final Button buttonFinalizeRdv = new Button(context);
-                buttonFinalizeRdv.setText("Ok");
                 seekBar.setMax( (max - min) / step );
-                linearLayoutAccept.addView(durationTextView);
+                final Button buttonFinalizeRdv = new Button(context);
+                final Button buttonCancelAccept = new Button(context);
+                buttonFinalizeRdv.setBackground(context.getResources().getDrawable(R.drawable.selector_btn_accept));
+                buttonCancelAccept.setBackground(context.getResources().getDrawable(R.drawable.selector_btn_accept));
+                buttonFinalizeRdv.setText("Ok");
+                buttonCancelAccept.setText("Annuler");
                 durationTextView.setGravity(Gravity.CENTER_HORIZONTAL);
                 buttonFinalizeRdv.setGravity(Gravity.CENTER_HORIZONTAL);
                 durationTextView.setTextSize(20);
+                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayoutCompat.LayoutParams.MATCH_PARENT, LinearLayoutCompat.LayoutParams.MATCH_PARENT);
+                params.setMargins(40,40,40,40);
+                buttonCancelAccept.setLayoutParams(params);
+                buttonFinalizeRdv.setLayoutParams(params);
+                linearLayoutAccept.addView(durationTextView);
                 linearLayoutAccept.addView(seekBar);
                 linearLayoutAccept.addView(buttonFinalizeRdv);
+                linearLayoutAccept.addView(buttonCancelAccept);
                 alertAccept.setView(linearLayoutAccept);
 
                 final AlertDialog ad = alertAccept.show();
@@ -170,6 +184,13 @@ public class SwipeBookingAdapter extends BaseSwipeAdapter {
 
                     }
                 });
+
+                buttonCancelAccept.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        ad.dismiss();
+                    }
+                });
             }
         });
 
@@ -185,10 +206,18 @@ public class SwipeBookingAdapter extends BaseSwipeAdapter {
                 final EditText editTextDeclineReason = new EditText(context);
                 final Button buttonDeclineReason = new Button(context);
                 buttonDeclineReason.setText("OK");
+                buttonDeclineReason.setBackground(context.getResources().getDrawable(R.drawable.selector_btn_accept));
                 final Button buttonCancelDecline = new Button(context);
                 buttonCancelDecline.setText("Annuler");
+                buttonCancelDecline.setBackground(context.getResources().getDrawable(R.drawable.selector_btn_accept));
+                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayoutCompat.LayoutParams.MATCH_PARENT, LinearLayoutCompat.LayoutParams.MATCH_PARENT);
+                params.setMargins(40,40,40,40);
+                editTextDeclineReason.setLayoutParams(params);
+                buttonDeclineReason.setLayoutParams(params);
+                buttonCancelDecline.setLayoutParams(params);
                 linearLayoutDecline.addView(editTextDeclineReason);
                 linearLayoutDecline.addView(buttonDeclineReason);
+                linearLayoutDecline.addView(buttonCancelDecline);
                 alertDecline.setView(linearLayoutDecline);
                 final AlertDialog ad = alertDecline.show();
 
@@ -196,6 +225,13 @@ public class SwipeBookingAdapter extends BaseSwipeAdapter {
                     @Override
                     public void onClick(View v) {
                         declineMeeting(currentRdv, editTextDeclineReason.getText().toString());
+                        ad.dismiss();
+                    }
+                });
+
+                buttonCancelDecline.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
                         ad.dismiss();
                     }
                 });
@@ -211,25 +247,30 @@ public class SwipeBookingAdapter extends BaseSwipeAdapter {
             @Override
             public void onClick(View v) {
                 String motif = "Saisissez votre message";
-                Toast.makeText(context, "J'envoie un message", Toast.LENGTH_SHORT).show();
-
                 final LinearLayout linearLayoutMessage = new LinearLayout(context);
                 linearLayoutMessage.setOrientation(LinearLayout.VERTICAL);
                 final EditText edittextMessage = new EditText(context);
                 edittextMessage.setInputType(InputType.TYPE_TEXT_FLAG_CAP_SENTENCES|InputType.TYPE_TEXT_FLAG_MULTI_LINE);
-               // edittext.setMinLines(2);
-                edittextMessage.setMaxLines(4);
                 edittextMessage.setVerticalScrollBarEnabled(true);
                 edittextMessage.setScroller(new Scroller(context));
                 edittextMessage.setMovementMethod(new ScrollingMovementMethod());
                 edittextMessage.setGravity(Gravity.LEFT|Gravity.TOP);
                 Button buttonSendMessage = new Button(context);
                 buttonSendMessage.setText("ok");
-                buttonSendMessage.setBackground(context.getResources().getDrawable(R.drawable.selector_btn_message));
+                buttonSendMessage.setBackground(context.getResources().getDrawable(R.drawable.selector_btn_accept));
+                Button buttonCancelMessage = new Button(context);
+                buttonCancelMessage.setText("Annuler");
+                buttonCancelMessage.setBackground(context.getResources().getDrawable(R.drawable.selector_btn_accept));
+                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayoutCompat.LayoutParams.MATCH_PARENT, LinearLayoutCompat.LayoutParams.MATCH_PARENT);
+                params.setMargins(40,40,40,40);
+                buttonSendMessage.setLayoutParams(params);
+                buttonCancelMessage.setLayoutParams(params);
+                edittextMessage.setLayoutParams(params);
                 linearLayoutMessage.addView(edittextMessage);
                 linearLayoutMessage.addView(buttonSendMessage);
+                linearLayoutMessage.addView(buttonCancelMessage);
                 AlertDialog.Builder alertMessage = new AlertDialog.Builder(context);
-                alertMessage.setMessage("Entrez votre Message");
+                alertMessage.setMessage("Entrez votre Message pour "+currentRdv.getFirstnameCustomer());
                 alertMessage.setTitle("Message");
                 alertMessage.setView(linearLayoutMessage);
 
@@ -238,6 +279,13 @@ public class SwipeBookingAdapter extends BaseSwipeAdapter {
                     @Override
                     public void onClick(View v) {
                         sendMessage(currentRdv, edittextMessage.getText().toString());
+                        ad.dismiss();
+                    }
+                });
+
+                buttonCancelMessage.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
                         ad.dismiss();
                     }
                 });
@@ -356,7 +404,7 @@ public class SwipeBookingAdapter extends BaseSwipeAdapter {
         acceptReservation.enqueue(new Callback<AcceptReservation>() {
             @Override
             public void onResponse(retrofit2.Call<AcceptReservation> call, Response<AcceptReservation> response) {
-                Toast.makeText(context, String.valueOf("J'accepte le rdv"+meeting.getIdCustomer()+meeting.getIdMeeting()), Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "Rendez-vous accepté", Toast.LENGTH_SHORT).show();
                 bookingFragment.btn_demand.callOnClick();
 
             }
@@ -367,5 +415,19 @@ public class SwipeBookingAdapter extends BaseSwipeAdapter {
             }
         });
 
+    }
+
+    public String getGoodDateFormat(String dateString){
+        DateFormat fromFormat = new SimpleDateFormat("yyyy-MM-dd");
+        fromFormat.setLenient(false);
+        DateFormat toFormat = new SimpleDateFormat("dd-MM-yyyy");
+        toFormat.setLenient(false);
+        Date date = null;
+        try {
+            date = fromFormat.parse(dateString);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return toFormat.format(date);
     }
 }

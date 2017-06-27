@@ -96,7 +96,6 @@ public class MainActivity extends AppCompatActivity implements InboxFragment.OnF
     static final int REQUEST_PERMISSION_GET_ACCOUNTS = 1003;
     private static final String[] SCOPES = {CalendarScopes.CALENDAR_READONLY};
     private static final String PREF_ACCOUNT_NAME = "accountName";
-    private List<String> list;
 
 
     @Override
@@ -159,11 +158,7 @@ public class MainActivity extends AppCompatActivity implements InboxFragment.OnF
                     case R.id.navigation_agenda:
                         getResultsFromApi();
                         actionBar.show();
-                        /*fragmentManager
-                                .beginTransaction()
-                                .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
-                                .replace(R.id.contentLayout, agendaFragment, agendaFragment.getTag())
-                                .commit();*/
+
                         //Do what you need
                         return true;
                     case R.id.navigation_booking:

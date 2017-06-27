@@ -10,7 +10,7 @@
 
     <style name="notitlebar" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/white</item>
+        <item name="colorAccent">@color/bigoudystronggold</item>
 
     </style>
 

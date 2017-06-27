@@ -146,8 +146,7 @@ public class AgendaFragment extends Fragment implements WeekView.EventClickListe
         mRdvButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent toCreateRdvIntentButton = (new Intent(getActivity(), CreatRdvActivity.class));
-                startActivity(toCreateRdvIntentButton);
+                //NEW MEETING
             }
         });
 
@@ -156,7 +155,6 @@ public class AgendaFragment extends Fragment implements WeekView.EventClickListe
 
         bookingModel = (BookingModel) getArguments().getSerializable("bookingModel");
 
-        //callModel(idConnectUser);
 
         // Inflate the layout for this fragment
 
@@ -317,10 +315,13 @@ public class AgendaFragment extends Fragment implements WeekView.EventClickListe
     @Override
     public void onEventClick(WeekViewEvent event, RectF eventRect) {
 
+
         meetingDetailFragment = new MeetingDetailFragment();
         fragmentManager = getFragmentManager();
         int testId = (int) event.getId();
         Meeting selectedMeeting = hashMapMeeting.get(testId);
+
+        //Si c'est un rdv Bigoudy, ouvre le détail
         if(selectedMeeting != null) {
             Bundle bundleDetails = new Bundle();
             bundleDetails.putSerializable("meetingDetails", selectedMeeting);
@@ -329,6 +330,8 @@ public class AgendaFragment extends Fragment implements WeekView.EventClickListe
                     .beginTransaction()
                     .replace(R.id.contentLayout, meetingDetailFragment, meetingDetailFragment.getTag())
                     .commit();
+
+        //Sinon ouvre Google Calendar sur le mois en cours
         }else{
             Calendar cal = new GregorianCalendar();
             cal.setTime(new Date());
@@ -360,9 +363,10 @@ public class AgendaFragment extends Fragment implements WeekView.EventClickListe
         // Populate the week view with some events.
         events = new ArrayList<WeekViewEvent>();
 
+        //AJOUT DES RDV GOOGLE A LA LISTE
         for (int j = 0; j < googleWeekViewEventList.size(); j++){
             WeekViewEvent eventGoogle = googleWeekViewEventList.get(j);
-            if(eventGoogle.getStartTime().get(Calendar.MONTH) == newMonth) {
+            if(eventGoogle.getStartTime().get(Calendar.MONTH) == newMonth && eventGoogle.getStartTime().get(Calendar.YEAR) == newYear) {
                 eventGoogle.setColor(getResources().getColor(R.color.bigoudydarkgrey));
                 events.add(eventGoogle);
             }
