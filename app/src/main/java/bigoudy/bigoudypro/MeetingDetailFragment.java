@@ -18,6 +18,11 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import de.hdodenhof.circleimageview.CircleImageView;
 
 
@@ -121,7 +126,11 @@ public class MeetingDetailFragment extends Fragment {
 
         textViewName.setText(meetingDetails.getFirstnameCustomer()+" "+meetingDetails.getLastnameCustomer());
         textViewLibPerf.setText(meetingDetails.getPerformances().get(0).getLibPerformance());
-        textViewDate.setText(meetingDetails.getDateMeeting()+"\n"+meetingDetails.getBeginTimeAvailable());
+
+        String formatDate = getGoodDateFormat(meetingDetails.getDateMeeting());
+
+
+        textViewDate.setText(formatDate+"\n"+meetingDetails.getBeginTimeAvailable().substring(0,5));
         textViewAdress.setText(meetingDetails.getAddressMeeting()+"\n"+meetingDetails.getZipcodeMeeting()+" "+meetingDetails.getCityMeeting());
         textViewRappel.setText("30 minutes avant");
         if (meetingDetails.getMoreInfoAskMeeting() != null) {
@@ -186,6 +195,20 @@ public class MeetingDetailFragment extends Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
+    }
+
+    public String getGoodDateFormat(String dateString){
+        DateFormat fromFormat = new SimpleDateFormat("yyyy-MM-dd");
+        fromFormat.setLenient(false);
+        DateFormat toFormat = new SimpleDateFormat("EEEEEEEE dd MMM yyyy");
+        toFormat.setLenient(false);
+        Date date = null;
+        try {
+            date = fromFormat.parse(dateString);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return toFormat.format(date);
     }
 
 

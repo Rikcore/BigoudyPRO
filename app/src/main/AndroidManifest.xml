@@ -25,7 +25,6 @@
         <activity
             android:name=".LoginActivity"
             android:theme="@style/notitlebar" />
-        <activity android:name=".CreatRdvActivity" />
 
         <receiver
             android:name=".MyReceiver"
