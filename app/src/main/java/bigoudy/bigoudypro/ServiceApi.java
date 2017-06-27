@@ -40,6 +40,7 @@ public interface ServiceApi {
     @FormUrlEncoded
     @POST("meeting.php")
     Call<AcceptReservation> acceptReservation(
+
             @Field("action") String action,
             @Field("idMeeting") Integer idMeeting,
             @Field("durationMeeting") Integer durationMeeting,
@@ -51,7 +52,13 @@ public interface ServiceApi {
             @Field("timeDiagnosticAvailable") String timeDiagnosticAvailable
     );
 
-
-
+    @FormUrlEncoded
+    @POST("chat.php")
+    Call<Message> sendMessageRdv(
+            @Field("action") String action,
+            @Field("idSender") Integer idSender,
+            @Field("idReceiver") Integer idReceiver,
+            @Field("textMessage") String textMessage
+    );
 
 }

@@ -258,6 +258,35 @@ public class SwipeBookingAdapter extends BaseSwipeAdapter {
                 String motif = "Saisissez votre message";
                 Toast.makeText(context, "J'envoie un message", Toast.LENGTH_SHORT).show();
 
+                final LinearLayout linearLayoutMessage = new LinearLayout(context);
+                linearLayoutMessage.setOrientation(LinearLayout.VERTICAL);
+                final EditText edittextMessage = new EditText(context);
+                edittextMessage.setInputType(InputType.TYPE_TEXT_FLAG_CAP_SENTENCES|InputType.TYPE_TEXT_FLAG_MULTI_LINE);
+               // edittext.setMinLines(2);
+                edittextMessage.setMaxLines(4);
+                edittextMessage.setVerticalScrollBarEnabled(true);
+                edittextMessage.setScroller(new Scroller(context));
+                edittextMessage.setMovementMethod(new ScrollingMovementMethod());
+                edittextMessage.setGravity(Gravity.LEFT|Gravity.TOP);
+                Button buttonSendMessage = new Button(context);
+                buttonSendMessage.setText("ok");
+                buttonSendMessage.setBackground(context.getResources().getDrawable(R.drawable.selector_btn_message));
+                linearLayoutMessage.addView(edittextMessage);
+                linearLayoutMessage.addView(buttonSendMessage);
+                AlertDialog.Builder alertMessage = new AlertDialog.Builder(context);
+                alertMessage.setMessage("Entrez votre Message");
+                alertMessage.setTitle("Message");
+                alertMessage.setView(linearLayoutMessage);
+
+                final AlertDialog ad = alertMessage.show();
+                buttonSendMessage.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        sendMessage(currentRdv, edittextMessage.getText().toString());
+                        ad.dismiss();
+                    }
+                });
+
             }
         });
 
@@ -300,6 +329,23 @@ public class SwipeBookingAdapter extends BaseSwipeAdapter {
         return serviceApi;
     }
 
+    public void sendMessage(Meeting meeting, String message){
+        String action = "addMessageAndDiscussion";
+        Integer idSender = Integer.valueOf(idBigouder);
+        Integer idReceiver = Integer.valueOf(meeting.getIdCustomer());
+        final retrofit2.Call<Message> callMessage = callRetrofit().sendMessageRdv(action, idSender, idReceiver, message);
+        callMessage.enqueue(new Callback<Message>() {
+            @Override
+            public void onResponse(retrofit2.Call<Message> call, Response<Message> response) {
+                Toast.makeText(context, "Message envoyé", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onFailure(retrofit2.Call<Message> call, Throwable t) {
+
+            }
+        });
+
     public void declineMeeting(Meeting meeting, String declineReason){
         String action = "refuseReservation";
         int idMeeting = Integer.valueOf(meeting.getIdMeeting());
@@ -317,5 +363,6 @@ public class SwipeBookingAdapter extends BaseSwipeAdapter {
 
             }
         });
+
     }
 }
