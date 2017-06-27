@@ -329,7 +329,7 @@ public class SwipeBookingAdapter extends BaseSwipeAdapter {
         return serviceApi;
     }
 
-    public void sendMessage(Meeting meeting, String message){
+    public void sendMessage(Meeting meeting, String message) {
         String action = "addMessageAndDiscussion";
         Integer idSender = Integer.valueOf(idBigouder);
         Integer idReceiver = Integer.valueOf(meeting.getIdCustomer());
@@ -345,7 +345,7 @@ public class SwipeBookingAdapter extends BaseSwipeAdapter {
 
             }
         });
-
+    }
     public void declineMeeting(Meeting meeting, String declineReason){
         String action = "refuseReservation";
         int idMeeting = Integer.valueOf(meeting.getIdMeeting());
