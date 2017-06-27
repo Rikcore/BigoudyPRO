@@ -104,7 +104,7 @@ public class SwipeBookingAdapter extends BaseSwipeAdapter {
         textViewPrice.setText(currentRdv.getAmmountWithTimeIncreaseHT());
 
         Button buttonAccept = (Button)convertView.findViewById(R.id.buttonAccept);
-        Button buttonDecline = (Button)convertView.findViewById(R.id.buttonDecline);
+        final Button buttonDecline = (Button)convertView.findViewById(R.id.buttonDecline);
         Button buttonMessage = (Button)convertView.findViewById(R.id.buttonMessage);
         Button buttonGps = (Button)convertView.findViewById(R.id.buttonGPS);
         if(currentRdv.getIsADemandMeeting().equals("0")){
@@ -124,25 +124,25 @@ public class SwipeBookingAdapter extends BaseSwipeAdapter {
                 final int max = 240;
                 final int min = 30;
 
-                final AlertDialog.Builder alert = new AlertDialog.Builder(context);
-                alert.setMessage("Merci de choisir la durée du rendez-vous");
-                alert.setTitle("Durée rendez-vous");
-                final LinearLayout linearLayout = new LinearLayout(context);
-                linearLayout.setOrientation(LinearLayout.VERTICAL);
+                final AlertDialog.Builder alertAccept = new AlertDialog.Builder(context);
+                alertAccept.setMessage("Merci de choisir la durée du rendez-vous");
+                alertAccept.setTitle("Durée rendez-vous");
+                final LinearLayout linearLayoutAccept = new LinearLayout(context);
+                linearLayoutAccept.setOrientation(LinearLayout.VERTICAL);
                 final TextView durationTextView = new TextView(context);
                 final SeekBar seekBar = new SeekBar(context);
-                final Button button = new Button(context);
-                button.setText("Ok");
+                final Button buttonFinalizeRdv = new Button(context);
+                buttonFinalizeRdv.setText("Ok");
                 seekBar.setMax( (max - min) / step );
-                linearLayout.addView(durationTextView);
+                linearLayoutAccept.addView(durationTextView);
                 durationTextView.setGravity(Gravity.CENTER_HORIZONTAL);
-                button.setGravity(Gravity.CENTER_HORIZONTAL);
+                buttonFinalizeRdv.setGravity(Gravity.CENTER_HORIZONTAL);
                 durationTextView.setTextSize(20);
-                linearLayout.addView(seekBar);
-                linearLayout.addView(button);
-                alert.setView(linearLayout);
+                linearLayoutAccept.addView(seekBar);
+                linearLayoutAccept.addView(buttonFinalizeRdv);
+                alertAccept.setView(linearLayoutAccept);
 
-                final AlertDialog ad = alert.show();
+                final AlertDialog ad = alertAccept.show();
 
                 seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
                     @Override
@@ -162,7 +162,7 @@ public class SwipeBookingAdapter extends BaseSwipeAdapter {
                     }
                 });
 
-                button.setOnClickListener(new View.OnClickListener() {
+                buttonFinalizeRdv.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
 
@@ -222,8 +222,30 @@ public class SwipeBookingAdapter extends BaseSwipeAdapter {
         buttonDecline.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String motif = DECLINE_MOTIF;
-                declineMeeting(currentRdv);
+                final AlertDialog.Builder alertDecline = new AlertDialog.Builder(context);
+                alertDecline.setTitle("Refus rendez-vous");
+                alertDecline.setMessage("Merci de préciser votre motif de refus");
+                final LinearLayout linearLayoutDecline = new LinearLayout(context);
+                linearLayoutDecline.setOrientation(LinearLayout.VERTICAL);
+                final EditText editTextDeclineReason = new EditText(context);
+                final Button buttonDeclineReason = new Button(context);
+                buttonDeclineReason.setText("OK");
+                final Button buttonCancelDecline = new Button(context);
+                buttonCancelDecline.setText("Annuler");
+                linearLayoutDecline.addView(editTextDeclineReason);
+                linearLayoutDecline.addView(buttonDeclineReason);
+                alertDecline.setView(linearLayoutDecline);
+                final AlertDialog ad = alertDecline.show();
+
+                buttonDeclineReason.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        declineMeeting(currentRdv, editTextDeclineReason.getText().toString());
+                        ad.dismiss();
+                    }
+                });
+
+
 
 
             }
@@ -278,10 +300,10 @@ public class SwipeBookingAdapter extends BaseSwipeAdapter {
         return serviceApi;
     }
 
-    public void declineMeeting(Meeting meeting){
+    public void declineMeeting(Meeting meeting, String declineReason){
         String action = "refuseReservation";
         int idMeeting = Integer.valueOf(meeting.getIdMeeting());
-        String cancellationReason = "Rendez vous refusé";
+        String cancellationReason = declineReason;
         final retrofit2.Call<DeclineMeeting> declineMeeting = callRetrofit().declineReservation(action, idMeeting, cancellationReason);
         declineMeeting.enqueue(new Callback<DeclineMeeting>() {
             @Override
