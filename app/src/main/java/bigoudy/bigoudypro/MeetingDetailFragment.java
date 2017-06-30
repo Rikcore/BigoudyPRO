@@ -14,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.support.v7.app.AppCompatActivity;
+import android.widget.GridView;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
@@ -47,6 +48,7 @@ public class MeetingDetailFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    private String[] tab;
 
     String address;
 
@@ -92,6 +94,16 @@ public class MeetingDetailFragment extends Fragment {
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_meeting_detail, container, false);
 
+        tab = new String[]{
+                "http://www.freepngimg.com/download/light/2-2-light-free-download-png.png",
+                "http://www.freepngimg.com/download/light/2-2-light-free-download-png.png",
+                "http://www.freepngimg.com/download/light/2-2-light-free-download-png.png",
+                "http://www.freepngimg.com/download/light/2-2-light-free-download-png.png",
+                "http://www.freepngimg.com/download/light/2-2-light-free-download-png.png",
+                "http://www.freepngimg.com/download/light/2-2-light-free-download-png.png",
+                "http://www.freepngimg.com/download/light/2-2-light-free-download-png.png",
+        };
+
         Meeting meetingDetails = (Meeting) getArguments().getSerializable("meetingDetails");
         address = meetingDetails.getAddressMeeting()+" "+meetingDetails.getZipcodeMeeting()+" "+meetingDetails.getCityMeeting();
 
@@ -99,6 +111,9 @@ public class MeetingDetailFragment extends Fragment {
         actionBar.hide();
 
         FloatingActionButton floatingActionButtonGps = (FloatingActionButton)v.findViewById(R.id.floatingActionButtonGps);
+
+        GridView gridViewDiagnostic = (GridView)v.findViewById(R.id.gridViewDiagnostic);
+        gridViewDiagnostic.setAdapter(new ImageAdapter(getActivity(), tab ));
 
         TextView textViewName = (TextView)v.findViewById(R.id.textViewName);
         Fonts.setFontButler(getActivity(), textViewName);

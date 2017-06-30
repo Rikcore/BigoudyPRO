@@ -182,6 +182,8 @@ public class AgendaFragment extends Fragment implements WeekView.EventClickListe
         // the week view. This is optional.
         setupDateTimeInterpreter(false);
 
+        mWeekView.goToHour(8);
+
         return view;
 
 
