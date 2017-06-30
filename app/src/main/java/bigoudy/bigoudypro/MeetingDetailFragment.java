@@ -4,17 +4,24 @@ import android.app.ActionBar;
 import android.app.FragmentBreadCrumbs;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.LinearLayoutCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.support.v7.app.AppCompatActivity;
+import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
@@ -22,6 +29,7 @@ import com.squareup.picasso.Picasso;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -106,6 +114,7 @@ public class MeetingDetailFragment extends Fragment {
 
         Meeting meetingDetails = (Meeting) getArguments().getSerializable("meetingDetails");
         address = meetingDetails.getAddressMeeting()+" "+meetingDetails.getZipcodeMeeting()+" "+meetingDetails.getCityMeeting();
+        final ArrayList<DiagnosticPhoto> diagnosticPhotoArrayList = (ArrayList<DiagnosticPhoto>) meetingDetails.getDiagnosticPhotos();
 
         actionBar = ((AppCompatActivity)getActivity()).getSupportActionBar();
         actionBar.hide();
@@ -113,7 +122,34 @@ public class MeetingDetailFragment extends Fragment {
         FloatingActionButton floatingActionButtonGps = (FloatingActionButton)v.findViewById(R.id.floatingActionButtonGps);
 
         GridView gridViewDiagnostic = (GridView)v.findViewById(R.id.gridViewDiagnostic);
-        gridViewDiagnostic.setAdapter(new ImageAdapter(getActivity(), tab ));
+        ImageView imageViewPhoto = (ImageView)v.findViewById(R.id.imageViewPhoto);
+        if(diagnosticPhotoArrayList.size() == 0){
+            gridViewDiagnostic.setVisibility(View.GONE);
+            imageViewPhoto.setVisibility(View.GONE);
+        }
+        gridViewDiagnostic.setAdapter(new ImageAdapter(getActivity(), diagnosticPhotoArrayList));
+
+        gridViewDiagnostic.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                AlertDialog.Builder alertBuilder = new AlertDialog.Builder(getActivity());
+                LinearLayout linearLayout = new LinearLayout(getActivity());
+                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayoutCompat.LayoutParams.MATCH_PARENT, LinearLayoutCompat.LayoutParams.MATCH_PARENT);
+                params.setMargins(350,40,350,40);
+                ImageView imageView = new ImageView(getActivity());
+                imageView.setLayoutParams(params);
+                imageView.setMinimumWidth(1000);
+                imageView.setMinimumHeight(1000);
+                Picasso
+                        .with(getActivity())
+                        .load(Uri.parse("https://www.bigoudychat.ovh/"+diagnosticPhotoArrayList.get(position).getLinkImageHD()))
+                        .into(imageView);
+                linearLayout.addView(imageView);
+                alertBuilder.setView(linearLayout);
+                final AlertDialog dialog = alertBuilder.show();
+                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            }
+        });
 
         TextView textViewName = (TextView)v.findViewById(R.id.textViewName);
         Fonts.setFontButler(getActivity(), textViewName);

@@ -81,6 +81,8 @@ public class MainActivity extends AppCompatActivity implements InboxFragment.OnF
     BookingFragment bookingFragment;
     FragmentManager fragmentManager;
 
+    BottomNavigationView bottomNavigationView;
+
     Bundle bundleGlobal;
 
     android.support.v7.app.ActionBar actionBar;
@@ -140,7 +142,7 @@ public class MainActivity extends AppCompatActivity implements InboxFragment.OnF
         agendaFragment.setArguments(bundle);
 
 
-        BottomNavigationView bottomNavigationView = (BottomNavigationView) findViewById(R.id.navigation);
+        bottomNavigationView = (BottomNavigationView) findViewById(R.id.navigation);
         bottomNavigationView.setSelectedItemId(R.id.navigation_agenda);
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -534,5 +536,9 @@ public class MainActivity extends AppCompatActivity implements InboxFragment.OnF
         }
     }
 
-
+    @Override
+    public void onBackPressed() {
+        getResultsFromApi();
+        bottomNavigationView.setSelectedItemId(R.id.navigation_agenda);
+    }
 }
