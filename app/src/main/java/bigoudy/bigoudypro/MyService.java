@@ -67,7 +67,7 @@ public class MyService extends Service {
     public void watchBigoudy(String filter) {
 
         String action = "getIncomingMeetingByBigouderId";
-        String idBigouder = PreferenceManager.getDefaultSharedPreferences(MyService.this).getString("idBigouder", null);
+        String idBigouder = PreferenceManager.getDefaultSharedPreferences(MyService.this).getString("bigouderId", null);
 
         if (idBigouder == null) {
             stopSelf();
@@ -99,6 +99,7 @@ public class MyService extends Service {
 
                 @Override
                 public void onFailure(Call<BookingModel> call, Throwable t) {
+                    String toto = "";
                 }
             });
 
