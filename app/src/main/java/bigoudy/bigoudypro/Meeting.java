@@ -126,7 +126,7 @@ public class Meeting implements Serializable {
     private List<Object> diagnosticResponses = new ArrayList<Object>();
     @SerializedName("diagnosticPhotos")
     @Expose
-    private List<Object> diagnosticPhotos = new ArrayList<Object>();
+    private List<DiagnosticPhoto> diagnosticPhotos = new ArrayList<DiagnosticPhoto>();
 
     public String getIdMeeting() {
         return idMeeting;
@@ -408,11 +408,11 @@ public class Meeting implements Serializable {
         this.diagnosticResponses = diagnosticResponses;
     }
 
-    public List<Object> getDiagnosticPhotos() {
+    public List<DiagnosticPhoto> getDiagnosticPhotos() {
         return diagnosticPhotos;
     }
 
-    public void setDiagnosticPhotos(List<Object> diagnosticPhotos) {
+    public void setDiagnosticPhotos(List<DiagnosticPhoto> diagnosticPhotos) {
         this.diagnosticPhotos = diagnosticPhotos;
     }
 

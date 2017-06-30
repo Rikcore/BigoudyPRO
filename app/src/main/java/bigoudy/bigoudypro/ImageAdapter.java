@@ -14,31 +14,34 @@ import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
 
+import java.util.ArrayList;
+
 public class ImageAdapter extends BaseAdapter {
     private Context mContext;
     private Meeting meeting;
-    private String[] mThumbIds;
+    private ArrayList<DiagnosticPhoto> diagnosticPhotoArrayList;
 
 
 
 
-
-    public ImageAdapter(Context c, String[] mThumbIds) {
+    public ImageAdapter(Context c, ArrayList<DiagnosticPhoto> diagnosticPhotoArrayList) {
         mContext = c;
-        this.mThumbIds = mThumbIds;
+        this.diagnosticPhotoArrayList = diagnosticPhotoArrayList;
     }
 
     public int getCount() {
-        return mThumbIds.length;
+        //return mThumbIds.length;
+        return diagnosticPhotoArrayList.size();
     }
 
     @Override
     public String getItem(int position) {
-        return mThumbIds[position];
+        //return mThumbIds[position];
+        return diagnosticPhotoArrayList.get(position).getLinkImageHD();
     }
 
     public long getItemId(int position) {
-        return 0;
+        return position;
     }
 
     public View getView(int position, View convertView, ViewGroup parent) {
@@ -47,11 +50,11 @@ public class ImageAdapter extends BaseAdapter {
             imageView = new ImageView(mContext);
             imageView.setLayoutParams(new GridView.LayoutParams(480, 480));
             imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-            imageView.setPadding(8, 8, 8, 8);
+            imageView.setPadding(25, 25, 25, 25);
         } else {
             imageView = (ImageView) convertView;
         }
-        String url = getItem(position);
+        String url = "https://www.bigoudychat.ovh/"+getItem(position);
         Picasso.with(mContext)
                 .load(Uri.parse(url))
                 .fit()
