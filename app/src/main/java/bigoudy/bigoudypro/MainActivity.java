@@ -452,6 +452,7 @@ public class MainActivity extends AppCompatActivity implements InboxFragment.OnF
             } catch (Exception e) {
 
                 mLastError = e;
+     //           Log.e("MainActivity", e.getMessage());
                 cancel(true);
                 return null;
             }
