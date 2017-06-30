@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.RectF;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.provider.CalendarContract;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -17,6 +18,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Switch;
 
 import com.alamkanak.weekview.DateTimeInterpreter;
 import com.alamkanak.weekview.MonthLoader;
@@ -70,6 +72,7 @@ public class AgendaFragment extends Fragment implements WeekView.EventClickListe
     private FloatingActionButton mRdvButton;
     private HashMap<Integer, Meeting> hashMapMeeting;
     MeetingDetailFragment meetingDetailFragment;
+    String idConnectUser;
 
     FragmentManager fragmentManager;
 
@@ -134,6 +137,7 @@ public class AgendaFragment extends Fragment implements WeekView.EventClickListe
 
         googleList = new ArrayList<String>();
         googleWeekViewEventList = new ArrayList<WeekViewEvent>();
+        idConnectUser = getArguments().getString("idConnectUser");
 
         googleList = getArguments().getStringArrayList("googleList");
         for (int i = 0; i < googleList.size(); i++){
@@ -150,7 +154,7 @@ public class AgendaFragment extends Fragment implements WeekView.EventClickListe
             }
         });
 
-        String idConnectUser = getArguments().getString("idConnectUser");
+
 
 
         bookingModel = (BookingModel) getArguments().getSerializable("bookingModel");
@@ -455,8 +459,8 @@ public class AgendaFragment extends Fragment implements WeekView.EventClickListe
             yearGoogleStart = Integer.valueOf(startSplitString[0]);
             monthGoogleStart = Integer.valueOf(startSplitString[1]);
             dayGoogleStart = Integer.valueOf(startSplitString[2]);
-            hourGoogleStart = 0;
-            minuteGoogleStart = 0;
+            hourGoogleStart = 00;
+            minuteGoogleStart = 00;
 
             String[] endSplitString = endString.split("-");
             yearGoogleEnd = Integer.valueOf(endSplitString[0]);
@@ -489,6 +493,8 @@ public class AgendaFragment extends Fragment implements WeekView.EventClickListe
 
             duration = (int) differenceDates;
 
+            pushGoogleRdvToBigoudy(duration, yearGoogleStart, monthGoogleStart, dayGoogleStart, hourGoogleStart, minuteGoogleStart);
+
         } catch (Exception exception) {
             Log.e("DIDN'T WORK", "exception " + exception);
         }
@@ -508,6 +514,101 @@ public class AgendaFragment extends Fragment implements WeekView.EventClickListe
 
 
             return googleWeekViewEvent;
+
+
+    }
+
+    public void pushGoogleRdvToBigoudy(int duration, int year, int month, int day, int hour, int minute){
+        String action = "addBigouderExceptionTextualTimeAvailable";
+        Integer id = Integer.valueOf(PreferenceManager.getDefaultSharedPreferences(getActivity()).getString("bigouderId", null));
+        //Boolean available = false;
+        Integer available = 0;
+        String hourBigoudy;
+        String minuteBigoudy;
+        if(hour < 10){
+            hourBigoudy = "0"+hour;
+        }else{
+            hourBigoudy = String.valueOf(hour);
+        }
+        if(minute == 0){
+            minuteBigoudy = "00";
+        }else{
+            minuteBigoudy = String.valueOf(minute);
+        }
+        String beginTime = hourBigoudy+":"+minuteBigoudy+":00";
+
+        String monthBigoudy;
+        String dayBigoudy;
+
+        if(month < 10){
+            monthBigoudy = "0"+month;
+        }else{
+            monthBigoudy = String.valueOf(month);
+        }
+
+        if(day < 10){
+            dayBigoudy = "0"+day;
+        }else{
+            dayBigoudy = String.valueOf(day);
+        }
+
+        String dateMeeting = year+"-"+monthBigoudy+"-"+dayBigoudy;
+
+        SimpleDateFormat sdf = new SimpleDateFormat("EEEE");
+        Date d = new Date(year - 1900, month - 1, day);
+        String frenchDayOfTheWeek = sdf.format(d);
+
+        String engDayOfTheWeek;
+
+        switch (frenchDayOfTheWeek){
+            case "lundi":
+                engDayOfTheWeek = "'monday'";
+                break;
+            case "mardi":
+                engDayOfTheWeek = "'tuesday'";
+                break;
+            case "mercredi":
+                engDayOfTheWeek = "'wednesday'";
+                break;
+            case "jeudi":
+                engDayOfTheWeek = "'thursday'";
+                break;
+            case "vendredi":
+                engDayOfTheWeek = "'friday'";
+                break;
+            case "samedi":
+                engDayOfTheWeek = "'saturday'";
+                break;
+            case "dimanche":
+                engDayOfTheWeek = "'sunday'";
+                break;
+            default:
+                engDayOfTheWeek = null;
+        }
+
+
+        OkHttpClient client = new OkHttpClient();
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(Resources.RESOURCES)
+                .client(client)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        ServiceApi serviceApi = retrofit.create(ServiceApi.class);
+
+        final Call<ExceptionTime> exceptionTimeCall = serviceApi.setException(action, id, beginTime, duration, engDayOfTheWeek , dateMeeting, available );
+
+        exceptionTimeCall.enqueue(new Callback<ExceptionTime>() {
+            @Override
+            public void onResponse(Call<ExceptionTime> call, Response<ExceptionTime> response) {
+                ExceptionTime exceptionTime = response.body();
+            }
+
+            @Override
+            public void onFailure(Call<ExceptionTime> call, Throwable t) {
+                String tata = "tata";
+            }
+        });
 
 
     }

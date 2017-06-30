@@ -61,4 +61,17 @@ public interface ServiceApi {
             @Field("textMessage") String textMessage
     );
 
+    @FormUrlEncoded
+    @POST("bigouder.php")
+    Call<ExceptionTime> setException(
+            @Field("action") String action,
+            @Field("idBigouder") Integer idBigouder,
+            @Field("beginTime") String beginTime,
+            @Field("duration") Integer duration,
+            @Field("day") String day,
+            @Field("date") String date,
+            //@Field("available") Boolean available
+            @Field("available") Integer available
+    );
+
 }
