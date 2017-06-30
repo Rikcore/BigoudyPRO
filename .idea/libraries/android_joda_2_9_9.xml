@@ -1,8 +1,8 @@
 <component name="libraryTable">
   <library name="android.joda-2.9.9">
     <CLASSES>
-      <root url="jar://$USER_HOME$/.android/build-cache/572129ef0820441ec2a37f84d90cf21ef6cd39b0/output/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.android/build-cache/572129ef0820441ec2a37f84d90cf21ef6cd39b0/output/res" />
+      <root url="jar://$USER_HOME$/.android/build-cache/519684c6bec6b7e53ecf82d1b5c1693304d8666f/output/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.android/build-cache/519684c6bec6b7e53ecf82d1b5c1693304d8666f/output/res" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>

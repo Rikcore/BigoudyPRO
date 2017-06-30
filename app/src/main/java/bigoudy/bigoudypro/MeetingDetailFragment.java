@@ -94,7 +94,6 @@ public class MeetingDetailFragment extends Fragment {
 
         Meeting meetingDetails = (Meeting) getArguments().getSerializable("meetingDetails");
         address = meetingDetails.getAddressMeeting()+" "+meetingDetails.getZipcodeMeeting()+" "+meetingDetails.getCityMeeting();
-        Object object = meetingDetails.getDiagnosticPhotos().get(0);
 
         actionBar = ((AppCompatActivity)getActivity()).getSupportActionBar();
         actionBar.hide();
