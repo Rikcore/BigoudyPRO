@@ -22,6 +22,7 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
@@ -56,7 +57,6 @@ public class MeetingDetailFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-    private String[] tab;
 
     String address;
 
@@ -102,17 +102,7 @@ public class MeetingDetailFragment extends Fragment {
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_meeting_detail, container, false);
 
-        tab = new String[]{
-                "http://www.freepngimg.com/download/light/2-2-light-free-download-png.png",
-                "http://www.freepngimg.com/download/light/2-2-light-free-download-png.png",
-                "http://www.freepngimg.com/download/light/2-2-light-free-download-png.png",
-                "http://www.freepngimg.com/download/light/2-2-light-free-download-png.png",
-                "http://www.freepngimg.com/download/light/2-2-light-free-download-png.png",
-                "http://www.freepngimg.com/download/light/2-2-light-free-download-png.png",
-                "http://www.freepngimg.com/download/light/2-2-light-free-download-png.png",
-        };
-
-        Meeting meetingDetails = (Meeting) getArguments().getSerializable("meetingDetails");
+        final Meeting meetingDetails = (Meeting) getArguments().getSerializable("meetingDetails");
         address = meetingDetails.getAddressMeeting()+" "+meetingDetails.getZipcodeMeeting()+" "+meetingDetails.getCityMeeting();
         final ArrayList<DiagnosticPhoto> diagnosticPhotoArrayList = (ArrayList<DiagnosticPhoto>) meetingDetails.getDiagnosticPhotos();
 
@@ -159,8 +149,9 @@ public class MeetingDetailFragment extends Fragment {
         Fonts.setFontMontSerrat(getActivity(), textViewDate);
         TextView textViewAdress = (TextView)v.findViewById(R.id.textViewAdress);
         Fonts.setFontMontSerrat(getActivity(), textViewAdress);
-        TextView textViewRappel = (TextView)v.findViewById(R.id.textViewRappel);
-        Fonts.setFontMontSerrat(getActivity(), textViewRappel);
+        TextView textViewPersonne = (TextView)v.findViewById(R.id.textViewPersonne);
+        ImageView imageViewPersonne = (ImageView)v.findViewById(R.id.imageViewPersonne);
+        Fonts.setFontMontSerrat(getActivity(), textViewPersonne);
         TextView textViewComments = (TextView)v.findViewById(R.id.textViewComments);
         Fonts.setFontMontSerrat(getActivity(), textViewComments);
         TextView textViewPrice = (TextView)v.findViewById(R.id.textViewPrice);
@@ -183,7 +174,27 @@ public class MeetingDetailFragment extends Fragment {
 
         textViewDate.setText(formatDate+"\n"+meetingDetails.getBeginTimeAvailable().substring(0,5));
         textViewAdress.setText(meetingDetails.getAddressMeeting()+"\n"+meetingDetails.getZipcodeMeeting()+" "+meetingDetails.getCityMeeting());
-        textViewRappel.setText("30 minutes avant");
+
+        if(meetingDetails.getPerformances().size() > 1){
+            textViewPersonne.setText("Ce rendez-vous comprend plusieurs personnes ou performances.");
+            textViewPersonne.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    AlertDialog.Builder alertBuilder = new AlertDialog.Builder(getActivity());
+                    ListView listViewPerf = new ListView(getActivity());
+                    alertBuilder.setView(listViewPerf);
+                    PerfAdapter perfAdapter = new PerfAdapter(getActivity(), meetingDetails);
+                    listViewPerf.setAdapter(perfAdapter);
+                    final AlertDialog dialog = alertBuilder.show();
+                }
+            });
+
+        }else{
+            textViewPersonne.setVisibility(View.GONE);
+            imageViewPersonne.setVisibility(View.GONE);
+        }
+
+
         if (meetingDetails.getMoreInfoAskMeeting() != null) {
             textViewComments.setText(meetingDetails.getMoreInfoAskMeeting().toString());
         }   else{

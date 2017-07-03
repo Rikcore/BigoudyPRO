@@ -3,40 +3,24 @@ package bigoudy.bigoudypro;
 
 import android.Manifest;
 import android.accounts.AccountManager;
-import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
-import android.graphics.Typeface;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
-import android.support.design.internal.BottomNavigationMenu;
 import android.support.design.widget.BottomNavigationView;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.text.TextUtils;
-import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.MenuItem;
 import android.support.v4.app.FragmentManager;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.LinearLayout;
-import android.widget.TextView;
-import android.widget.Toast;
-
-
-import com.alamkanak.weekview.WeekViewEvent;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.api.client.extensions.android.http.AndroidHttp;
@@ -53,11 +37,8 @@ import com.google.api.services.calendar.model.Event;
 import com.google.api.services.calendar.model.Events;
 
 import java.io.IOException;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 import okhttp3.OkHttpClient;
@@ -69,7 +50,6 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-import static android.app.Activity.RESULT_OK;
 
 public class MainActivity extends AppCompatActivity implements InboxFragment.OnFragmentInteractionListener,
         AgendaFragment.OnFragmentInteractionListener, BookingFragment.OnFragmentInteractionListener,
@@ -83,7 +63,7 @@ public class MainActivity extends AppCompatActivity implements InboxFragment.OnF
 
     BottomNavigationView bottomNavigationView;
 
-    Bundle bundleGlobal;
+    Bundle bundleAgenda;
 
     android.support.v7.app.ActionBar actionBar;
 
@@ -116,11 +96,8 @@ public class MainActivity extends AppCompatActivity implements InboxFragment.OnF
                 getApplicationContext(), Arrays.asList(SCOPES))
                 .setBackOff(new ExponentialBackOff());
 
-
+        //ON VERIFIE SI UN UTILISATEUR S'EST CONNECTE
         String bigouderId = PreferenceManager.getDefaultSharedPreferences(MainActivity.this).getString("bigouderId", null);
-
-
-
         if (bigouderId != null) {
             progressDialog.show();
             callModel(bigouderId);
@@ -149,7 +126,6 @@ public class MainActivity extends AppCompatActivity implements InboxFragment.OnF
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.navigation_inbox:
-                        //Do what you need
                         actionBar.hide();
                         fragmentManager
                                 .beginTransaction()
@@ -160,8 +136,6 @@ public class MainActivity extends AppCompatActivity implements InboxFragment.OnF
                     case R.id.navigation_agenda:
                         getResultsFromApi();
                         actionBar.show();
-
-                        //Do what you need
                         return true;
                     case R.id.navigation_booking:
                         actionBar.hide();
@@ -170,7 +144,6 @@ public class MainActivity extends AppCompatActivity implements InboxFragment.OnF
                                 .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
                                 .replace(R.id.contentLayout, bookingFragment, bookingFragment.getTag())
                                 .commit();
-                        //Do what you need
                         return true;
                     default:
                         return false;
@@ -211,8 +184,8 @@ public class MainActivity extends AppCompatActivity implements InboxFragment.OnF
             public void onResponse(Call<BookingModel> call, Response<BookingModel> response) {
                 progressDialog.dismiss();
                 bookingModel = response.body();
-                bundleGlobal = new Bundle();
-                bundleGlobal.putSerializable("bookingModel", bookingModel);
+                bundleAgenda = new Bundle();
+                bundleAgenda.putSerializable("bookingModel", bookingModel);
 
                 getResultsFromApi();
 
@@ -454,7 +427,6 @@ public class MainActivity extends AppCompatActivity implements InboxFragment.OnF
             } catch (Exception e) {
 
                 mLastError = e;
-     //           Log.e("MainActivity", e.getMessage());
                 cancel(true);
                 return null;
             }
@@ -466,11 +438,10 @@ public class MainActivity extends AppCompatActivity implements InboxFragment.OnF
          * @throws IOException
          */
         private List<String> getDataFromApi() throws IOException {
-            // List the next 10 events from the primary calendar.
             DateTime now = new DateTime(System.currentTimeMillis());
             ArrayList<String> eventStrings = new ArrayList<String>();
             Events events = mService.events().list("primary")
-                    .setMaxResults(50)
+                    .setMaxResults(100) // NOMBRE DE RESULTATS GOOGLE MAX
                     .setTimeMin(now)
                     .setOrderBy("startTime")
                     .setSingleEvents(true)
@@ -481,18 +452,16 @@ public class MainActivity extends AppCompatActivity implements InboxFragment.OnF
                 DateTime start = event.getStart().getDateTime();
                 DateTime end = event.getEnd().getDateTime();
                 if (start == null) {
-                    // All-day events don't have start times, so just use
-                    // the start date.
+                    //SI PAS D'HEURES DE DÉBUT, PRENDRE LA DATE
                     start = event.getStart().getDate();
                     end = event.getEnd().getDate();
                 }
 
-
                 eventStrings.add(String.format(event.getSummary()+"¤"+start+"¤"+end));
 
             }
-            bundleGlobal.putStringArrayList("googleList", eventStrings);
-            agendaFragment.setArguments(bundleGlobal);
+            bundleAgenda.putStringArrayList("googleList", eventStrings);
+            agendaFragment.setArguments(bundleAgenda);
             fragmentManager
                     .beginTransaction()
                     .replace(R.id.contentLayout, agendaFragment, agendaFragment.getTag())
@@ -512,7 +481,6 @@ public class MainActivity extends AppCompatActivity implements InboxFragment.OnF
             if (output == null || output.size() == 0) {
             } else {
                 output.add(0, "Data retrieved using the Google Calendar API:");
-                Log.d("prout",output.get(1));
             }
         }
 
@@ -528,10 +496,8 @@ public class MainActivity extends AppCompatActivity implements InboxFragment.OnF
                             ((UserRecoverableAuthIOException) mLastError).getIntent(),
                             MainActivity.REQUEST_AUTHORIZATION);
                 } else {
-                    String tata = "tata";
                 }
             } else {
-                String toto = "toto";
             }
         }
     }

@@ -400,7 +400,7 @@ public class AgendaFragment extends Fragment implements WeekView.EventClickListe
         return events;
 
     }
-
+    //TRANSFORME LES STRINGS REÇUS DE L'API EN WEEKVIEWEVENT
     public WeekViewEvent getGoogleCalendarEvent(String date){
 
         WeekViewEvent googleWeekViewEvent;
@@ -520,6 +520,8 @@ public class AgendaFragment extends Fragment implements WeekView.EventClickListe
 
     }
 
+
+    //RECUPERE LES DONNÉES ET LES TRANSFORME POUR LES FOURNIR AU BON FORMAT À BIGOUDY POUR GRISER LE CALENDRIER
     public void pushGoogleRdvToBigoudy(int duration, int year, int month, int day, int hour, int minute){
         String action = "addBigouderExceptionTextualTimeAvailable";
         Integer id = Integer.valueOf(PreferenceManager.getDefaultSharedPreferences(getActivity()).getString("bigouderId", null));
@@ -608,7 +610,6 @@ public class AgendaFragment extends Fragment implements WeekView.EventClickListe
 
             @Override
             public void onFailure(Call<ExceptionTime> call, Throwable t) {
-                String tata = "tata";
             }
         });
 
