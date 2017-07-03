@@ -144,6 +144,7 @@ public class MeetingDetailFragment extends Fragment {
         TextView textViewName = (TextView)v.findViewById(R.id.textViewName);
         Fonts.setFontButler(getActivity(), textViewName);
         TextView textViewLibPerf = (TextView)v.findViewById(R.id.textViewLibPerf);
+        textViewLibPerf.setSelected(true);
         Fonts.setFontMontSerrat(getActivity(), textViewLibPerf);
         TextView textViewDate = (TextView)v.findViewById(R.id.textViewDate);
         Fonts.setFontMontSerrat(getActivity(), textViewDate);
@@ -167,7 +168,12 @@ public class MeetingDetailFragment extends Fragment {
 
 
         textViewName.setText(meetingDetails.getFirstnameCustomer()+" "+meetingDetails.getLastnameCustomer());
-        textViewLibPerf.setText(meetingDetails.getPerformances().get(0).getLibPerformance());
+        int numPerf = meetingDetails.getPerformances().size();
+        if(numPerf > 1) {
+            textViewLibPerf.setText((meetingDetails.getPerformances().get(0).getLibPerformance()) + " (+" + (numPerf - 1) + ")");
+        }else{
+            textViewLibPerf.setText((meetingDetails.getPerformances().get(0).getLibPerformance()));
+        }
 
         String formatDate = getGoodDateFormat(meetingDetails.getDateMeeting());
 
