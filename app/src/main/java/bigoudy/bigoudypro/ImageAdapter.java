@@ -18,7 +18,6 @@ import java.util.ArrayList;
 
 public class ImageAdapter extends BaseAdapter {
     private Context mContext;
-    private Meeting meeting;
     private ArrayList<DiagnosticPhoto> diagnosticPhotoArrayList;
 
 
@@ -30,13 +29,11 @@ public class ImageAdapter extends BaseAdapter {
     }
 
     public int getCount() {
-        //return mThumbIds.length;
         return diagnosticPhotoArrayList.size();
     }
 
     @Override
     public String getItem(int position) {
-        //return mThumbIds[position];
         return diagnosticPhotoArrayList.get(position).getLinkImageHD();
     }
 
