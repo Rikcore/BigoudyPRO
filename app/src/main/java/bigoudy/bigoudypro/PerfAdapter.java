@@ -44,8 +44,11 @@ public class PerfAdapter extends BaseAdapter {
         Performance currentPerf = meeting.getPerformances().get(position);
 
         TextView textViewNumPers = (TextView)convertView.findViewById(R.id.textViewNumPers);
+        Fonts.setFontButler(context,textViewNumPers);
         TextView textViewType = (TextView)convertView.findViewById(R.id.textViewType);
+        Fonts.setFontButler(context,textViewType);
         TextView textViewLib = (TextView)convertView.findViewById(R.id.textViewLib);
+        Fonts.setFontButler(context,textViewLib);
 
         textViewNumPers.setText(currentPerf.getNumPers());
         textViewType.setText(currentPerf.getLibPerformanceType());
