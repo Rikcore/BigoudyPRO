@@ -566,25 +566,25 @@ public class AgendaFragment extends Fragment implements WeekView.EventClickListe
 
         switch (frenchDayOfTheWeek){
             case "lundi":
-                engDayOfTheWeek = "'monday'";
+                engDayOfTheWeek = "monday";
                 break;
             case "mardi":
-                engDayOfTheWeek = "'tuesday'";
+                engDayOfTheWeek = "tuesday";
                 break;
             case "mercredi":
-                engDayOfTheWeek = "'wednesday'";
+                engDayOfTheWeek = "wednesday";
                 break;
             case "jeudi":
-                engDayOfTheWeek = "'thursday'";
+                engDayOfTheWeek = "thursday";
                 break;
             case "vendredi":
-                engDayOfTheWeek = "'friday'";
+                engDayOfTheWeek = "friday";
                 break;
             case "samedi":
-                engDayOfTheWeek = "'saturday'";
+                engDayOfTheWeek = "saturday";
                 break;
             case "dimanche":
-                engDayOfTheWeek = "'sunday'";
+                engDayOfTheWeek = "sunday";
                 break;
             default:
                 engDayOfTheWeek = null;

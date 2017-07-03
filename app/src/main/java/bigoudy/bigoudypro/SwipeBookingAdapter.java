@@ -91,6 +91,7 @@ public class SwipeBookingAdapter extends BaseSwipeAdapter {
         Fonts.setFontMontSerrat(context, textViewDate);
         TextView textViewCoupe = (TextView)convertView.findViewById(R.id.textViewCoupe);
         Fonts.setFontMontSerrat(context, textViewCoupe);
+        textViewCoupe.setSelected(true);
         TextView textViewPrice = (TextView)convertView.findViewById(R.id.textViewPrice);
         Fonts.setFontMontSerrat(context, textViewPrice);
 

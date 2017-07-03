@@ -25,14 +25,14 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_alignParentStart="true"
-            android:layout_marginLeft="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="105dp"
+            android:layout_marginTop="130dp"
             android:clickable="true"
             app:fabSize="mini"
-            app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="@+id/relativeLayout"
-            app:srcCompat="@mipmap/shape_copy" />
+            app:srcCompat="@mipmap/shape_copy"
+            android:layout_marginRight="32dp"
+            app:layout_constraintRight_toRightOf="parent"
+            android:layout_marginEnd="32dp" />
 
 
 
@@ -108,7 +108,7 @@
             android:id="@+id/textViewPersonne"
             android:layout_width="250dp"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="33dp"
+            android:layout_marginLeft="32dp"
             android:layout_marginStart="32dp"
             android:layout_marginTop="32dp"
             android:text="Une seule personne/performance"
@@ -162,16 +162,17 @@
             app:layout_constraintTop_toBottomOf="@+id/textViewPrice"
             app:srcCompat="@mipmap/camera_alt" />
 
-        <RelativeLayout
+        <android.support.constraint.ConstraintLayout
             android:id="@+id/relativeLayout"
             android:layout_width="0dp"
-            android:layout_height="125dp"
+            android:layout_height="150dp"
             android:background="@color/bigoudymediumgold"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            android:layout_marginTop="-1dp">
+            tools:layout_constraintRight_creator="1"
+            tools:layout_constraintLeft_creator="1">
 
             <TextView
                 android:id="@+id/textViewName"
@@ -180,41 +181,55 @@
                 android:text="TextView"
                 android:textSize="25dp"
                 android:textStyle="bold"
-                android:layout_alignTop="@+id/imageViewAvatar"
-                android:layout_centerHorizontal="true" />
+                tools:layout_constraintTop_creator="1"
+                android:layout_marginStart="22dp"
+                android:layout_marginTop="28dp"
+                tools:layout_constraintLeft_creator="1"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintLeft_toRightOf="@+id/imageViewAvatar"
+                android:layout_marginLeft="116dp" />
 
             <TextView
                 android:id="@+id/textViewLibPerf"
-                android:layout_width="wrap_content"
+                android:layout_width="240dp"
                 android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_alignStart="@+id/textViewName"
-                android:layout_marginBottom="38dp"
-                android:text="TextView"
-                android:textSize="20dp" />
+                android:layout_marginLeft="0dp"
+                android:layout_marginStart="22dp"
+                android:layout_marginTop="16dp"
+                android:ellipsize="marquee"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:marqueeRepeatLimit="marquee_forever"
+                android:maxLines="1"
+                android:nestedScrollingEnabled="true"
+                android:scrollHorizontally="true"
+                android:singleLine="true"
+                android:textSize="20dp"
+                app:layout_constraintLeft_toRightOf="@+id/imageViewAvatar"
+                app:layout_constraintTop_toBottomOf="@+id/textViewName"
+                tools:layout_constraintBottom_creator="1"
+                tools:layout_constraintLeft_creator="1" />
 
             <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/imageViewAvatar"
                 android:layout_width="90dp"
                 android:layout_height="90dp"
-                android:layout_marginLeft="31dp"
                 android:src="@mipmap/logobigoudy"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:layout_constraintLeft_creator="1"
                 tools:layout_constraintTop_creator="1"
-                android:layout_centerVertical="true"
-                android:layout_alignParentStart="true"
-                android:layout_marginStart="27dp" />
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="24dp" />
 
-        </RelativeLayout>
+        </android.support.constraint.ConstraintLayout>
 
         <GridView
             android:id="@+id/gridViewDiagnostic"
-            android:layout_width="250dp"
+            android:layout_width="0dp"
             android:layout_height="300dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginRight="8dp"
+            android:layout_marginLeft="36dp"
+            android:layout_marginRight="36dp"
             android:layout_marginTop="8dp"
             android:numColumns="2"
             android:gravity="center"
@@ -224,7 +239,11 @@
             android:horizontalSpacing="10dp"
             app:layout_constraintLeft_toRightOf="@+id/imageViewPhoto"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/imageViewPhoto" />
+            app:layout_constraintTop_toBottomOf="@+id/imageViewPhoto"
+            tools:layout_constraintRight_creator="1"
+            android:layout_marginStart="36dp"
+            android:layout_marginEnd="36dp"
+            tools:layout_constraintLeft_creator="1" />
 
 
     </android.support.constraint.ConstraintLayout>
