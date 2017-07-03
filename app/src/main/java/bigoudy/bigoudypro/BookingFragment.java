@@ -5,12 +5,16 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.daimajia.swipe.SwipeLayout;
 
@@ -143,7 +147,14 @@ public class BookingFragment extends Fragment {
         meetingDetailFragment = new MeetingDetailFragment();
 
         listViewBooking = (ListView)view.findViewById(R.id.listViewBooking);
-        
+        View empty = view.findViewById(R.id.emptyView);
+        TextView textViewEmpty = (TextView) view.findViewById(R.id.textViewEmpty);
+        Fonts.setFontMontSerrat(getActivity(), textViewEmpty);
+        listViewBooking.setEmptyView(empty);
+
+
+
+
 
         listViewBooking.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -230,10 +241,10 @@ public class BookingFragment extends Fragment {
             public void onResponse(Call<BookingModel> call, Response<BookingModel> response) {
                 bookingModel = response.body();
                 final ArrayList<Meeting> meetingArrayList = (ArrayList<Meeting>)bookingModel.getMeetings();
-
                 swipeBookingAdapter = new SwipeBookingAdapter(getActivity(), meetingArrayList, idConnectUser, BookingFragment.this);
-
                 listViewBooking.setAdapter(swipeBookingAdapter);
+
+
             }
 
             @Override
