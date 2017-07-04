@@ -223,11 +223,17 @@ public class SwipeBookingAdapter extends BaseSwipeAdapter {
                 alertDecline.setView(linearLayoutDecline);
                 final AlertDialog ad = alertDecline.show();
 
+
                 buttonDeclineReason.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        declineMeeting(currentRdv, editTextDeclineReason.getText().toString());
-                        ad.dismiss();
+                        if (editTextDeclineReason.length() == 0){
+                            Toast.makeText(context, "Veuillez préciser un motif.", Toast.LENGTH_SHORT).show();
+                        }
+                        else {
+                            declineMeeting(currentRdv, editTextDeclineReason.getText().toString());
+                            ad.dismiss();
+                        }
                     }
                 });
 
@@ -281,8 +287,12 @@ public class SwipeBookingAdapter extends BaseSwipeAdapter {
                 buttonSendMessage.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        sendMessage(currentRdv, edittextMessage.getText().toString());
-                        ad.dismiss();
+                        if (edittextMessage.length() == 0){
+                            Toast.makeText(context, "Veuillez entrer un message.", Toast.LENGTH_SHORT).show();
+                        } else {
+                            sendMessage(currentRdv, edittextMessage.getText().toString());
+                            ad.dismiss();
+                        }
                     }
                 });
 
