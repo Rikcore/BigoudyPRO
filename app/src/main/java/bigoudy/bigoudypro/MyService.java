@@ -111,7 +111,7 @@ public class MyService extends Service {
         @Override
         public void run() {
             watchBigoudy("demand");
-            customHandler.postDelayed(this, 5000);
+            customHandler.postDelayed(this, 900000); //15 minutes
         }
     };
 }
