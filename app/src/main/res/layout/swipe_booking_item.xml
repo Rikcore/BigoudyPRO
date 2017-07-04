@@ -188,6 +188,18 @@
             app:layout_constraintLeft_toRightOf="@+id/imageViewAvatar"
             app:layout_constraintTop_toBottomOf="@+id/textViewDate" />
 
+        <ImageView
+            android:id="@+id/imageView3"
+            android:layout_width="7dp"
+            android:layout_height="50dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginTop="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@mipmap/puces" />
+
         <!--What you want to show in SurfaceView-->
     </android.support.constraint.ConstraintLayout>
     <!-- Surface View End -->
