@@ -2,8 +2,6 @@ package bigoudy.bigoudypro;
 
 import android.content.Context;
 import android.graphics.Typeface;
-import android.icu.text.DisplayContext;
-import android.support.constraint.ConstraintLayout;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;

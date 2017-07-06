@@ -1,4 +1,5 @@
 package bigoudy.bigoudypro;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.media.MediaPlayer;
@@ -6,6 +7,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.view.WindowManager;
 import android.widget.VideoView;
+
+
 public class SplashActivity extends Activity {
 
     VideoView videoView;

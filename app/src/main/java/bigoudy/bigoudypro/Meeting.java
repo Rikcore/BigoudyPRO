@@ -4,14 +4,10 @@ package bigoudy.bigoudypro;
  * Created by M.C on 06/06/2017.
  */
 
-import android.content.Context;
-import android.graphics.Color;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-import java.util.Locale;
 
 import com.alamkanak.weekview.WeekViewEvent;
 import com.google.gson.annotations.Expose;

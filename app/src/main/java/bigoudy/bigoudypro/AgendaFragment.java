@@ -18,7 +18,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-
 import com.alamkanak.weekview.DateTimeInterpreter;
 import com.alamkanak.weekview.MonthLoader;
 import com.alamkanak.weekview.WeekView;
@@ -150,6 +149,7 @@ public class AgendaFragment extends Fragment implements WeekView.EventClickListe
         }
 
         FloatingActionButton mRdvButton = (FloatingActionButton) view.findViewById(R.id.addRdvButton);
+        mRdvButton.setVisibility(View.GONE);
 
         mRdvButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -404,7 +404,7 @@ public class AgendaFragment extends Fragment implements WeekView.EventClickListe
         return events;
 
     }
-    //TRANSFORME LES STRINGS REÇUS DE L'API EN WEEKVIEWEVENT
+    //TRANSFORME LES STRINGS REÇUS DE L'API GOOGLE EN WEEKVIEWEVENT
     public WeekViewEvent getGoogleCalendarEvent(String date){
 
         WeekViewEvent googleWeekViewEvent;
