@@ -14,7 +14,7 @@ public class MyReceiver extends BroadcastReceiver {
 
         if (intent.getAction().equals(intent.ACTION_BOOT_COMPLETED)){
             context.startService(myIntent);
-            Log.d("Test receiver", "Receiver works");
+            Log.d("Test receive", "Receiver works");
         }
         else{
             Log.d("Test receiver", "Receiver fails");

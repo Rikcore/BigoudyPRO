@@ -73,7 +73,7 @@ public class InboxFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_inbox, container, false);
         String idConnectUser = getArguments().getString("idConnectUser");
         mWebView = (WebView) view.findViewById(R.id.webview);
-        mWebView.loadUrl("https://www.bigoudychat.ovh/chat:u"+idConnectUser);
+        mWebView.loadUrl(Resources.URLCHAT + idConnectUser);
 
         WebSettings webSettings = mWebView.getSettings();
         webSettings.setJavaScriptEnabled(true);
