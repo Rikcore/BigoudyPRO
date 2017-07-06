@@ -1,7 +1,6 @@
 package bigoudy.bigoudypro;
 
-import android.app.ActionBar;
-import android.app.FragmentBreadCrumbs;
+
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -10,8 +9,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.NotificationCompat;
-import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutCompat;
 import android.view.LayoutInflater;
@@ -24,15 +21,12 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
-
 import com.squareup.picasso.Picasso;
-
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-
 import de.hdodenhof.circleimageview.CircleImageView;
 
 

@@ -2,13 +2,10 @@ package bigoudy.bigoudypro;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutCompat;
-import android.telecom.Call;
-import android.text.InputType;
 import android.text.method.ScrollingMovementMethod;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -21,21 +18,14 @@ import android.widget.Scroller;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.daimajia.swipe.adapters.BaseSwipeAdapter;
 import com.squareup.picasso.Picasso;
-
 import org.joda.time.LocalTime;
-import org.joda.time.format.DateTimeFormatter;
-import org.joda.time.format.DateTimeFormatterBuilder;
-
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Locale;
-
 import de.hdodenhof.circleimageview.CircleImageView;
 import okhttp3.OkHttpClient;
 import retrofit2.Callback;

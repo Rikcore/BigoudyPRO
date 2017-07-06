@@ -1,5 +1,4 @@
 package bigoudy.bigoudypro;
-
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -8,12 +7,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
-
-import java.util.ArrayList;
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.concurrent.ScheduledThreadPoolExecutor;
-
 import okhttp3.OkHttpClient;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -23,7 +16,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MyService extends Service {
 
-    private int count = 1000000;
+    private int count = Integer.MAX_VALUE;
     private BookingModel bookingModelForNotif;
     final android.os.Handler customHandler = new android.os.Handler();
 
@@ -99,7 +92,6 @@ public class MyService extends Service {
 
                 @Override
                 public void onFailure(Call<BookingModel> call, Throwable t) {
-                    String toto = "";
                 }
             });
 
