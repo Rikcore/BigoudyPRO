@@ -17,4 +17,41 @@
     <string name="button_dmd_resa">Demandes de\n réservation</string>
     <string name="button_resaok">Réservations acceptées</string>
 
+    <!-- SwipeBookingAdapter String -->
+            <!-- accept String -->
+    <string name="message_accept">Merci de choisir la durée du rendez-vous</string>
+    <string name="title_accept">Durée rendez-vous</string>
+    <string name="duration_accept">30</string>
+    <string name="toast_rdv_accept">Rendez-vous accepté</string>
+            <!-- decline String -->
+    <string name="motif_decline">Saisissez le motif du refus</string>
+    <string name="title_decline">Refus rendez-vous</string>
+    <string name="toast_decline">Veuillez préciser un motif.</string>
+    <string name="toast_rdv_decline">Rendez-vous refusé</string>
+            <!-- message String -->
+    <string name="text_message">Entrez votre Message pour</string>
+    <string name="title_message">Message</string>
+    <string name="toast_message">Veuillez entrer un message.</string>
+    <string name="toast_message_send">Message envoyé</string>
+
+            <!-- common String-->
+    <string name="btn_finalize">OK</string>
+    <string name="btn_cancel">Annuler</string>
+    
+    <!-- PerfAdapter String -->
+    <string name="numPers">Client</string>
+    
+    <!-- MeetingDetailFragment String -->
+    <string name="textviewPersonne">Ce rendez-vous comprend plusieurs personnes ou performances.</string>
+    <string name="textviewComments">Pas de commentaire</string>
+    <string name="textviewPrice">€</string>
+    <string name="runtimeException"> must implement OnFragmentInteractionListener</string>
+    <string name="lienOvh">https://www.bigoudychat.ovh/</string>
+    
+    <!-- MainActivity String -->
+    <string name="actionBar_agenda">Agenda</string>
+
+
+
+
 </resources>

@@ -27,6 +27,7 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
+import java.net.URL;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -132,7 +133,7 @@ public class MeetingDetailFragment extends Fragment {
                 imageView.setMinimumHeight(1000);
                 Picasso
                         .with(getActivity())
-                        .load(Uri.parse("https://www.bigoudychat.ovh/"+diagnosticPhotoArrayList.get(position).getLinkImageHD()))
+                        .load(Uri.parse(Resources.URLOVH +diagnosticPhotoArrayList.get(position).getLinkImageHD()))
                         .into(imageView);
                 linearLayout.addView(imageView);
                 alertBuilder.setView(linearLayout);
@@ -159,7 +160,7 @@ public class MeetingDetailFragment extends Fragment {
         Fonts.setFontMontSerrat(getActivity(), textViewPrice);
         CircleImageView imageViewAvatar = (CircleImageView)v.findViewById(R.id.imageViewAvatar);
 
-        String urlFull = "https://www.bigoudychat.ovh/"+meetingDetails.getLinkAvatarCustomer();
+        String urlFull = Resources.URLOVH + meetingDetails.getLinkAvatarCustomer();
 
         Picasso
                 .with(getActivity().getApplicationContext())
@@ -182,7 +183,7 @@ public class MeetingDetailFragment extends Fragment {
         textViewAdress.setText(meetingDetails.getAddressMeeting()+"\n"+meetingDetails.getZipcodeMeeting()+" "+meetingDetails.getCityMeeting());
 
         if(meetingDetails.getPerformances().size() > 1){
-            textViewPersonne.setText("Ce rendez-vous comprend plusieurs personnes ou performances.");
+            textViewPersonne.setText(R.string.textviewPersonne);
             textViewPersonne.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -204,9 +205,9 @@ public class MeetingDetailFragment extends Fragment {
         if (meetingDetails.getMoreInfoAskMeeting() != null) {
             textViewComments.setText(meetingDetails.getMoreInfoAskMeeting().toString());
         }   else{
-            textViewComments.setText("Pas de commentaire");
+            textViewComments.setText(R.string.textviewComments);
         }
-        textViewPrice.setText(meetingDetails.getAmmountWithTimeIncreaseHT()+"€");
+        textViewPrice.setText(meetingDetails.getAmmountWithTimeIncreaseHT()+ "€");
 
         floatingActionButtonGps.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -238,7 +239,7 @@ public class MeetingDetailFragment extends Fragment {
             mListener = (OnFragmentInteractionListener) context;
         } else {
             throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
+                    + R.string.runtimeException);
         }
     }
 

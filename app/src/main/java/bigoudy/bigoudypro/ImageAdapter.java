@@ -51,7 +51,7 @@ public class ImageAdapter extends BaseAdapter {
         } else {
             imageView = (ImageView) convertView;
         }
-        String url = "https://www.bigoudychat.ovh/"+getItem(position);
+        String url = Resources.URLOVH + getItem(position);
         Picasso.with(mContext)
                 .load(Uri.parse(url))
                 .fit()
