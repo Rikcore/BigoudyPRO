@@ -45,9 +45,9 @@ public class SwipeBookingAdapter extends BaseSwipeAdapter {
     private String idBigouder;
     private String address;
 
-    public final static String DECLINE_MOTIF = "Saisissez le motif du refus";
-
     private int value = 30;
+
+
 
     FragmentManager fragmentManager;
 
@@ -86,7 +86,7 @@ public class SwipeBookingAdapter extends BaseSwipeAdapter {
         Fonts.setFontMontSerrat(context, textViewPrice);
 
         String urlAvatar = currentRdv.getLinkAvatarCustomer();
-        String urlFull = "https://www.bigoudychat.ovh/"+urlAvatar;
+        String urlFull = Resources.URLOVH + urlAvatar;
 
         Picasso
                 .with(this.context)
@@ -120,20 +120,20 @@ public class SwipeBookingAdapter extends BaseSwipeAdapter {
                 final int min = 30;
 
                 final AlertDialog.Builder alertAccept = new AlertDialog.Builder(context);
-                alertAccept.setMessage("Merci de choisir la durée du rendez-vous");
-                alertAccept.setTitle("Durée rendez-vous");
+                alertAccept.setMessage(R.string.message_accept);
+                alertAccept.setTitle(R.string.title_accept);
                 final LinearLayout linearLayoutAccept = new LinearLayout(context);
                 linearLayoutAccept.setOrientation(LinearLayout.VERTICAL);
                 final TextView durationTextView = new TextView(context);
-                durationTextView.setText("30");
+                durationTextView.setText(R.string.duration_accept);
                 final SeekBar seekBar = new SeekBar(context);
                 seekBar.setMax( (max - min) / step );
                 final Button buttonFinalizeRdv = new Button(context);
                 final Button buttonCancelAccept = new Button(context);
                 buttonFinalizeRdv.setBackground(context.getResources().getDrawable(R.drawable.selector_btn_accept));
                 buttonCancelAccept.setBackground(context.getResources().getDrawable(R.drawable.selector_btn_accept));
-                buttonFinalizeRdv.setText("Ok");
-                buttonCancelAccept.setText("Annuler");
+                buttonFinalizeRdv.setText(R.string.btn_finalize);
+                buttonCancelAccept.setText(R.string.btn_cancel);
                 durationTextView.setGravity(Gravity.CENTER_HORIZONTAL);
                 durationTextView.setTextSize(20);
                 LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayoutCompat.LayoutParams.MATCH_PARENT, LinearLayoutCompat.LayoutParams.MATCH_PARENT);
@@ -189,16 +189,16 @@ public class SwipeBookingAdapter extends BaseSwipeAdapter {
             @Override
             public void onClick(View v) {
                 final AlertDialog.Builder alertDecline = new AlertDialog.Builder(context);
-                alertDecline.setTitle("Refus rendez-vous");
-                alertDecline.setMessage("Merci de préciser votre motif de refus");
+                alertDecline.setTitle(R.string.title_decline);
+                alertDecline.setMessage(R.string.motif_decline);
                 final LinearLayout linearLayoutDecline = new LinearLayout(context);
                 linearLayoutDecline.setOrientation(LinearLayout.VERTICAL);
                 final EditText editTextDeclineReason = new EditText(context);
                 final Button buttonDeclineReason = new Button(context);
-                buttonDeclineReason.setText("OK");
+                buttonDeclineReason.setText(R.string.btn_finalize);
                 buttonDeclineReason.setBackground(context.getResources().getDrawable(R.drawable.selector_btn_accept));
                 final Button buttonCancelDecline = new Button(context);
-                buttonCancelDecline.setText("Annuler");
+                buttonCancelDecline.setText(R.string.btn_cancel);
                 buttonCancelDecline.setBackground(context.getResources().getDrawable(R.drawable.selector_btn_accept));
                 LinearLayout.LayoutParams paramsText = new LinearLayout.LayoutParams(LinearLayoutCompat.LayoutParams.MATCH_PARENT, LinearLayoutCompat.LayoutParams.MATCH_PARENT);
                 paramsText.setMargins(40,40,40,40);
@@ -218,7 +218,7 @@ public class SwipeBookingAdapter extends BaseSwipeAdapter {
                     @Override
                     public void onClick(View v) {
                         if (editTextDeclineReason.length() == 0){
-                            Toast.makeText(context, "Veuillez préciser un motif.", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(context, R.string.toast_decline, Toast.LENGTH_SHORT).show();
                         }
                         else {
                             declineMeeting(currentRdv, editTextDeclineReason.getText().toString());
@@ -244,7 +244,6 @@ public class SwipeBookingAdapter extends BaseSwipeAdapter {
         buttonMessage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String motif = "Saisissez votre message";
                 final LinearLayout linearLayoutMessage = new LinearLayout(context);
                 linearLayoutMessage.setOrientation(LinearLayout.VERTICAL);
                 final EditText edittextMessage = new EditText(context);
@@ -253,10 +252,10 @@ public class SwipeBookingAdapter extends BaseSwipeAdapter {
                 edittextMessage.setMovementMethod(new ScrollingMovementMethod());
                 edittextMessage.setGravity(Gravity.LEFT|Gravity.TOP);
                 Button buttonSendMessage = new Button(context);
-                buttonSendMessage.setText("ok");
+                buttonSendMessage.setText(R.string.btn_finalize);
                 buttonSendMessage.setBackground(context.getResources().getDrawable(R.drawable.selector_btn_accept));
                 Button buttonCancelMessage = new Button(context);
-                buttonCancelMessage.setText("Annuler");
+                buttonCancelMessage.setText(R.string.btn_cancel);
                 buttonCancelMessage.setBackground(context.getResources().getDrawable(R.drawable.selector_btn_accept));
                 LinearLayout.LayoutParams paramsText = new LinearLayout.LayoutParams(LinearLayoutCompat.LayoutParams.MATCH_PARENT, LinearLayoutCompat.LayoutParams.MATCH_PARENT);
                 paramsText.setMargins(40,40,40,40);
@@ -269,8 +268,8 @@ public class SwipeBookingAdapter extends BaseSwipeAdapter {
                 linearLayoutMessage.addView(buttonSendMessage);
                 linearLayoutMessage.addView(buttonCancelMessage);
                 AlertDialog.Builder alertMessage = new AlertDialog.Builder(context);
-                alertMessage.setMessage("Entrez votre Message pour "+currentRdv.getFirstnameCustomer());
-                alertMessage.setTitle("Message");
+                alertMessage.setMessage(context.getString(R.string.text_message) + " " + currentRdv.getFirstnameCustomer());
+                alertMessage.setTitle(R.string.title_message);
                 alertMessage.setView(linearLayoutMessage);
 
                 final AlertDialog ad = alertMessage.show();
@@ -278,7 +277,7 @@ public class SwipeBookingAdapter extends BaseSwipeAdapter {
                     @Override
                     public void onClick(View v) {
                         if (edittextMessage.length() == 0){
-                            Toast.makeText(context, "Veuillez entrer un message.", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(context, R.string.toast_message, Toast.LENGTH_SHORT).show();
                         } else {
                             sendMessage(currentRdv, edittextMessage.getText().toString());
                             ad.dismiss();
@@ -343,7 +342,7 @@ public class SwipeBookingAdapter extends BaseSwipeAdapter {
         callMessage.enqueue(new Callback<Message>() {
             @Override
             public void onResponse(retrofit2.Call<Message> call, Response<Message> response) {
-                Toast.makeText(context, "Message envoyé", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, R.string.toast_message_send, Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -360,7 +359,7 @@ public class SwipeBookingAdapter extends BaseSwipeAdapter {
         declineMeeting.enqueue(new Callback<DeclineMeeting>() {
             @Override
             public void onResponse(retrofit2.Call<DeclineMeeting> call, Response<DeclineMeeting> response) {
-                Toast.makeText(context, "Rendez-vous refusé", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, R.string.toast_rdv_decline, Toast.LENGTH_SHORT).show();
                 bookingFragment.btn_demand.callOnClick();
             }
 
@@ -407,7 +406,7 @@ public class SwipeBookingAdapter extends BaseSwipeAdapter {
         acceptReservation.enqueue(new Callback<AcceptReservation>() {
             @Override
             public void onResponse(retrofit2.Call<AcceptReservation> call, Response<AcceptReservation> response) {
-                Toast.makeText(context, "Rendez-vous accepté", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, R.string.toast_rdv_accept, Toast.LENGTH_SHORT).show();
                 bookingFragment.btn_demand.callOnClick();
 
             }

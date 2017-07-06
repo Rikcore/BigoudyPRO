@@ -48,7 +48,7 @@ public class PerfAdapter extends BaseAdapter {
         TextView textViewLib = (TextView)convertView.findViewById(R.id.textViewLib);
         Fonts.setFontButler(context,textViewLib);
 
-        textViewNumPers.setText("Client "+currentPerf.getNumPers()+" : "+currentPerf.getLibPerformanceType());
+        textViewNumPers.setText(context.getString(R.string.numPers) +currentPerf.getNumPers()+" : "+currentPerf.getLibPerformanceType());
         textViewLib.setText(currentPerf.getLibPerformance());
 
         return convertView;

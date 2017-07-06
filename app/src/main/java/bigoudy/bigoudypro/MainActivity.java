@@ -87,7 +87,7 @@ public class MainActivity extends AppCompatActivity implements InboxFragment.OnF
         progressDialog = new ProgressDialog(this);
         progressDialog.setMessage("Patientez");
         actionBar = getSupportActionBar();
-        actionBar.setTitle("Agenda");
+        actionBar.setTitle(R.string.actionBar_agenda);
 
         mCredential = GoogleAccountCredential.usingOAuth2(
                 getApplicationContext(), Arrays.asList(SCOPES))
