@@ -173,7 +173,7 @@ public class MeetingDetailFragment extends Fragment {
         String formatDate = getGoodDateFormat(meetingDetails.getDateMeeting());
 
 
-        textViewDate.setText(formatDate+"\n"+meetingDetails.getBeginTimeAvailable().substring(0,5));
+        textViewDate.setText(formatDate+" à "+meetingDetails.getBeginTimeAvailable().substring(0,5));
         textViewAdress.setText(meetingDetails.getAddressMeeting()+"\n"+meetingDetails.getZipcodeMeeting()+" "+meetingDetails.getCityMeeting());
 
         if(meetingDetails.getPerformances().size() > 1){

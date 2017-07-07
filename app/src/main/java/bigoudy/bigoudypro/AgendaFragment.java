@@ -72,7 +72,7 @@ public class AgendaFragment extends Fragment implements WeekView.EventClickListe
     private static final int TYPE_WEEK_VIEW = 3;
     private int mWeekViewType = TYPE_THREE_DAY_VIEW;
     private WeekView mWeekView;
-    private FloatingActionButton mRdvButton;
+    private FloatingActionButton floatingActionButtonLogout;
     private HashMap<Integer, Meeting> hashMapMeeting;
     MeetingDetailFragment meetingDetailFragment;
     String idConnectUser;
@@ -132,11 +132,11 @@ public class AgendaFragment extends Fragment implements WeekView.EventClickListe
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_agenda, container, false);
         setHasOptionsMenu(true);
+
+
 
         googleList = new ArrayList<String>();
         googleWeekViewEventList = new ArrayList<WeekViewEvent>();
@@ -148,16 +148,14 @@ public class AgendaFragment extends Fragment implements WeekView.EventClickListe
             googleWeekViewEventList.add(googleWeekViewEvent);
         }
 
-        FloatingActionButton mRdvButton = (FloatingActionButton) view.findViewById(R.id.addRdvButton);
-        mRdvButton.setVisibility(View.GONE);
-
-        mRdvButton.setOnClickListener(new View.OnClickListener() {
+        floatingActionButtonLogout = (FloatingActionButton)view.findViewById(R.id.floatingActionButtonLogout);
+        floatingActionButtonLogout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //NEW MEETING
+                PreferenceManager.getDefaultSharedPreferences(getActivity()).edit().putString("bigouderId", null).commit();
+                startActivity(new Intent(getActivity(), LoginActivity.class));
             }
         });
-
 
 
 
