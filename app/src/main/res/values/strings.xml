@@ -51,6 +51,11 @@
     <!-- MainActivity String -->
     <string name="actionBar_agenda">Agenda</string>
 
+    <!-- LoginActivity String -->
+
+    <string name="error_login_empty">Merci de renseigner votre email !</string>
+    <string name="error_login_invalid">Votre email est incorrect !</string>
+
 
 
 

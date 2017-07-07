@@ -1,13 +1,18 @@
 package bigoudy.bigoudypro;
 
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.codec.digest.DigestUtils;
 import okhttp3.OkHttpClient;
@@ -31,6 +36,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        super.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setContentView(R.layout.activity_login);
 
         TextView textViewBienvenue = (TextView)findViewById(R.id.textViewBienvenue);
@@ -38,7 +44,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         editTextEmail = (EditText)findViewById(R.id.editTextEmail);
         editTextPassword = (EditText)findViewById(R.id.editTextPassword);
         Button buttonConnection = (Button)findViewById(R.id.buttonConnection);
-
         buttonConnection.setOnClickListener(this);
 
 
@@ -74,6 +79,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             case R.id.buttonConnection:
                 mailUser = editTextEmail.getText().toString();
                 passwordUser = editTextPassword.getText().toString();
+
+
                 String action = "connectUser";
                 final String passwordUserSha1 = new String(Hex.encodeHex(DigestUtils.sha1(passwordUser)));
 
@@ -91,9 +98,13 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
                     @Override
                     public void onFailure(Call<UserModel> call, Throwable t) {
+                        Toast.makeText(LoginActivity.this, "Email ou mot de passe incorrect", Toast.LENGTH_SHORT).show();
+                        editTextPassword.setText("");
                     }
                 });
 
         }
     }
+
+
 }

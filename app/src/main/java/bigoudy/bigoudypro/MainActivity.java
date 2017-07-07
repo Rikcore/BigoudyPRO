@@ -94,7 +94,7 @@ public class MainActivity extends AppCompatActivity implements InboxFragment.OnF
                 .setBackOff(new ExponentialBackOff());
 
         //ON VERIFIE SI UN UTILISATEUR S'EST CONNECTE
-        String bigouderId = PreferenceManager.getDefaultSharedPreferences(MainActivity.this).getString("bigouderId", null);
+        final String bigouderId = PreferenceManager.getDefaultSharedPreferences(MainActivity.this).getString("bigouderId", null);
         if (bigouderId != null) {
             progressDialog.show();
             callModel(bigouderId);
@@ -131,7 +131,7 @@ public class MainActivity extends AppCompatActivity implements InboxFragment.OnF
                                 .commit();
                         return true;
                     case R.id.navigation_agenda:
-                        getResultsFromApi();
+                        callModel(bigouderId);
                         actionBar.show();
                         return true;
                     case R.id.navigation_booking:
