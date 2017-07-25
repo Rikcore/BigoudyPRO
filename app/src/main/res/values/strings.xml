@@ -21,7 +21,7 @@
             <!-- accept String -->
     <string name="message_accept">Merci de choisir la durée du rendez-vous</string>
     <string name="title_accept">Durée rendez-vous</string>
-    <string name="duration_accept">30</string>
+    <string name="duration_accept">30 minutes</string>
     <string name="toast_rdv_accept">Rendez-vous accepté</string>
             <!-- decline String -->
     <string name="motif_decline">Saisissez le motif du refus</string>

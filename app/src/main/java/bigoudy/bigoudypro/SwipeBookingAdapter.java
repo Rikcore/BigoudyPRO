@@ -137,7 +137,7 @@ public class SwipeBookingAdapter extends BaseSwipeAdapter {
                 durationTextView.setGravity(Gravity.CENTER_HORIZONTAL);
                 durationTextView.setTextSize(20);
                 LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayoutCompat.LayoutParams.MATCH_PARENT, LinearLayoutCompat.LayoutParams.MATCH_PARENT);
-                params.setMargins(350,40,350,40);
+                params.setMargins(50,40,50,40);
                 buttonCancelAccept.setLayoutParams(params);
                 buttonFinalizeRdv.setLayoutParams(params);
                 linearLayoutAccept.addView(durationTextView);
@@ -152,7 +152,7 @@ public class SwipeBookingAdapter extends BaseSwipeAdapter {
                     @Override
                     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                         value = min + (progress * step);
-                        durationTextView.setText(String.valueOf(value));
+                        durationTextView.setText(String.valueOf(value)+" minutes");
                     }
 
                     @Override
@@ -204,7 +204,7 @@ public class SwipeBookingAdapter extends BaseSwipeAdapter {
                 paramsText.setMargins(40,40,40,40);
                 editTextDeclineReason.setLayoutParams(paramsText);
                 LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayoutCompat.LayoutParams.MATCH_PARENT, LinearLayoutCompat.LayoutParams.MATCH_PARENT);
-                params.setMargins(350,40,350,40);
+                params.setMargins(50,40,50,40);
                 buttonDeclineReason.setLayoutParams(params);
                 buttonCancelDecline.setLayoutParams(params);
                 linearLayoutDecline.addView(editTextDeclineReason);
@@ -261,7 +261,7 @@ public class SwipeBookingAdapter extends BaseSwipeAdapter {
                 paramsText.setMargins(40,40,40,40);
                 edittextMessage.setLayoutParams(paramsText);
                 LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayoutCompat.LayoutParams.MATCH_PARENT, LinearLayoutCompat.LayoutParams.MATCH_PARENT);
-                params.setMargins(350,40,350,40);
+                params.setMargins(50,40,50,40);
                 buttonSendMessage.setLayoutParams(params);
                 buttonCancelMessage.setLayoutParams(params);
                 linearLayoutMessage.addView(edittextMessage);
