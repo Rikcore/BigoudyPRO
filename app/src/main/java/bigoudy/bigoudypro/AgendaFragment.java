@@ -152,8 +152,9 @@ public class AgendaFragment extends Fragment implements WeekView.EventClickListe
         floatingActionButtonLogout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                PreferenceManager.getDefaultSharedPreferences(getActivity()).edit().putString("bigouderId", null).commit();
-                startActivity(new Intent(getActivity(), LoginActivity.class));
+                /*PreferenceManager.getDefaultSharedPreferences(getActivity()).edit().putString("bigouderId", null).commit();
+                startActivity(new Intent(getActivity(), LoginActivity.class));*/
+                startActivity(new Intent(getActivity(), SendMessagesActivity.class));
             }
         });
 
@@ -374,7 +375,8 @@ public class AgendaFragment extends Fragment implements WeekView.EventClickListe
         //AJOUT DES RDV GOOGLE A LA LISTE
         for (int j = 0; j < googleWeekViewEventList.size(); j++){
             WeekViewEvent eventGoogle = googleWeekViewEventList.get(j);
-            if(eventGoogle.getStartTime().get(Calendar.MONTH) == newMonth && eventGoogle.getStartTime().get(Calendar.YEAR) == newYear) {
+            // Calendar.MONTH va de 0 à 11, tandis que newMonth varie de 1 à 12 >> +1
+            if(eventGoogle.getStartTime().get(Calendar.MONTH) + 1 == newMonth && eventGoogle.getStartTime().get(Calendar.YEAR) == newYear) {
                 eventGoogle.setColor(getResources().getColor(R.color.bigoudydarkgrey));
                 events.add(eventGoogle);
             }
@@ -531,7 +533,17 @@ public class AgendaFragment extends Fragment implements WeekView.EventClickListe
         Integer available = 0;
         String hourBigoudy;
         String minuteBigoudy;
-        if(hour < 10){
+        int durationBigoudy;
+
+        if (duration == 1440){
+            durationBigoudy = 780;
+        } else {
+            durationBigoudy = duration;
+        }
+        if (hour == 0){
+            hourBigoudy = "08";
+        }
+        else if(hour < 10){
             hourBigoudy = "0"+hour;
         }else{
             hourBigoudy = String.valueOf(hour);
@@ -602,7 +614,7 @@ public class AgendaFragment extends Fragment implements WeekView.EventClickListe
 
         ServiceApi serviceApi = retrofit.create(ServiceApi.class);
 
-        final Call<ExceptionTime> exceptionTimeCall = serviceApi.setException(action, id, beginTime, duration, engDayOfTheWeek , dateMeeting, available );
+        final Call<ExceptionTime> exceptionTimeCall = serviceApi.setException(action, id, beginTime, durationBigoudy, engDayOfTheWeek , dateMeeting, available );
 
         exceptionTimeCall.enqueue(new Callback<ExceptionTime>() {
             @Override

@@ -46,11 +46,16 @@ public class MyService extends Service {
 
 
         NotificationManager notifManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        Intent intentNotif = new Intent(this, MainActivity.class);
+        int keyNotif = 1;
+        intentNotif.putExtra("keyNotif", keyNotif);
+        intentNotif.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
         Notification noti = new Notification.Builder(this)
                 .setContentTitle("Bigoudy")
                 .setContentText("Vous avez une nouvelle demande")
                 .setSmallIcon(R.mipmap.notifications_copie)
-                .setContentIntent(PendingIntent.getActivity(this, 0, new Intent(this, MainActivity.class), 0))
+                .setContentIntent(PendingIntent.getActivity(this, 0, intentNotif, PendingIntent.FLAG_UPDATE_CURRENT))
+                .setAutoCancel(true)
                 .build();
 
         notifManager.notify(0, noti);
@@ -103,7 +108,7 @@ public class MyService extends Service {
         @Override
         public void run() {
             watchBigoudy("demand");
-            customHandler.postDelayed(this, 900000); //15 minutes
+            customHandler.postDelayed(this, 5000 /*900000*/); //15 minutes
         }
     };
 }

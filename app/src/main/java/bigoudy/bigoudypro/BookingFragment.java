@@ -168,10 +168,6 @@ public class BookingFragment extends Fragment {
         Fonts.setFontMontSerrat(getActivity(), textViewEmpty);
         listViewBooking.setEmptyView(empty);
 
-
-
-
-
         listViewBooking.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -190,10 +186,7 @@ public class BookingFragment extends Fragment {
         // Inflate the layout for this fragment
         return view;
 
-
     }
-
-
 
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
@@ -260,14 +253,12 @@ public class BookingFragment extends Fragment {
                 swipeBookingAdapter = new SwipeBookingAdapter(getActivity(), meetingArrayList, idConnectUser, BookingFragment.this);
                 listViewBooking.setAdapter(swipeBookingAdapter);
 
-
             }
 
             @Override
             public void onFailure(Call<BookingModel> call, Throwable t) {
             }
         });
-
 
     }
 
@@ -281,7 +272,5 @@ public class BookingFragment extends Fragment {
         button.setBackground(getResources().getDrawable(R.drawable.btn_unselected));
         button.setTextColor(getResources().getColor(R.color.bigoudystronggrey));
     }
-
-
 
 }

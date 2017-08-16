@@ -6,6 +6,8 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <uses-permission android:name="android.permission.SEND_SMS" />
 
     <application
         android:allowBackup="true"
@@ -14,7 +16,6 @@
         android:roundIcon="@mipmap/logobigoudy"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
         <activity android:name=".SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -22,7 +23,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".LoginActivity"
             android:theme="@style/notitlebar" />
@@ -41,8 +41,8 @@
             android:enabled="true"
             android:exported="true" />
 
-    <activity android:name=".MainActivity" />
-
+        <activity android:name=".MainActivity" />
+        <activity android:name=".SendMessagesActivity"></activity>
     </application>
 
 </manifest>

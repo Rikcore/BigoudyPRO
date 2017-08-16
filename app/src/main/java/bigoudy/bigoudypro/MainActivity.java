@@ -76,6 +76,8 @@ public class MainActivity extends AppCompatActivity implements InboxFragment.OnF
     private static final String[] SCOPES = {CalendarScopes.CALENDAR_READONLY};
     private static final String PREF_ACCOUNT_NAME = "accountName";
 
+    String bigouderId;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,19 +91,16 @@ public class MainActivity extends AppCompatActivity implements InboxFragment.OnF
         actionBar = getSupportActionBar();
         actionBar.setTitle(R.string.actionBar_agenda);
 
+
+
         mCredential = GoogleAccountCredential.usingOAuth2(
                 getApplicationContext(), Arrays.asList(SCOPES))
                 .setBackOff(new ExponentialBackOff());
 
-        //ON VERIFIE SI UN UTILISATEUR S'EST CONNECTE
-        final String bigouderId = PreferenceManager.getDefaultSharedPreferences(MainActivity.this).getString("bigouderId", null);
-        if (bigouderId != null) {
-            progressDialog.show();
-            callModel(bigouderId);
 
-        } else {
-            startActivity(new Intent(MainActivity.this, LoginActivity.class));
-        }
+
+        //ON VERIFIE SI UN UTILISATEUR S'EST CONNECTE
+        bigouderId = PreferenceManager.getDefaultSharedPreferences(MainActivity.this).getString("bigouderId", null);
 
         fragmentManager = getSupportFragmentManager();
 
@@ -114,16 +113,18 @@ public class MainActivity extends AppCompatActivity implements InboxFragment.OnF
         bookingFragment.setArguments(bundle);
         inboxFragment.setArguments(bundle);
         agendaFragment.setArguments(bundle);
-
-
         bottomNavigationView = (BottomNavigationView) findViewById(R.id.navigation);
         bottomNavigationView.setSelectedItemId(R.id.navigation_agenda);
+
+        onNewIntent(getIntent());
+
+        
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.navigation_inbox:
-                        actionBar.hide();
+                        actionBar.setTitle("Messagerie");
                         fragmentManager
                                 .beginTransaction()
                                 .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
@@ -131,11 +132,12 @@ public class MainActivity extends AppCompatActivity implements InboxFragment.OnF
                                 .commit();
                         return true;
                     case R.id.navigation_agenda:
+                        actionBar.setTitle("Agenda");
                         callModel(bigouderId);
                         actionBar.show();
                         return true;
                     case R.id.navigation_booking:
-                        actionBar.hide();
+                        actionBar.setTitle("Booking");
                         fragmentManager
                                 .beginTransaction()
                                 .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
@@ -197,8 +199,6 @@ public class MainActivity extends AppCompatActivity implements InboxFragment.OnF
     }
 
 
-
-    //DEBUT DES PROBLEMES
 
     /**
      * Attempt to call the API, after verifying that all the preconditions are
@@ -504,4 +504,26 @@ public class MainActivity extends AppCompatActivity implements InboxFragment.OnF
         getResultsFromApi();
         bottomNavigationView.setSelectedItemId(R.id.navigation_agenda);
     }
+
+    @Override
+    public void onNewIntent(Intent intent) {
+        Bundle extras = intent.getExtras();
+        if (extras != null) {
+            actionBar.setTitle("Booking");
+            bottomNavigationView.setSelectedItemId(R.id.navigation_booking);
+            fragmentManager
+                    .beginTransaction()
+                    .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
+                    .replace(R.id.contentLayout, bookingFragment, bookingFragment.getTag())
+                    .commit();
+        }
+        else if (bigouderId != null){
+            progressDialog.show();
+            callModel(bigouderId);
+        }
+        else {
+            startActivity(new Intent(MainActivity.this, LoginActivity.class));
+        }
+    }
+
 }
