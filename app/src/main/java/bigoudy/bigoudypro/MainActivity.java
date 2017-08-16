@@ -118,7 +118,7 @@ public class MainActivity extends AppCompatActivity implements InboxFragment.OnF
 
         onNewIntent(getIntent());
 
-        
+
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {

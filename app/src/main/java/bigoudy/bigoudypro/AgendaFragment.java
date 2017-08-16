@@ -248,6 +248,7 @@ public class AgendaFragment extends Fragment implements WeekView.EventClickListe
         switch (id){
             case R.id.action_today:
                 mWeekView.goToToday();
+                mWeekView.goToHour(8);
                 return true;
             case R.id.action_day_view:
                 if (mWeekViewType != TYPE_DAY_VIEW) {
@@ -259,6 +260,8 @@ public class AgendaFragment extends Fragment implements WeekView.EventClickListe
                     mWeekView.setColumnGap((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 8, getResources().getDisplayMetrics()));
                     mWeekView.setTextSize((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 12, getResources().getDisplayMetrics()));
                     mWeekView.setEventTextSize((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 12, getResources().getDisplayMetrics()));
+                    mWeekView.goToHour(8);
+
                 }
                 return true;
             case R.id.action_three_day_view:
@@ -271,6 +274,8 @@ public class AgendaFragment extends Fragment implements WeekView.EventClickListe
                     mWeekView.setColumnGap((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 8, getResources().getDisplayMetrics()));
                     mWeekView.setTextSize((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 12, getResources().getDisplayMetrics()));
                     mWeekView.setEventTextSize((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 12, getResources().getDisplayMetrics()));
+                    mWeekView.goToHour(8);
+
                 }
                 return true;
             case R.id.action_week_view:
@@ -283,6 +288,7 @@ public class AgendaFragment extends Fragment implements WeekView.EventClickListe
                     mWeekView.setColumnGap((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 2, getResources().getDisplayMetrics()));
                     mWeekView.setTextSize((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 10, getResources().getDisplayMetrics()));
                     mWeekView.setEventTextSize((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 10, getResources().getDisplayMetrics()));
+                    mWeekView.goToHour(8);
                 }
                 return true;
         }
@@ -296,6 +302,8 @@ public class AgendaFragment extends Fragment implements WeekView.EventClickListe
             public String interpretDate(Calendar date) {
                 SimpleDateFormat weekdayNameFormat = new SimpleDateFormat("EEE", Locale.FRANCE);
                 String weekday = weekdayNameFormat.format(date.getTime());
+                SimpleDateFormat monthNameFormat = new SimpleDateFormat("MMM", Locale.FRANCE);
+                String month = monthNameFormat.format(date.getTime());
                 SimpleDateFormat format = new SimpleDateFormat(" dd", Locale.FRANCE);
 
                 // All android api level do not have a standard way of getting the first letter of
@@ -303,7 +311,7 @@ public class AgendaFragment extends Fragment implements WeekView.EventClickListe
                 // Details: http://stackoverflow.com/questions/16959502/get-one-letter-abbreviation-of-week-day-of-a-date-in-java#answer-16959657
                 if (shortDate)
                     weekday = String.valueOf(weekday.charAt(0));
-                return weekday.toUpperCase() + format.format(date.getTime());
+                return weekday.toUpperCase() + format.format(date.getTime()) + " " + month.toUpperCase();
             }
 
             @Override
