@@ -6,6 +6,7 @@ import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.os.Build;
@@ -29,6 +30,7 @@ import java.util.Comparator;
 public class SendMessagesActivity extends AppCompatActivity {
 
     ListView listViewContact;
+    TextView textViewTitle;
     Button buttonSend;
     TextView textViewAnnuler;
     ProgressDialog progressDialog;
@@ -45,7 +47,9 @@ public class SendMessagesActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_send_messages);
+        super.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
+        textViewTitle = (TextView) findViewById(R.id.textViewTitle);
         listViewContact = (ListView) findViewById(R.id.listViewContact);
         buttonSend = (Button) findViewById(R.id.buttonSend);
         textViewAnnuler = (TextView)findViewById(R.id.textViewAnnuler);
@@ -53,6 +57,7 @@ public class SendMessagesActivity extends AppCompatActivity {
         contacts = new ArrayList<Contact>();
 
         showContacts();
+        refreshCount();
 
         progressDialog = new ProgressDialog(this);
         progressDialog.setMessage("Sending Messages.. Please wait!");
@@ -87,6 +92,7 @@ public class SendMessagesActivity extends AppCompatActivity {
                 contactToDelete = contacts.get(i);
                 contacts.remove(contactToDelete);
                 Toast.makeText(SendMessagesActivity.this, "Effacé", Toast.LENGTH_SHORT).show();
+                refreshCount();
                 contactAdapter.notifyDataSetChanged();
             }
         });
@@ -100,6 +106,7 @@ public class SendMessagesActivity extends AppCompatActivity {
                     Toast.makeText(SendMessagesActivity.this, "Suppression annulée", Toast.LENGTH_SHORT).show();
                     contactAdapter.notifyDataSetChanged();
                     contactToDelete = null;
+                    refreshCount();
                 } else {
                     Toast.makeText(SendMessagesActivity.this, "Rien à annuler", Toast.LENGTH_SHORT).show();
                 }
@@ -198,6 +205,10 @@ public class SendMessagesActivity extends AppCompatActivity {
                 return s1.compareTo(s2);
             }
         });
+    }
+
+    public void refreshCount(){
+        textViewTitle.setText("Contacts sélectionnés : " + contacts.size());
     }
 
 
