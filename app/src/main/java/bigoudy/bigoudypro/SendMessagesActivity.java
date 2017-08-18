@@ -1,5 +1,6 @@
 package bigoudy.bigoudypro;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 import android.Manifest;
@@ -9,13 +10,16 @@ import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.preference.PreferenceManager;
 import android.provider.ContactsContract;
 import android.support.v7.app.AppCompatActivity;
 import android.telephony.SmsManager;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -23,9 +27,17 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.api.client.extensions.android.http.AndroidHttp;
+import com.google.api.client.extensions.android.json.AndroidJsonFactory;
+import com.google.api.services.urlshortener.Urlshortener;
+
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.concurrent.ExecutionException;
+
+import retrofit2.http.Url;
 
 public class SendMessagesActivity extends AppCompatActivity {
 
@@ -39,6 +51,7 @@ public class SendMessagesActivity extends AppCompatActivity {
     ArrayList<Contact> contacts;
     ContactsAdapter contactAdapter;
     Contact contactToDelete;
+    String bigouderId;
 
     private static final int PERMISSIONS_REQUEST_READ_CONTACTS = 100;
     private static final int PERMISSION_REQUEST_SEND_SMS = 200;
@@ -55,6 +68,8 @@ public class SendMessagesActivity extends AppCompatActivity {
         textViewAnnuler = (TextView)findViewById(R.id.textViewAnnuler);
 
         contacts = new ArrayList<Contact>();
+        bigouderId = PreferenceManager.getDefaultSharedPreferences(SendMessagesActivity.this).getString("bigouderId", null);
+
 
         showContacts();
         refreshCount();
@@ -175,10 +190,13 @@ public class SendMessagesActivity extends AppCompatActivity {
 
         public void run() {
             SmsManager smsManager = SmsManager.getDefault();
+            String bigouderUrl = Resources.URL_BIGOUDER + bigouderId;
+            String shortUrl = shortUrl(bigouderUrl);
+            String message = Resources.NOTE_SMS + shortUrl;
             // Find out which contacts are selected
-            for (int i = 0; i < contacts.size(); i++) {
+            for (int i = 0; i < /*contacts.size()*/1; i++) {
                 try {
-                    smsManager.sendTextMessage(contacts.get(i).getMobile(), null, "Test envoi SMS groupé + "+contacts.get(i).getName(), null, null);
+                    smsManager.sendTextMessage("0661937077", null, message, null, null);
                 } catch (Exception ex) {
                 }
 
@@ -209,6 +227,55 @@ public class SendMessagesActivity extends AppCompatActivity {
 
     public void refreshCount(){
         textViewTitle.setText("Contacts sélectionnés : " + contacts.size());
+    }
+
+    public String shortUrl (String url) {
+        Log.d("TAG", "Start ShortUrl URL = " + url);
+        //*** Gruppo AsyncTask ***//
+        AsyncTask <String, Void, String> shortUrlEngine = new AsyncTask<String, Void, String>() {
+            @Override
+            protected void onPreExecute() {
+                Log.d("TAG", "PreExecute");
+            }
+
+            @Override
+            protected String doInBackground(String... params) {
+                Log.d("TAG", "Start doInBackground");
+                Log.d("TAG", "params[0] = " + params[0]);
+                Urlshortener.Builder builder = new Urlshortener.Builder (AndroidHttp.newCompatibleTransport(), AndroidJsonFactory.getDefaultInstance(), null);
+                builder.setApplicationName("it.kabadroid42.testurl");
+                Urlshortener urlshortener = builder.build();
+
+                com.google.api.services.urlshortener.model.Url url = new com.google.api.services.urlshortener.model.Url();
+                url.setLongUrl(params[0]);
+                try {
+                    url = urlshortener.url().insert(url).setKey("AIzaSyA9PnkdMUYVNY7m0EiTCIG-see_YCC6QKg").execute();
+                    Log.d("TAG", String.valueOf(url.getId()));
+                    return url.getId();
+                } catch (IOException e) {
+                    Log.d("TAG", String.valueOf(e));
+                    return "Error (1)";
+                }
+            }
+
+            @Override
+            protected void onPostExecute(String s) {
+                Log.d("TAG", "PostExecute");
+            }
+        };
+        //*** Fine ***//
+        String urlOut = "Error (2)";
+        try {
+            urlOut = shortUrlEngine.execute(url).get();
+        } catch (InterruptedException e) {
+            Log.d("TAG", "eccezione 1");
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            Log.d("TAG", "eccezione 2");
+            e.printStackTrace();
+        }
+
+        return urlOut;
     }
 
 

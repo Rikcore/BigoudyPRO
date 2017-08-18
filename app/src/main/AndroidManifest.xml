@@ -17,6 +17,10 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
+        <meta-data
+            android:name="com.google.android.urlshortener.API_KEY"
+            android:value="AIzaSyA9PnkdMUYVNY7m0EiTCIG-see_YCC6QKg"/>
+
         <activity android:name=".SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
