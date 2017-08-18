@@ -21,5 +21,6 @@ public class Resources {
     public final static String URL_BIGOUDER = "https://www.bigoudychat.ovh/bigouder/detail:";
 
     //SMS d'invitation à donner des avis
-    public final static String NOTE_SMS = "Bonjour, je viens de m'inscrire sur le site Bigoudy. Vous pouvez ajouter un avis sur mon profil pour m'aider à trouver plus de clients: ";
+    public final static String NOTE_SMS = "Bonjour,  \n" +
+            "Je suis désormais coiffeur partenaire chez Bigoudy. Merci de noter mon profil pour m'aider à trouver plus de clients: ";
 }
