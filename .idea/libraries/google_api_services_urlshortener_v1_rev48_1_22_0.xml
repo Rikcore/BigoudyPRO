@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="google-api-services-urlshortener-v1-rev48-1.22.0">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.google.apis/google-api-services-urlshortener/v1-rev48-1.22.0/96f5610c4ac8c57209a6756316c518ad1a3fa2f5/google-api-services-urlshortener-v1-rev48-1.22.0.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.google.apis/google-api-services-urlshortener/v1-rev48-1.22.0/707c96472d7a4c47fcd895bb19f1771ca6867b07/google-api-services-urlshortener-v1-rev48-1.22.0-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

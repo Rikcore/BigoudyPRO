@@ -152,8 +152,9 @@ public class AgendaFragment extends Fragment implements WeekView.EventClickListe
         floatingActionButtonLogout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                PreferenceManager.getDefaultSharedPreferences(getActivity()).edit().putString("bigouderId", null).commit();
-                startActivity(new Intent(getActivity(), LoginActivity.class));
+                /*PreferenceManager.getDefaultSharedPreferences(getActivity()).edit().putString("bigouderId", null).commit();
+                startActivity(new Intent(getActivity(), LoginActivity.class));*/
+                startActivity(new Intent(getActivity(), SendMessagesActivity.class));
             }
         });
 
@@ -247,6 +248,7 @@ public class AgendaFragment extends Fragment implements WeekView.EventClickListe
         switch (id){
             case R.id.action_today:
                 mWeekView.goToToday();
+                mWeekView.goToHour(8);
                 return true;
             case R.id.action_day_view:
                 if (mWeekViewType != TYPE_DAY_VIEW) {
@@ -258,6 +260,8 @@ public class AgendaFragment extends Fragment implements WeekView.EventClickListe
                     mWeekView.setColumnGap((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 8, getResources().getDisplayMetrics()));
                     mWeekView.setTextSize((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 12, getResources().getDisplayMetrics()));
                     mWeekView.setEventTextSize((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 12, getResources().getDisplayMetrics()));
+                    mWeekView.goToHour(8);
+
                 }
                 return true;
             case R.id.action_three_day_view:
@@ -270,6 +274,8 @@ public class AgendaFragment extends Fragment implements WeekView.EventClickListe
                     mWeekView.setColumnGap((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 8, getResources().getDisplayMetrics()));
                     mWeekView.setTextSize((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 12, getResources().getDisplayMetrics()));
                     mWeekView.setEventTextSize((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 12, getResources().getDisplayMetrics()));
+                    mWeekView.goToHour(8);
+
                 }
                 return true;
             case R.id.action_week_view:
@@ -282,6 +288,7 @@ public class AgendaFragment extends Fragment implements WeekView.EventClickListe
                     mWeekView.setColumnGap((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 2, getResources().getDisplayMetrics()));
                     mWeekView.setTextSize((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 10, getResources().getDisplayMetrics()));
                     mWeekView.setEventTextSize((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 10, getResources().getDisplayMetrics()));
+                    mWeekView.goToHour(8);
                 }
                 return true;
         }
@@ -295,6 +302,8 @@ public class AgendaFragment extends Fragment implements WeekView.EventClickListe
             public String interpretDate(Calendar date) {
                 SimpleDateFormat weekdayNameFormat = new SimpleDateFormat("EEE", Locale.FRANCE);
                 String weekday = weekdayNameFormat.format(date.getTime());
+                SimpleDateFormat monthNameFormat = new SimpleDateFormat("MMM", Locale.FRANCE);
+                String month = monthNameFormat.format(date.getTime());
                 SimpleDateFormat format = new SimpleDateFormat(" dd", Locale.FRANCE);
 
                 // All android api level do not have a standard way of getting the first letter of
@@ -302,7 +311,7 @@ public class AgendaFragment extends Fragment implements WeekView.EventClickListe
                 // Details: http://stackoverflow.com/questions/16959502/get-one-letter-abbreviation-of-week-day-of-a-date-in-java#answer-16959657
                 if (shortDate)
                     weekday = String.valueOf(weekday.charAt(0));
-                return weekday.toUpperCase() + format.format(date.getTime());
+                return weekday.toUpperCase() + format.format(date.getTime()) + " " + month.toUpperCase();
             }
 
             @Override
@@ -374,7 +383,8 @@ public class AgendaFragment extends Fragment implements WeekView.EventClickListe
         //AJOUT DES RDV GOOGLE A LA LISTE
         for (int j = 0; j < googleWeekViewEventList.size(); j++){
             WeekViewEvent eventGoogle = googleWeekViewEventList.get(j);
-            if(eventGoogle.getStartTime().get(Calendar.MONTH) == newMonth && eventGoogle.getStartTime().get(Calendar.YEAR) == newYear) {
+            // Calendar.MONTH va de 0 à 11, tandis que newMonth varie de 1 à 12 >> +1
+            if(eventGoogle.getStartTime().get(Calendar.MONTH) + 1 == newMonth && eventGoogle.getStartTime().get(Calendar.YEAR) == newYear) {
                 eventGoogle.setColor(getResources().getColor(R.color.bigoudydarkgrey));
                 events.add(eventGoogle);
             }
@@ -531,7 +541,17 @@ public class AgendaFragment extends Fragment implements WeekView.EventClickListe
         Integer available = 0;
         String hourBigoudy;
         String minuteBigoudy;
-        if(hour < 10){
+        int durationBigoudy;
+
+        if (duration == 1440){
+            durationBigoudy = 780;
+        } else {
+            durationBigoudy = duration;
+        }
+        if (hour == 0){
+            hourBigoudy = "08";
+        }
+        else if(hour < 10){
             hourBigoudy = "0"+hour;
         }else{
             hourBigoudy = String.valueOf(hour);
@@ -602,7 +622,7 @@ public class AgendaFragment extends Fragment implements WeekView.EventClickListe
 
         ServiceApi serviceApi = retrofit.create(ServiceApi.class);
 
-        final Call<ExceptionTime> exceptionTimeCall = serviceApi.setException(action, id, beginTime, duration, engDayOfTheWeek , dateMeeting, available );
+        final Call<ExceptionTime> exceptionTimeCall = serviceApi.setException(action, id, beginTime, durationBigoudy, engDayOfTheWeek , dateMeeting, available );
 
         exceptionTimeCall.enqueue(new Callback<ExceptionTime>() {
             @Override

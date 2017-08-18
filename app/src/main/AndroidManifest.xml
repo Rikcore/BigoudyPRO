@@ -6,6 +6,9 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <uses-permission android:name="android.permission.SEND_SMS" />
+    <uses-permission android:name="android.permission.READ_SMS" />
 
     <application
         android:allowBackup="true"
@@ -15,14 +18,18 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
+        <meta-data
+            android:name="com.google.android.urlshortener.API_KEY"
+            android:value="AIzaSyA9PnkdMUYVNY7m0EiTCIG-see_YCC6QKg"/>
+
         <activity android:name=".SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
 
+
+        </activity>
         <activity
             android:name=".LoginActivity"
             android:theme="@style/notitlebar" />
@@ -41,8 +48,12 @@
             android:enabled="true"
             android:exported="true" />
 
-    <activity android:name=".MainActivity" />
+        <activity android:name=".MainActivity">
 
+        </activity>
+
+
+        <activity android:name=".SendMessagesActivity"></activity>
     </application>
 
 </manifest>

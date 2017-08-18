@@ -71,4 +71,7 @@ public interface ServiceApi {
             @Field("available") Integer available
     );
 
+
+
+
 }
